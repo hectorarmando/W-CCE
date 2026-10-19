@@ -9,6 +9,9 @@ import fotoAuditorio from "../assets/fotos/evento-auditorio.jpg";
 import fotoCharla from "../assets/fotos/evento-charla-ia-generativa.jpg";
 import fotoRegistro from "../assets/fotos/evento-registro.jpg";
 import fotoKits from "../assets/fotos/evento-entrega-kits.jpg";
+import fotoTren from "../assets/fotos/equipo-tren-ce.jpg";
+import fotoCinta from "../assets/fotos/evento-corte-de-cinta.jpg";
+import fotoBatucada from "../assets/fotos/evento-batucada-banner.jpg";
 
 const [destacado, ...resto] = programas;
 const cuenta = (id: string) => programas.filter((p) => p.area === id).length + cursos.filter((c) => c.area === id).length;
@@ -94,6 +97,21 @@ const formas = [
     </div>
   </section>
 
+  <!-- CAMPAÑA: «Educación continua · Aprende, certifícate y avanza» (banner oficial de la CE) -->
+  <section class="campana" aria-labelledby="campana-titulo">
+    <figure class="campana__foto">
+      <Picture src={fotoTren} formats={["avif", "webp"]} widths={[640, 1000, 1500, 2000]} sizes="100vw" alt="Equipo de la Cámara de Comercio Exterior en un andén, junto a un tren con el logo de la CE" />
+    </figure>
+    <div class="contenedor">
+      <div class="campana__panel sobre-oscuro">
+        <p class="campana__linea">Educación continua</p>
+        <h2 id="campana-titulo" class="campana__titulo">Aprende, certifícate y avanza.</h2>
+        <p class="campana__texto">Programas en vivo, con proyectos aplicados y certificado digital verificable, para que des el siguiente paso en tu carrera.</p>
+        <a class="btn btn--amarillo" href="/programas">Ver programas</a>
+      </div>
+    </div>
+  </section>
+
   <!-- CÓMO ESTUDIAS -->
   <section class="seccion seccion--suave" aria-labelledby="formas-titulo">
     <div class="contenedor formas">
@@ -126,6 +144,12 @@ const formas = [
       </figure>
       <figure class="comunidad__foto comunidad__foto--kits">
         <Picture src={fotoKits} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 860px) 50vw, 33vw" alt="Entrega de bolsas con el logo de la Cámara de Comercio Exterior a una participante" />
+      </figure>
+      <figure class="comunidad__foto comunidad__foto--cinta">
+        <Picture src={fotoCinta} formats={["avif", "webp"]} widths={[640, 1000, 1400]} sizes="(max-width: 860px) 100vw, 66vw" alt="Corte de cinta con el lema «Aprende, certifícate y avanza» y el logo de la Cámara de Comercio Exterior" />
+      </figure>
+      <figure class="comunidad__foto comunidad__foto--batucada">
+        <Picture src={fotoBatucada} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 860px) 100vw, 33vw" alt="Batucada con sombreros amarillos junto al banner «Educación continua» de la Cámara de Comercio Exterior" />
       </figure>
     </div>
   </section>
@@ -254,7 +278,7 @@ const formas = [
   /* COMUNIDAD: retícula editorial con fotos reales */
   .comunidad__rejilla {
     display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4);
-    grid-template-areas: "texto principal principal" "charla registro kits";
+    grid-template-areas: "texto principal principal" "charla registro kits" "cinta cinta batucada";
   }
   .comunidad__texto { grid-area: texto; align-self: end; padding: 0 var(--s-5) var(--s-5) 0; }
   .comunidad__texto .intro { margin-top: var(--s-5); }
@@ -265,6 +289,23 @@ const formas = [
   .comunidad__foto--charla :global(img) { object-position: 42% 40%; }
   .comunidad__foto--registro { grid-area: registro; aspect-ratio: 4 / 3; }
   .comunidad__foto--kits { grid-area: kits; aspect-ratio: 4 / 3; }
+  /* Última fila: el corte de cinta fija la altura y la batucada se estira para igualarla */
+  .comunidad__foto--cinta { grid-area: cinta; aspect-ratio: 2 / 1; }
+  .comunidad__foto--cinta :global(img) { object-position: 50% 35%; }
+  .comunidad__foto--batucada { grid-area: batucada; }
+  .comunidad__foto--batucada :global(img) { object-position: 0% 50%; }
+
+  /* CAMPAÑA: foto a todo el ancho con panel negro superpuesto */
+  .campana { position: relative; padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
+  .campana__foto { margin: 0; height: clamp(22rem, 12rem + 34vw, 46rem); overflow: hidden; background: #ddd; }
+  .campana__foto :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+  .campana__panel {
+    position: relative; margin-top: clamp(-14rem, -6rem - 8vw, -6rem); max-width: 34rem;
+    padding: clamp(1.75rem, 1rem + 2.5vw, 3rem); background: var(--negro); color: var(--blanco); border-radius: var(--radio);
+  }
+  .campana__linea { font-weight: 800; color: var(--amarillo); font-size: var(--t-lg); }
+  .campana__titulo { margin-top: var(--s-3); font-size: var(--t-2xl); font-weight: 900; }
+  .campana__texto { margin: var(--s-4) 0 var(--s-6); color: #d9d9d9; }
 
   /* ÁREAS */
   .areas { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: var(--s-7); border-top: 1px solid var(--negro); border-left: 1px solid var(--linea); }
@@ -297,7 +338,9 @@ const formas = [
   .cierre .intro { margin-top: var(--s-5); color: var(--negro); }
 
   @media (max-width: 860px) {
-    .comunidad__rejilla { grid-template-columns: 1fr 1fr; grid-template-areas: "texto texto" "principal principal" "charla charla" "registro kits"; gap: var(--s-3); }
+    .comunidad__rejilla { grid-template-columns: 1fr 1fr; grid-template-areas: "texto texto" "principal principal" "charla charla" "registro kits" "cinta cinta" "batucada batucada"; gap: var(--s-3); }
+    .comunidad__foto--cinta, .comunidad__foto--batucada { aspect-ratio: 4 / 3; }
+    .campana__panel { margin-top: -3rem; max-width: none; }
     .comunidad__texto { padding: 0 0 var(--s-4); }
   }
   @media (max-width: 1024px) {

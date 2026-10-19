@@ -5,6 +5,7 @@ import { sitio } from "../data/sitio";
 import { Picture } from "astro:assets";
 import fotoAuditorio from "../assets/fotos/evento-auditorio.jpg";
 import fotoMarca from "../assets/fotos/marca-el-exito-lo-logramos-juntos.jpg";
+import fotoPresentacion from "../assets/fotos/evento-presentacion-educacion-continua.jpg";
 ---
 <Base titulo="Nosotros" descripcion="Conoce a la Cámara de Comercio Exterior (CE): nuestra visión de ser un Centro de Capacitación Profesional Internacional y nuestros valores.">
   <section class="encabezado-pagina">
@@ -41,7 +42,12 @@ import fotoMarca from "../assets/fotos/marca-el-exito-lo-logramos-juntos.jpg";
 
   <section class="seccion" aria-labelledby="forma">
     <div class="contenedor dos">
-      <h2 id="forma" class="titulo-seccion">Cómo formamos</h2>
+      <div>
+        <h2 id="forma" class="titulo-seccion">Cómo formamos</h2>
+        <figure class="forma__foto">
+          <Picture src={fotoPresentacion} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" alt="Presentación junto al banner «Educación continua: Aprende, certifícate y avanza» de la Cámara de Comercio Exterior" />
+        </figure>
+      </div>
       <div class="texto-largo">
         <p>Nuestros programas combinan clases en vivo con el docente, material para repasar a tu ritmo y un proyecto aplicado al final. Cubren comercio exterior, análisis de datos, inteligencia artificial, marketing, diseño, ingeniería e idiomas.</p>
         <p>Al terminar recibes un certificado digital de la Cámara de Comercio Exterior con código QR, para que cualquier persona pueda verificar su autenticidad.</p>
@@ -81,6 +87,8 @@ import fotoMarca from "../assets/fotos/marca-el-exito-lo-logramos-juntos.jpg";
   .dos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--s-8); align-items: start; }
   .texto-largo { display: grid; gap: var(--s-4); font-size: var(--t-lg); line-height: 1.55; color: var(--gris-oscuro); max-width: 58ch; }
   .texto-largo strong { color: var(--negro); }
+  .forma__foto { margin: var(--s-6) 0 0; overflow: hidden; border-radius: var(--radio); aspect-ratio: 4 / 3; }
+  .forma__foto :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
   .sigla { padding-top: 0; }
   .sigla .dos { align-items: center; }
   .sigla__foto, .portada { margin: 0; }

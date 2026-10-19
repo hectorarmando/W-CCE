@@ -49,12 +49,18 @@ Cuando estén disponibles se agregan así:
 | `evento-registro.jpg` | Inicio |
 | `evento-entrega-kits.jpg` | Inicio |
 | `marca-el-exito-lo-logramos-juntos.jpg` | Nosotros («Somos CE») |
+| `equipo-tren-ce.jpg` | Inicio, franja «Educación continua · Aprende, certifícate y avanza» |
+| `evento-corte-de-cinta.jpg` | Inicio, galería |
+| `evento-batucada-banner.jpg` | Inicio, galería |
+| `evento-presentacion-educacion-continua.jpg` | Nosotros («Cómo formamos») |
+| `evento-batucada.jpg` | Página 404 |
 
 **Por validar:**
 
 - **Autorización de imagen.** Confirmar el consentimiento de las personas que aparecen, sobre todo estudiantes, para su uso en la web.
-- **Marcas de terceros.** En las fotos se ven marcas de terceros (UTP e Interbank en el fondo). Los textos del sitio **no** mencionan alianzas ni convenios con ellas. Confirmar si se puede publicar o si conviene recortar o desenfocar esas marcas.
-- **Frases del material gráfico.** Se usan «Conectamos talento, impulsamos desarrollo» (banner) y «El éxito lo logramos juntos.» (bolsas). Confirmar que siguen vigentes como mensajes institucionales.
+- **Marcas de terceros.** En las fotos se ven marcas e instalaciones de terceros (UTP e Interbank en el fondo; un tren y una estación de transporte con la marca de la CE). Los textos del sitio **no** mencionan alianzas, convenios ni a la empresa operadora. Confirmar si se pueden publicar o si conviene recortar o desenfocar esas marcas.
+- **Frases del material gráfico.** Se usan «Conectamos talento, impulsamos desarrollo» (banner), «El éxito lo logramos juntos.» (bolsas) y «Educación continua · Aprende, certifícate y avanza» (banner y cinta de la campaña). Confirmar que siguen vigentes como mensajes institucionales.
+- **Redes sociales.** El banner de la campaña muestra Instagram, TikTok, YouTube, Facebook y LinkedIn. Faltan las URLs de cada perfil para agregarlas al pie del sitio.
 
 **Pendientes de fotografía:**
 

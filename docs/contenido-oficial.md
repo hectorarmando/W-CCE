@@ -432,3 +432,4 @@ Frases visibles en piezas institucionales fotografiadas. Se usan en el sitio com
 
 - Banner: «Conectamos talento, impulsamos desarrollo» · «Tu futuro profesional comienza aquí».
 - Bolsas: «El éxito lo logramos juntos.»
+- Campaña «Educación continua» (banner roll-up, cinta de inauguración y tren rotulado): «Aprende, certifícate y avanza». El banner muestra íconos de Instagram, TikTok, YouTube, Facebook y LinkedIn, sin las direcciones.
