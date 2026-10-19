@@ -7,11 +7,15 @@ const anio = new Date().getFullYear();
   <div class="contenedor pie__rejilla">
     <div class="pie__marca">
       <img src="/brand/imagotipo-blanco.svg" alt="Cámara de Comercio Exterior" width="184" height="120" />
-      <p>Capacitación profesional en comercio exterior, datos, inteligencia artificial y habilidades digitales.</p>
+      <p class="pie__frase">¿Listo para dar el siguiente paso?</p>
+      <a class="btn btn--amarillo" href={enlaceWhatsapp("Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.")} target="_blank" rel="noopener">
+        Escribir por WhatsApp
+        <span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
+      </a>
     </div>
 
     <nav aria-label="Sitio">
-      <p class="pie__titulo">Sitio</p>
+      <p class="pie__titulo">Navegación</p>
       <ul role="list">
         <li><a href="/">Inicio</a></li>
         {navegacion.map((n) => <li><a href={n.href}>{n.texto}</a></li>)}
@@ -35,25 +39,52 @@ const anio = new Date().getFullYear();
         </li>
         <li><a href="/contacto">Formulario de contacto</a></li>
       </ul>
+      <a class="pie__arriba" href="#contenido">
+        <span>Volver arriba</span>
+        <span class="pie__arriba-icono" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 12V3M3 6.5 7 2.5l4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
+      </a>
     </div>
   </div>
 
   <div class="contenedor pie__legal">
     <p>© {anio} {sitio.nombre} ({sitio.sigla}). Todos los derechos reservados.</p>
   </div>
+
+  <!-- Lema de la campaña «Educación continua» en gran formato, recortado por el borde -->
+  <p class="pie__lema" aria-hidden="true">Aprende, certifícate y avanza</p>
 </footer>
 
 <style>
-  .pie { background: var(--negro); color: var(--blanco); padding-block: var(--s-8) var(--s-5); margin-top: 0; }
-  .pie__rejilla { display: grid; grid-template-columns: 1.4fr 1fr 1.4fr 1.2fr; gap: var(--s-7) var(--s-6); }
+  .pie {
+    position: relative; overflow: hidden; color: var(--blanco); padding-top: var(--s-8);
+    background:
+      radial-gradient(60rem 30rem at 50% 115%, rgba(200, 154, 49, 0.55), transparent 70%),
+      radial-gradient(40rem 22rem at 90% 100%, rgba(255, 195, 0, 0.18), transparent 70%),
+      linear-gradient(#111, var(--negro) 40%);
+  }
+  .pie__rejilla { position: relative; display: grid; grid-template-columns: 1.4fr 1fr 1.4fr 1.1fr; gap: var(--s-7) var(--s-6); }
   .pie__marca img { width: 152px; height: auto; margin-bottom: var(--s-5); }
-  .pie__marca p { color: var(--gris-claro); font-size: var(--t-sm); max-width: 30ch; }
-  .pie__titulo { font-size: var(--t-xs); font-weight: 700; color: var(--amarillo); margin-bottom: var(--s-4); }
-  .pie ul { display: grid; gap: var(--s-3); }
-  .pie a { text-decoration: none; font-size: var(--t-sm); color: #e6e6e6; }
-  .pie a:hover { color: var(--blanco); text-decoration: underline; text-decoration-color: var(--amarillo); text-underline-offset: 4px; }
-  .pie__legal { margin-top: var(--s-8); padding-top: var(--s-5); border-top: 1px solid #262626; }
-  .pie__legal p { font-size: var(--t-xs); color: var(--gris); }
+  .pie__frase { font-size: var(--t-xl); font-weight: 450; letter-spacing: -0.025em; margin-bottom: var(--s-5); max-width: 16ch; line-height: 1.15; }
+  .pie__titulo { font-family: var(--font-marca); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amarillo); margin-bottom: var(--s-4); }
+  .pie ul { display: grid; gap: var(--s-2); }
+  .pie ul a { text-decoration: none; font-size: var(--t-sm); color: #e6e6e6; }
+  .pie ul a:hover { color: var(--blanco); text-decoration: underline; text-decoration-color: var(--amarillo); text-underline-offset: 4px; }
+  .pie__arriba {
+    display: inline-flex; align-items: stretch; gap: 2px; margin-top: var(--s-6); text-decoration: none;
+    font-family: var(--font-marca); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .pie__arriba > span { display: grid; place-items: center; min-height: 2.5rem; padding: 0 0.9rem; background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+  .pie__arriba-icono { width: 2.5rem; padding: 0 !important; }
+  .pie__arriba:hover > span { background: rgba(255, 255, 255, 0.18); }
+  .pie__legal { position: relative; margin-top: var(--s-8); }
+  .pie__legal p { padding-top: var(--s-4); border-top: 1px dashed rgba(255, 255, 255, 0.18); font-family: var(--font-marca); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a6a6a6; }
+  .pie__lema {
+    margin: var(--s-5) 0 -0.24em; padding-inline: var(--gutter); white-space: nowrap; text-align: center;
+    font-size: clamp(1.6rem, 6.2vw, 8.4rem); font-weight: 500; letter-spacing: -0.05em; line-height: 1;
+    background: linear-gradient(180deg, #fff6d6 0%, var(--dorado-claro) 35%, var(--dorado) 60%, rgba(172, 88, 28, 0.15) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    user-select: none;
+  }
   @media (max-width: 900px) { .pie__rejilla { grid-template-columns: 1fr 1fr; } .pie__marca { grid-column: 1 / -1; } }
   @media (max-width: 520px) { .pie__rejilla { grid-template-columns: 1fr; } }
 </style>

@@ -5,6 +5,7 @@ import Footer from "../components/Footer.astro";
 import { sitio } from "../data/sitio";
 // Montserrat (alfabeto latino, incluye tildes y ñ) precargada: evita el salto de diseño al cambiar de fuente
 import fuenteLatina from "@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url";
+import fuenteTexto from "@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url";
 
 interface Props {
   titulo: string;
@@ -28,6 +29,7 @@ const og = new URL(imagenOg, Astro.site);
     <link rel="canonical" href={canonical} />
     {noIndex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#ffffff" />
+    <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={fuenteLatina} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
@@ -51,6 +53,8 @@ const og = new URL(imagenOg, Astro.site);
   </head>
   <body>
     <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <div class="reticula" aria-hidden="true"><div class="contenedor reticula__cols"><span></span><span></span><span></span><span></span></div></div>
+    <div class="velo" aria-hidden="true"></div>
     <Header />
     <main id="contenido">
       <slot />
