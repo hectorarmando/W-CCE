@@ -12,9 +12,9 @@ import fotoTren from "../assets/fotos/equipo-tren-ce.jpg";
 import fotoCinta from "../assets/fotos/evento-corte-de-cinta.jpg";
 import fotoBatucada from "../assets/fotos/evento-batucada-banner.jpg";
 
-const [destacado, ...resto] = programas;
 const cuenta = (id: string) => programas.filter((p) => p.area === id).length + cursos.filter((c) => c.area === id).length;
-const dos = (n: number) => String(n).padStart(2, "0");
+const dato = (p: (typeof programas)[number], etiqueta: string) => p.datos.find((d) => d.etiqueta === etiqueta)?.valor;
+const totalOferta = programas.length + cursos.length;
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -27,12 +27,7 @@ const jsonLd = {
 };
 
 // Beneficios que aparecen en los brochures y sílabos 2026 (F6, F10, F11, F12)
-const formas = [
-  { icono: "vivo", titulo: "Clases en vivo", texto: "Aprendes con el docente en tiempo real y resuelves tus dudas en clase. Varios programas suman clases de refuerzo en vivo." },
-  { icono: "grabado", titulo: "Clases grabadas y recursos", texto: "Repasa cuando lo necesites: grabaciones, plantillas y materiales del programa." },
-  { icono: "proyecto", titulo: "Proyectos aplicados", texto: "Cierras con un proyecto real: un capstone en Power BI, un sistema de IA o tu propio proyecto de importación." },
-  { icono: "certificado", titulo: "Certificado verificable", texto: "Certificado digital de la Cámara de Comercio Exterior con código QR para validar su autenticidad." },
-];
+const senales = ["Clases en vivo con el docente", "Certificado digital con código QR", "Proyecto aplicado al cierre", "100 % en línea, desde cualquier país"];
 
 // Preguntas frecuentes: cada respuesta se apoya en material oficial (docs/contenido-oficial.md)
 const preguntas = [
@@ -44,137 +39,69 @@ const preguntas = [
   { p: "¿Tienen capacitación para empresas?", r: "Sí. Coordinamos programas del catálogo para grupos de colaboradores, con condiciones corporativas. Cuéntanos cuántas personas son y qué necesitan aprender." },
 ];
 
-const iconos: Record<string, string> = {
-  vivo: '<circle cx="20" cy="20" r="4"/><path d="M12.5 12.5a10.6 10.6 0 0 0 0 15M27.5 12.5a10.6 10.6 0 0 1 0 15M7.5 7.5a17.7 17.7 0 0 0 0 25M32.5 7.5a17.7 17.7 0 0 1 0 25"/>',
-  grabado: '<rect x="5" y="9" width="30" height="20" rx="2"/><path d="M17 15v8l7-4z"/><path d="M12 33h16"/>',
-  proyecto: '<circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="8"/><circle cx="20" cy="20" r="2"/><path d="M20 2v6M20 32v6M2 20h6M32 20h6"/>',
-  certificado: '<rect x="6" y="5" width="22" height="28" rx="2"/><path d="M11 12h12M11 17h8"/><circle cx="29" cy="27" r="6"/><path d="m26 32-1 6 4-2 4 2-1-6"/>',
-};
 ---
 <Base titulo={sitio.nombre} descripcion={sitio.descripcion} jsonLd={jsonLd}>
-  <!-- HERO -->
+  <!-- PORTADA — «El abrazo»: el arco amarillo de la C envuelve a la comunidad CE -->
   <section class="hero" aria-labelledby="hero-titulo">
     <div class="contenedor hero__rejilla">
       <div class="hero__texto">
-        <p class="etiqueta">Educación continua</p>
-        <h1 id="hero-titulo" class="hero__titulo">Formamos profesionales para competir en un mercado global: comercio exterior, datos e inteligencia artificial, con clases en vivo y certificación verificable.</h1>
+        <!-- Lema oficial de la campaña «Educación continua» -->
+        <h1 id="hero-titulo" class="hero__titulo">Aprende, certifícate y avanza.</h1>
+        <p class="hero__sub">Programas en vivo de comercio exterior, datos e inteligencia artificial, con un proyecto aplicado y certificado verificable de la Cámara de Comercio Exterior.</p>
         <div class="acciones">
-          <a class="btn btn--negro" href="/programas">Ver programas <Flecha /></a>
+          <a class="btn btn--negro" href="#programas">Ver programas <Flecha /></a>
           <a class="btn btn--contorno" href={enlaceWhatsapp("Hola, quiero que un asesor me ayude a elegir un programa.")} target="_blank" rel="noopener">Hablar con un asesor</a>
         </div>
       </div>
 
-      <!-- Arco de la «C» envolvente del isologo, en el dorado del logo (manual 1.5) -->
-      <div class="hero__arco" aria-hidden="true">
-        <svg viewBox="0 0 400 400">
-          <defs>
-            <linearGradient id="oro" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#fff3c4" />
-              <stop offset=".22" stop-color="#d8c362" />
-              <stop offset=".48" stop-color="#ac581c" />
-              <stop offset=".7" stop-color="#e9cf74" />
-              <stop offset="1" stop-color="#8a4a18" />
-            </linearGradient>
-            <linearGradient id="brillo" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#fff" stop-opacity=".75" />
-              <stop offset=".5" stop-color="#fff" stop-opacity="0" />
-            </linearGradient>
-            <filter id="sombra" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#5a3510" flood-opacity=".28" /></filter>
-          </defs>
-          <g class="hero__arco-giro" filter="url(#sombra)">
-            <path class="hero__arco-trazo" d="M 313.1 86.9 A 160 160 0 1 0 313.1 313.1" fill="none" stroke="url(#oro)" stroke-width="52" stroke-linecap="butt" pathLength="100" />
-            <path d="M 313.1 86.9 A 160 160 0 1 0 313.1 313.1" fill="none" stroke="url(#brillo)" stroke-width="18" transform="translate(-6 -10)" opacity=".7" />
-          </g>
+      <div class="abrazo">
+        <figure class="abrazo__foto">
+          <Picture src={fotoAuditorio} formats={["avif", "webp"]} widths={[480, 720, 960, 1280]} sizes="(max-width: 900px) 80vw, 40vw" loading="eager" fetchpriority="high" alt="Participantes y equipo de la Cámara de Comercio Exterior en un auditorio lleno al cierre de un evento" />
+        </figure>
+        <svg class="abrazo__arco" viewBox="0 0 400 400" aria-hidden="true">
+          <path d="M 327.3 72.7 A 180 180 0 1 0 327.3 327.3" fill="none" stroke="var(--amarillo)" stroke-width="30" pathLength="100" />
         </svg>
       </div>
+    </div>
 
-      <ul role="list" class="hero__ventajas">
-        {formas.filter((f) => f.icono !== "grabado").map((f) => (
-          <li>
-            <svg class="icono" viewBox="0 0 40 40" aria-hidden="true" set:html={iconos[f.icono]} />
-            <div><strong>{f.titulo}</strong><span>{f.texto}</span></div>
-          </li>
-        ))}
+    <div class="contenedor">
+      <ul role="list" class="senales">
+        {senales.map((t) => <li>{t}</li>)}
       </ul>
     </div>
   </section>
 
-  <!-- PROGRAMAS -->
-  <section class="seccion" aria-labelledby="destacados-titulo">
+  <!-- PROGRAMAS — el tablero: un panel de salidas con los programas de temario completo -->
+  <section class="seccion tablero-seccion sobre-oscuro" id="programas" aria-labelledby="programas-titulo">
     <div class="contenedor">
       <div class="cabeza">
-        <div>
-          <p class="etiqueta">Programas</p>
-          <h2 id="destacados-titulo" class="titulo-seccion">Programas con temario completo</h2>
-        </div>
-        <a class="btn btn--contorno" href="/programas">Ver el catálogo <Flecha /></a>
+        <h2 id="programas-titulo" class="titulo-seccion">Elige tu próximo destino profesional.</h2>
+        <p class="intro">Cinco programas con temario completo, clases en vivo y un proyecto que demuestra lo que aprendiste.</p>
       </div>
 
-      <div class="destacados">
-        <a class="tarjeta" href={`/programas/${destacado.slug}`}>
-          <div class="tarjeta__visual">
-            <span class="tarjeta__linea">{areaPorId[destacado.area].nombre}</span>
-            <span class="tarjeta__nombre">{destacado.nombre}</span>
-            <svg class="tarjeta__arco" viewBox="0 0 200 200" aria-hidden="true"><path d="M 156.6 43.4 A 80 80 0 1 0 156.6 156.6" fill="none" stroke="var(--amarillo)" stroke-width="22" /></svg>
-          </div>
-          <div class="tarjeta__meta">
-            <span class="ficha-tag">{areaPorId[destacado.area].nombre}</span>
-            <span class="ficha-tag">{destacado.datos[0].valor}</span>
-          </div>
-          <p class="tarjeta__resumen">{destacado.resumen}</p>
-          <span class="tarjeta__ir" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
-        </a>
-
-        <ol role="list" class="filas">
-          {resto.map((p, i) => (
-            <li>
-              <a class="fila" href={`/programas/${p.slug}`} style={`--c:${p.color ?? areaPorId[p.area].color}`}>
-                <span class="numero"><i aria-hidden="true"></i>{dos(i + 2)}</span>
-                <span class="fila__cuerpo">
-                  <span class="fila__nombre">{p.nombre}</span>
-                  <span class="fila__dato">{p.datos.map((d) => d.valor).slice(0, 2).join(" · ")}</span>
-                </span>
-                <span class="fila__ir" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
+      <div class="tablero">
+        <div class="tablero__cabeza" aria-hidden="true">
+          <span>Programa</span><span>Área</span><span>Duración</span><span>Modalidad</span><span></span>
+        </div>
+        <ol role="list" class="tablero__filas">
+          {programas.map((p) => (
+            <li data-revelar>
+              <a class="tablero__fila" href={`/programas/${p.slug}`} style={`--c:${p.color ?? areaPorId[p.area].color}`}>
+                <span class="tablero__nombre">{p.nombre}</span>
+                <span class="tablero__dato"><span class="tablero__rotulo">Área</span><i aria-hidden="true"></i>{areaPorId[p.area].nombre}</span>
+                <span class="tablero__dato"><span class="tablero__rotulo">Duración</span>{dato(p, "Duración") ?? "Consulta con un asesor"}</span>
+                <span class="tablero__dato tablero__dato--modalidad"><span class="tablero__rotulo">Modalidad</span>{dato(p, "Modalidad")}</span>
+                <span class="tablero__ir"><span class="sr-only">Ver temario</span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
               </a>
             </li>
           ))}
         </ol>
       </div>
-    </div>
-  </section>
 
-  <!-- CAMPAÑA: «Educación continua · Aprende, certifícate y avanza» (banner oficial de la CE) -->
-  <section class="campana" aria-labelledby="campana-titulo">
-    <figure class="campana__foto">
-      <Picture src={fotoTren} formats={["avif", "webp"]} widths={[640, 1000, 1500, 2000]} sizes="100vw" alt="Equipo de la Cámara de Comercio Exterior en un andén, junto a un tren con el logo de la CE" />
-    </figure>
-    <div class="contenedor">
-      <div class="campana__panel sobre-oscuro">
-        <p class="etiqueta">Educación continua</p>
-        <h2 id="campana-titulo" class="campana__titulo">Aprende, certifícate y avanza.</h2>
-        <p class="campana__texto">Programas en vivo, con proyectos aplicados y certificado digital verificable, para que des el siguiente paso en tu carrera.</p>
-        <a class="btn btn--amarillo" href="/programas">Ver programas <Flecha /></a>
+      <div class="tablero__pie">
+        <p>¿Buscas Python, SQL, marketing, AutoCAD o idiomas? Hay {totalOferta} programas y cursos en el catálogo.</p>
+        <a class="btn btn--amarillo" href="/programas">Ver el catálogo completo <Flecha /></a>
       </div>
-    </div>
-  </section>
-
-  <!-- CÓMO ESTUDIAS -->
-  <section class="seccion" aria-labelledby="formas-titulo">
-    <div class="contenedor formas">
-      <div>
-        <p class="etiqueta">Cómo estudias</p>
-        <h2 id="formas-titulo" class="titulo-seccion">Estudias en línea, pero no estudias solo.</h2>
-        <p class="intro">Todos los programas son virtuales y combinan sesiones con el docente, material para repasar y un proyecto que demuestra lo que aprendiste.</p>
-      </div>
-      <ul role="list" class="formas__lista">
-        {formas.map((f) => (
-          <li>
-            <svg class="icono" viewBox="0 0 40 40" aria-hidden="true" set:html={iconos[f.icono]} />
-            <h3>{f.titulo}</h3>
-            <p>{f.texto}</p>
-          </li>
-        ))}
-      </ul>
     </div>
   </section>
 
@@ -182,13 +109,12 @@ const iconos: Record<string, string> = {
   <section class="seccion comunidad" aria-labelledby="comunidad-titulo">
     <div class="contenedor comunidad__rejilla">
       <div class="comunidad__texto">
-        <p class="etiqueta">Comunidad</p>
         <!-- Frase del banner institucional de la CE -->
         <h2 id="comunidad-titulo" class="titulo-seccion">Conectamos talento, impulsamos desarrollo.</h2>
         <p class="intro">Además de los programas virtuales, llevamos la formación a espacios presenciales con talleres y charlas, como los workshops de inteligencia artificial y de importación.</p>
       </div>
       <figure class="comunidad__foto comunidad__foto--principal">
-        <Picture src={fotoAuditorio} formats={["avif", "webp"]} widths={[640, 960, 1400, 2000]} sizes="(max-width: 860px) 100vw, 58vw" alt="Participantes y equipo de la Cámara de Comercio Exterior en un auditorio lleno al cierre de un evento" />
+        <Picture src={fotoTren} formats={["avif", "webp"]} widths={[640, 1000, 1500, 2000]} sizes="(max-width: 860px) 100vw, 58vw" alt="Equipo de la Cámara de Comercio Exterior en un andén, junto a un tren con el logo de la CE" />
       </figure>
       <figure class="comunidad__foto comunidad__foto--charla">
         <Picture src={fotoCharla} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 860px) 100vw, 33vw" alt="Ponente explicando qué son las IA generativas frente a una proyección" />
@@ -208,19 +134,21 @@ const iconos: Record<string, string> = {
     </div>
   </section>
 
-  <!-- ÁREAS -->
-  <section class="seccion" aria-labelledby="areas-titulo">
-    <div class="contenedor">
-      <p class="etiqueta">Áreas de formación</p>
-      <h2 id="areas-titulo" class="titulo-seccion">Seis áreas, un mismo enfoque práctico</h2>
-      <ul role="list" class="areas">
-        {areas.map((a, i) => (
+  <!-- ÁREAS — directorio, como el letrero de un terminal -->
+  <section class="seccion seccion--suave" aria-labelledby="areas-titulo">
+    <div class="contenedor areas-rejilla">
+      <div>
+        <h2 id="areas-titulo" class="titulo-seccion">Seis áreas, un mismo enfoque práctico.</h2>
+        <p class="intro">Elige un área y mira todos sus programas y cursos.</p>
+      </div>
+      <ul role="list" class="directorio">
+        {areas.map((a) => (
           <li>
-            <a class="area" href={`/programas?area=${a.id}`} style={`--c:${a.color}`}>
-              <span class="numero"><i aria-hidden="true"></i>{dos(i + 1)}</span>
-              <span class="area__nombre">{a.nombre}</span>
-              <span class="area__desc">{a.descripcion}</span>
-              <span class="area__cuenta">{cuenta(a.id)} {cuenta(a.id) === 1 ? "programa" : "programas y cursos"}</span>
+            <a class="directorio__fila" href={`/programas?area=${a.id}`} style={`--c:${a.color}`}>
+              <i aria-hidden="true"></i>
+              <span class="directorio__nombre">{a.nombre}</span>
+              <span class="directorio__cuenta">{cuenta(a.id)} {cuenta(a.id) === 1 ? "programa" : "programas y cursos"}</span>
+              <span class="directorio__ir" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
             </a>
           </li>
         ))}
@@ -228,54 +156,43 @@ const iconos: Record<string, string> = {
     </div>
   </section>
 
-  <!-- EMPRESAS -->
-  <section class="seccion seccion--oscura sobre-oscuro empresas-banda" aria-labelledby="empresas-titulo">
+  <!-- PASOS (secuencia real: por eso van numerados) -->
+  <section class="seccion" aria-labelledby="pasos-titulo">
+    <div class="contenedor">
+      <h2 id="pasos-titulo" class="titulo-seccion">Inscribirte toma tres pasos.</h2>
+      <ol role="list" class="pasos">
+        <li><span class="pasos__n" aria-hidden="true">1</span><h3>Elige tu programa</h3><p>Revisa el temario, la duración y la modalidad en la página de cada programa.</p></li>
+        <li><span class="pasos__n" aria-hidden="true">2</span><h3>Habla con un asesor</h3><p>Por WhatsApp o el formulario: te confirma horarios, inversión vigente y medios de pago.</p></li>
+        <li><span class="pasos__n" aria-hidden="true">3</span><h3>Matricúlate y empieza</h3><p>Recibes tus accesos y te unes a las clases en vivo de tu grupo.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- EMPRESAS — banda amarilla -->
+  <section class="empresas-banda" aria-labelledby="empresas-titulo">
     <div class="contenedor empresas">
+      <h2 id="empresas-titulo" class="titulo-seccion">¿Necesitas capacitar a tu equipo?</h2>
       <div>
-        <p class="etiqueta">Empresas</p>
-        <h2 id="empresas-titulo" class="titulo-seccion">¿Necesitas capacitar a tu equipo?</h2>
-      </div>
-      <div>
-        <p class="intro">Coordinamos programas del catálogo para grupos de colaboradores, con condiciones corporativas. Cuéntanos cuántas personas son y qué necesitan aprender.</p>
+        <p class="empresas__texto">Coordinamos programas del catálogo para grupos de colaboradores, con condiciones corporativas. Cuéntanos cuántas personas son y qué necesitan aprender.</p>
         <div class="acciones">
-          <a class="btn btn--amarillo" href="/empresas">Capacitación para empresas <Flecha /></a>
+          <a class="btn btn--negro" href="/empresas">Capacitación para empresas <Flecha /></a>
           <a class="btn btn--contorno" href={enlaceWhatsapp("Hola, quiero información sobre cursos para empresas y precio corporativo.")} target="_blank" rel="noopener">Escribir por WhatsApp</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PASOS -->
-  <section class="seccion" aria-labelledby="pasos-titulo">
-    <div class="contenedor">
-      <p class="etiqueta">Inscripción</p>
-      <h2 id="pasos-titulo" class="titulo-seccion">Cómo inscribirte</h2>
-      <ol role="list" class="pasos">
-        <li style="--n:0"><span class="pasos__n" data-n="01" aria-hidden="true"></span><h3>Elige tu programa</h3><p>Revisa el temario, la duración y la modalidad en la página de cada programa.</p></li>
-        <li style="--n:1"><span class="pasos__n" data-n="02" aria-hidden="true"></span><h3>Habla con un asesor</h3><p>Por WhatsApp o el formulario: te confirma horarios, inversión vigente y medios de pago.</p></li>
-        <li style="--n:2"><span class="pasos__n" data-n="03" aria-hidden="true"></span><h3>Matricúlate y empieza</h3><p>Recibes tus accesos y te unes a las clases en vivo de tu grupo.</p></li>
-      </ol>
-    </div>
-  </section>
-
   <!-- PREGUNTAS FRECUENTES -->
   <section class="seccion faq" aria-labelledby="faq-titulo">
-    <div class="contenedor">
-      <div class="cabeza">
-        <div>
-          <p class="etiqueta">Preguntas frecuentes</p>
-          <h2 id="faq-titulo" class="titulo-seccion">Resolvemos tus dudas</h2>
-        </div>
-        <div class="faq__contacto">
-          <span>¿Tienes más preguntas?</span>
-          <a class="btn btn--contorno" href="/contacto">Escríbenos <Flecha /></a>
-        </div>
+    <div class="contenedor faq__rejilla">
+      <div>
+        <h2 id="faq-titulo" class="titulo-seccion">Lo que suelen preguntarnos.</h2>
+        <p class="intro">¿Tu duda no está aquí? <a class="enlace" href="/contacto">Escríbenos</a> y te respondemos.</p>
       </div>
       <div class="faq__lista">
-        {preguntas.map((q, i) => (
+        {preguntas.map((q) => (
           <details class="faq__item" name="faq">
             <summary>
-              <span class="numero"><i aria-hidden="true"></i>{dos(i + 1)}</span>
               <span class="faq__pregunta">{q.p}</span>
               <span class="faq__mas" aria-hidden="true"></span>
             </summary>
@@ -289,189 +206,157 @@ const iconos: Record<string, string> = {
 
 <style>
   .acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
-  .cabeza { display: flex; justify-content: space-between; align-items: end; gap: var(--s-5); flex-wrap: wrap; margin-bottom: var(--s-7); }
-  .icono { width: 2.5rem; height: 2.5rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .cabeza { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--s-5) var(--s-7); align-items: end; margin-bottom: var(--s-8); }
 
-  /* Número en etiqueta (▪01): cuadradito de color + dígitos en Montserrat */
-  .numero {
-    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.45rem; border-radius: 2px; background: var(--gris-boton);
-    font-family: var(--font-marca); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; color: var(--gris-oscuro);
-  }
-  .numero i { width: 0.35rem; height: 0.35rem; background: var(--c, var(--negro)); }
+  /* PORTADA */
+  .hero { position: relative; overflow-x: clip; padding-block: clamp(1.5rem, 0.5rem + 3vw, 3.5rem) var(--s-8); }
+  .hero__rejilla { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--s-7); align-items: center; }
+  .hero__titulo { font-size: var(--t-display); letter-spacing: -0.055em; line-height: 0.92; max-width: 9ch; }
+  .hero__sub { margin-top: var(--s-6); font-size: var(--t-lg); line-height: 1.5; color: var(--gris-oscuro); max-width: 44ch; }
 
-  /* HERO */
-  .hero { position: relative; overflow-x: clip; padding-block: clamp(2.5rem, 1rem + 5vw, 5.5rem) var(--s-4); }
-  .hero__rejilla { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: var(--s-7) var(--s-8); align-items: center; }
-  .hero__titulo { font-size: clamp(1.9rem, 1rem + 2.6vw, 3.35rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.12; max-width: 30ch; text-wrap: pretty; }
-  .hero__arco { justify-self: end; width: min(100%, 30rem); aspect-ratio: 1; }
-  .hero__arco svg { width: 100%; height: 100%; overflow: visible; }
-  .hero__ventajas { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6); margin-top: var(--s-6); padding-top: var(--s-6); border-top: 1px dashed var(--gris-claro); }
-  .hero__ventajas li { display: flex; gap: var(--s-4); align-items: start; }
-  .hero__ventajas strong { display: block; font-weight: 600; margin-bottom: 4px; }
-  .hero__ventajas span { display: block; font-size: var(--t-sm); color: var(--gris-oscuro); }
+  /* El abrazo: foto circular dentro del arco de la C */
+  .abrazo { position: relative; width: min(100%, 36rem); aspect-ratio: 1; justify-self: end; }
+  .abrazo__foto { position: absolute; inset: 13%; margin: 0; border-radius: 50%; overflow: hidden; background: var(--bruma); }
+  .abrazo__foto :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+  .abrazo__arco { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   @media (prefers-reduced-motion: no-preference) {
-    .hero__arco-trazo { stroke-dasharray: 100; stroke-dashoffset: 100; animation: trazar 1.6s var(--ease) 0.2s forwards; }
-    .hero__arco-giro { transform-origin: 200px 200px; animation: flotar 9s ease-in-out 1.8s infinite; }
+    .abrazo__arco path { stroke-dasharray: 100; stroke-dashoffset: 100; animation: trazar var(--t-momento) var(--ease) 0.25s forwards; }
+    .abrazo__foto { animation: aparecer 1s var(--ease) both; }
     @keyframes trazar { to { stroke-dashoffset: 0; } }
-    @keyframes flotar { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-14px) rotate(-6deg); } }
-  }
-
-  /* PROGRAMAS */
-  .destacados { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: var(--s-6); align-items: start; }
-  .tarjeta { position: relative; display: block; text-decoration: none; }
-  .tarjeta__visual {
-    position: relative; display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 16 / 10; overflow: hidden;
-    padding: var(--s-5); border-radius: 4px; color: var(--blanco);
-    background: radial-gradient(120% 90% at 50% 120%, rgba(255, 195, 0, 0.55), transparent 60%), linear-gradient(#0a0a0a, #000);
-  }
-  .tarjeta__linea { font-family: var(--font-marca); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amarillo); }
-  .tarjeta__nombre { position: relative; z-index: 1; font-size: clamp(2rem, 1.2rem + 2.4vw, 3.4rem); font-weight: 450; letter-spacing: -0.035em; line-height: 1; max-width: 10ch; }
-  .tarjeta__arco { position: absolute; right: -10%; top: -22%; width: 50%; opacity: 0.95; transition: transform 600ms var(--ease); }
-  .tarjeta:hover .tarjeta__arco { transform: rotate(-12deg); }
-  .tarjeta__meta { display: flex; justify-content: space-between; gap: var(--s-3); margin-top: var(--s-4); }
-  .ficha-tag { font-family: var(--font-marca); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.5rem; border: 1px solid var(--gris-claro); border-radius: 2px; }
-  .tarjeta__resumen { margin-top: var(--s-4); font-size: var(--t-lg); line-height: 1.35; letter-spacing: -0.01em; }
-  .tarjeta__ir, .fila__ir {
-    display: grid; place-items: center; width: 2.25rem; height: 2.25rem; margin-top: var(--s-4); border-radius: 2px;
-    background: var(--negro); color: var(--amarillo); transition: transform 250ms var(--ease);
-  }
-  .tarjeta:hover .tarjeta__ir, .fila:hover .fila__ir { transform: translateX(4px); }
-
-  .filas { display: grid; gap: 2px; }
-  .fila {
-    display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-5); align-items: center;
-    padding: var(--s-4) var(--s-4) var(--s-4) var(--s-4); background: rgba(255, 255, 255, 0.65); border-radius: 3px; text-decoration: none;
-    backdrop-filter: blur(6px); transition: background-color 200ms var(--ease);
-  }
-  .fila:hover { background: rgba(255, 255, 255, 0.95); }
-  .fila__nombre { display: block; font-weight: 500; font-size: var(--t-lg); letter-spacing: -0.015em; line-height: 1.25; }
-  .fila__dato { display: block; margin-top: 2px; font-size: var(--t-sm); color: var(--gris-oscuro); }
-  .fila__ir { margin: 0; }
-
-  /* CAMPAÑA: foto a todo el ancho con panel negro superpuesto y paralaje */
-  .campana { position: relative; padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
-  .campana__foto { margin: 0; height: clamp(22rem, 12rem + 34vw, 46rem); overflow: hidden; background: #ddd; }
-  .campana__foto :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .campana__foto :global(picture) { display: block; height: 100%; animation: paralaje linear both; animation-timeline: view(); animation-range: cover; }
-      @keyframes paralaje { from { transform: translateY(-8%) scale(1.18); } to { transform: translateY(8%) scale(1.18); } }
+    @keyframes aparecer { from { opacity: 0; transform: scale(0.94); } }
+    /* Con el desplazamiento, el arco gira apenas, como un dial */
+    @supports (animation-timeline: scroll()) {
+      .abrazo__arco { animation: dial linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+      @keyframes dial { to { transform: rotate(-28deg); } }
     }
   }
-  .campana__panel {
-    position: relative; margin-top: clamp(-14rem, -6rem - 8vw, -6rem); max-width: 34rem;
-    padding: clamp(1.75rem, 1rem + 2.5vw, 3rem); background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(12px); color: var(--blanco); border-radius: 4px;
+
+  /* Señales: beneficios como placas de un letrero */
+  .senales { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-top: var(--s-8); }
+  .senales li { padding: 0.55rem 0.9rem; border-radius: var(--radio); background: var(--bruma); font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 600; letter-spacing: -0.01em; }
+  .senales li::before { content: ""; display: inline-block; width: 0.55rem; height: 0.55rem; margin-right: 0.55rem; border-radius: 50%; background: var(--amarillo); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15); }
+
+  /* TABLERO */
+  /* Capítulos (tablero y empresas): bloques de color con esquinas suaves, separados del borde de la ventana */
+  .tablero-seccion, .empresas-banda { margin-inline: clamp(0.5rem, 0.2rem + 0.8vw, 1rem); border-radius: var(--radio-l); }
+  .tablero-seccion { background: var(--negro); color: var(--blanco); }
+  .tablero__cabeza, .tablero__fila { display: grid; grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.3fr) minmax(0, 1.1fr) minmax(0, 1.7fr) 3rem; gap: var(--s-5); align-items: center; }
+  .tablero__cabeza { padding: 0 var(--s-5) var(--s-3); font-size: var(--t-xs); color: #a6a6a6; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+  .tablero__filas { perspective: 900px; }
+  .tablero__filas li { border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
+  .tablero__fila {
+    min-height: 6rem; padding: var(--s-4) var(--s-5); border-radius: var(--radio); text-decoration: none; color: var(--blanco);
+    transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease);
   }
-  .campana__titulo { font-size: var(--t-2xl); font-weight: 450; }
-  .campana__texto { margin: var(--s-4) 0 var(--s-6); color: #d9d9d9; }
+  .tablero__nombre { font-family: var(--font-marca); font-size: clamp(1.15rem, 0.9rem + 0.8vw, 1.6rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+  .tablero__dato { font-size: var(--t-sm); color: #d9d9d9; line-height: 1.35; transition: color var(--t-accion) var(--ease); }
+  .tablero__dato i { display: inline-block; width: 0.55rem; height: 0.55rem; margin-right: 0.5rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35); }
+  .tablero__rotulo { display: none; }
+  .tablero__ir { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--amarillo); color: var(--negro); transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease), transform var(--t-accion) var(--ease); }
+  /* Fila elegida: se enciende en amarillo, como el vuelo que buscas en el panel */
+  .tablero__fila:hover, .tablero__fila:focus-visible { background: var(--amarillo); color: var(--negro); }
+  .tablero__fila:hover .tablero__dato, .tablero__fila:focus-visible .tablero__dato { color: var(--negro); }
+  .tablero__fila:hover .tablero__ir, .tablero__fila:focus-visible .tablero__ir { background: var(--negro); color: var(--amarillo); transform: translateX(4px); }
+  .tablero__fila:focus-visible { outline-offset: 2px; }
+  /* Entrada: cada fila gira como una paleta del panel */
+  :global(.efectos) .tablero__filas li[data-revelar] { opacity: 0; transform: rotateX(-80deg); transform-origin: 50% 0; transition: transform 900ms var(--ease), opacity 500ms var(--ease); transition-delay: var(--retraso, 0ms); }
+  :global(.efectos) .tablero__filas li[data-revelar]:global(.visible) { opacity: 1; transform: none; }
+  .tablero__pie { display: flex; justify-content: space-between; align-items: center; gap: var(--s-5); flex-wrap: wrap; margin-top: var(--s-7); }
+  .tablero__pie p { color: #d9d9d9; max-width: 48ch; }
 
-  /* CÓMO ESTUDIAS */
-  .formas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: var(--s-8); align-items: start; }
-  .formas .intro { margin-top: var(--s-5); }
-  .formas__lista { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-7) var(--s-6); }
-  .formas__lista h3 { font-size: var(--t-lg); font-weight: 600; letter-spacing: -0.015em; margin-top: var(--s-4); }
-  .formas__lista p { margin-top: var(--s-2); color: var(--gris-oscuro); font-size: var(--t-sm); }
-
-  /* COMUNIDAD: retícula editorial con fotos reales */
+  /* COMUNIDAD: mosaico de fotos reales */
   .comunidad__rejilla {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4);
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-4);
     grid-template-areas: "texto principal principal" "charla registro kits" "cinta cinta batucada";
   }
-  .comunidad__texto { grid-area: texto; align-self: end; padding: 0 var(--s-5) var(--s-5) 0; }
+  .comunidad__texto { grid-area: texto; align-self: center; padding-right: var(--s-5); }
   .comunidad__texto .intro { margin-top: var(--s-5); }
-  .comunidad__foto { margin: 0; overflow: hidden; border-radius: var(--radio); background: #eee; }
-  .comunidad__foto :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease); }
-  .comunidad__foto:hover :global(img) { transform: scale(1.04); }
-  .comunidad__foto--principal { grid-area: principal; aspect-ratio: 16 / 9; }
+  .comunidad__foto { margin: 0; overflow: hidden; border-radius: var(--radio-l); background: var(--bruma); }
+  .comunidad__foto :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--ease); }
+  .comunidad__foto:hover :global(img) { transform: scale(1.03); }
+  .comunidad__foto--principal { grid-area: principal; aspect-ratio: 16 / 10; }
   .comunidad__foto--charla { grid-area: charla; aspect-ratio: 4 / 3; }
-  .comunidad__foto--charla :global(img) { object-position: 42% 40%; }
   .comunidad__foto--registro { grid-area: registro; aspect-ratio: 4 / 3; }
   .comunidad__foto--kits { grid-area: kits; aspect-ratio: 4 / 3; }
-  /* Última fila: el corte de cinta fija la altura y la batucada se estira para igualarla */
-  .comunidad__foto--cinta { grid-area: cinta; aspect-ratio: 2 / 1; }
-  .comunidad__foto--cinta :global(img) { object-position: 50% 35%; }
-  .comunidad__foto--batucada { grid-area: batucada; }
-  .comunidad__foto--batucada :global(img) { object-position: 0% 50%; }
+  .comunidad__foto--cinta { grid-area: cinta; aspect-ratio: auto; min-height: 22rem; }
+  .comunidad__foto--batucada { grid-area: batucada; aspect-ratio: auto; min-height: 22rem; }
 
-  /* ÁREAS: retícula con líneas punteadas, como la del fondo */
-  .areas { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: var(--s-7); border-top: 1px dashed var(--gris-claro); border-left: 1px dashed var(--gris-claro); }
-  .area {
-    display: grid; gap: var(--s-3); align-content: start; min-height: 14rem; height: 100%;
-    padding: var(--s-5); border-right: 1px dashed var(--gris-claro); border-bottom: 1px dashed var(--gris-claro);
-    text-decoration: none; transition: background-color 250ms var(--ease);
+  /* ÁREAS: directorio */
+  .areas-rejilla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--s-7); align-items: start; }
+  .areas-rejilla .intro { margin-top: var(--s-5); }
+  .directorio { display: grid; gap: var(--s-2); }
+  .directorio__fila {
+    display: grid; grid-template-columns: auto 1fr auto auto; gap: var(--s-4); align-items: center;
+    min-height: 4.5rem; padding: var(--s-3) var(--s-3) var(--s-3) var(--s-5); border-radius: var(--radio); background: var(--blanco); text-decoration: none;
+    transition: background-color var(--t-accion) var(--ease);
   }
-  .area:hover { background: rgba(255, 255, 255, 0.7); }
-  .area .numero { justify-self: start; }
-  .area__nombre { font-weight: 500; font-size: var(--t-xl); letter-spacing: -0.025em; line-height: 1.1; margin-top: var(--s-4); }
-  .area__desc { font-size: var(--t-sm); color: var(--gris-oscuro); }
-  .area__cuenta { font-family: var(--font-marca); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-top: auto; padding-top: var(--s-3); }
-
-  /* EMPRESAS */
-  .empresas-banda { background: radial-gradient(70rem 30rem at 85% 120%, rgba(200, 154, 49, 0.4), transparent 70%), var(--negro); }
-  .empresas { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-7); align-items: end; }
+  .directorio__fila i { width: 0.75rem; height: 0.75rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15); }
+  .directorio__nombre { font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 700; letter-spacing: -0.025em; }
+  .directorio__cuenta { font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .directorio__ir { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--negro); color: var(--amarillo); transition: transform var(--t-accion) var(--ease); }
+  .directorio__fila:hover { background: var(--amarillo); }
+  .directorio__fila:hover .directorio__ir { transform: translateX(4px); }
 
   /* PASOS */
-  .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6); margin-top: var(--s-7); }
-  .pasos li { padding-top: var(--s-5); border-top: 1px dashed var(--gris-claro); }
-  .pasos__n { display: inline-block; font-family: var(--font-marca); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; padding: 0.3rem 0.5rem; background: var(--negro); color: var(--amarillo); border-radius: 2px; margin-bottom: var(--s-5); }
-  /* El número va en un pseudoelemento: es decorativo y no debe evaluarse como texto */
-  .pasos__n::before { content: attr(data-n); }
-  .pasos h3 { font-size: var(--t-xl); font-weight: 500; }
-  .pasos p { margin-top: var(--s-3); color: var(--gris-oscuro); font-size: var(--t-sm); max-width: 32ch; }
-  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
-    .pasos { grid-template-columns: 1fr; gap: var(--s-5); }
-    .pasos li {
-      position: sticky; top: calc(var(--header-h) + 1.5rem + var(--n) * 1.25rem);
-      display: grid; grid-template-columns: 9rem 1fr; column-gap: var(--s-7); align-items: start;
-      min-height: 15rem; padding: var(--s-7); border: 1px solid var(--linea); border-radius: 4px; background: var(--blanco);
-      box-shadow: 0 -12px 40px -28px rgba(0, 0, 0, 0.35);
-    }
-    .pasos li:nth-child(3) { background: var(--negro); color: var(--blanco); border-color: var(--negro); }
-    .pasos li:nth-child(3) p { color: #d9d9d9; }
-    .pasos .pasos__n { grid-row: span 2; justify-self: start; background: none; padding: 0; color: var(--amarillo); font-family: var(--font); font-size: 6.5rem; font-weight: 400; letter-spacing: -0.05em; line-height: 0.8; margin: 0; -webkit-text-stroke: 1.5px var(--negro); }
-    .pasos li:nth-child(3) .pasos__n { -webkit-text-stroke: 0; }
-    .pasos h3 { font-size: var(--t-2xl); }
-    .pasos p { font-size: var(--t-lg); max-width: 40ch; }
-  }
+  .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6); margin-top: var(--s-8); counter-reset: paso; }
+  .pasos li { padding-top: var(--s-5); border-top: 2px solid var(--negro); }
+  .pasos__n { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: var(--s-6); border-radius: 50%; background: var(--amarillo); font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 800; }
+  .pasos h3 { font-size: var(--t-xl); margin-bottom: var(--s-3); }
+  .pasos p { color: var(--gris-oscuro); max-width: 34ch; }
 
-  /* PREGUNTAS FRECUENTES: filas numeradas con «+» negro */
-  .faq__contacto { display: flex; align-items: center; gap: var(--s-4); font-family: var(--font-marca); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-  .faq__lista { display: grid; gap: 2px; margin-left: auto; max-width: 62rem; }
-  .faq__item { background: rgba(255, 255, 255, 0.7); border-radius: 3px; backdrop-filter: blur(6px); }
-  .faq__item summary { display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-5); align-items: center; padding: var(--s-4); cursor: pointer; list-style: none; }
+  /* EMPRESAS: banda amarilla */
+  .empresas-banda { background: var(--amarillo); padding-block: clamp(4rem, 2.5rem + 5vw, 7rem); }
+  .empresas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-7); align-items: end; }
+  .empresas__texto { font-size: var(--t-lg); line-height: 1.5; max-width: 46ch; }
+
+  /* PREGUNTAS FRECUENTES */
+  .faq__rejilla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: var(--s-7); align-items: start; }
+  .faq__rejilla .intro { margin-top: var(--s-5); }
+  .faq__lista { border-top: 1px solid var(--linea); }
+  .faq__item { border-bottom: 1px solid var(--linea); }
+  .faq__item summary { display: grid; grid-template-columns: 1fr auto; gap: var(--s-5); align-items: center; padding: var(--s-5) 0; cursor: pointer; list-style: none; }
   .faq__item summary::-webkit-details-marker { display: none; }
-  .faq__pregunta { font-size: var(--t-lg); font-weight: 500; letter-spacing: -0.015em; }
-  .faq__mas { position: relative; width: 2rem; height: 2rem; border-radius: 2px; background: var(--negro); }
-  .faq__mas::before, .faq__mas::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 2px; background: var(--blanco); transform: translate(-50%, -50%); transition: transform 300ms var(--ease); }
+  .faq__pregunta { font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 700; letter-spacing: -0.025em; line-height: 1.3; }
+  .faq__mas { position: relative; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--bruma); transition: background-color var(--t-accion) var(--ease), transform var(--t-accion) var(--ease); }
+  .faq__mas::before, .faq__mas::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 2px; border-radius: 1px; background: var(--negro); transform: translate(-50%, -50%); transition: transform var(--t-accion) var(--ease); }
   .faq__mas::after { transform: translate(-50%, -50%) rotate(90deg); }
-  .faq__item[open] .faq__mas { background: var(--amarillo); }
-  .faq__item[open] .faq__mas::before, .faq__item[open] .faq__mas::after { background: var(--negro); }
+  .faq__item summary:hover .faq__mas { background: var(--amarillo); }
+  .faq__item[open] .faq__mas { background: var(--amarillo); transform: rotate(180deg); }
   .faq__item[open] .faq__mas::after { transform: translate(-50%, -50%) rotate(0deg); }
-  .faq__item summary:hover .faq__pregunta { text-decoration: underline; text-decoration-color: var(--amarillo); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-  .faq__respuesta { padding: 0 var(--s-4) var(--s-5) calc(var(--s-4) + 3.6rem + var(--s-5)); max-width: 70ch; color: var(--gris-oscuro); }
-
-  @media (max-width: 1100px) {
-    .hero__rejilla { grid-template-columns: 1fr; }
-    .hero__arco { position: absolute; top: 0.5rem; right: -6rem; width: 18rem; z-index: -1; opacity: 0.9; }
-    .destacados, .formas { grid-template-columns: 1fr; gap: var(--s-7); }
-    .areas { grid-template-columns: repeat(2, 1fr); }
+  .faq__respuesta { padding: 0 var(--s-8) var(--s-5) 0; max-width: 62ch; color: var(--gris-oscuro); }
+  /* Apertura suave donde el navegador lo permite */
+  @supports (interpolate-size: allow-keywords) {
+    .faq { interpolate-size: allow-keywords; }
+    .faq__item::details-content { height: 0; overflow: clip; transition: height var(--t-entrada) var(--ease), content-visibility var(--t-entrada) allow-discrete; }
+    .faq__item[open]::details-content { height: auto; }
   }
-  @media (max-width: 860px) {
-    .hero__ventajas { grid-template-columns: 1fr; gap: var(--s-5); }
-    .empresas { grid-template-columns: 1fr; align-items: start; gap: var(--s-5); }
-    .pasos { grid-template-columns: 1fr; }
+
+  @media (max-width: 1000px) {
+    .tablero__cabeza { display: none; }
+    .tablero__fila { grid-template-columns: 1fr 1fr auto; grid-template-areas: "nombre nombre ir" "area duracion ir" "modalidad modalidad ir"; gap: var(--s-2) var(--s-4); padding: var(--s-5) var(--s-3); }
+    .tablero__nombre { grid-area: nombre; margin-bottom: var(--s-2); }
+    .tablero__dato:nth-of-type(2) { grid-area: area; }
+    .tablero__dato:nth-of-type(3) { grid-area: duracion; }
+    .tablero__dato--modalidad { grid-area: modalidad; }
+    .tablero__ir { grid-area: ir; }
+    .tablero__rotulo { display: block; font-size: var(--t-xs); color: #a6a6a6; }
+    .tablero__fila:hover .tablero__rotulo { color: var(--gris-oscuro); }
+  }
+  @media (max-width: 900px) {
+    .hero__rejilla { grid-template-columns: 1fr; gap: var(--s-6); }
+    .abrazo { width: min(84%, 24rem); justify-self: center; }
+    .cabeza, .areas-rejilla, .empresas, .faq__rejilla { grid-template-columns: 1fr; gap: var(--s-5); }
+    .cabeza { margin-bottom: var(--s-6); }
+    .pasos { grid-template-columns: 1fr; gap: var(--s-5); margin-top: var(--s-6); }
     .comunidad__rejilla { grid-template-columns: 1fr 1fr; grid-template-areas: "texto texto" "principal principal" "charla charla" "registro kits" "cinta cinta" "batucada batucada"; gap: var(--s-3); }
     .comunidad__texto { padding: 0 0 var(--s-4); }
-    .comunidad__foto--cinta, .comunidad__foto--batucada { aspect-ratio: 4 / 3; }
-    .campana__panel { margin-top: -3rem; max-width: none; }
+    .comunidad__foto--cinta, .comunidad__foto--batucada { aspect-ratio: 4 / 3; min-height: 0; }
   }
   @media (max-width: 560px) {
-    .hero__arco { width: 13rem; right: -5rem; top: 0; opacity: 0.45; }
-    .areas, .formas__lista { grid-template-columns: 1fr; }
-    .area { min-height: 0; }
+    .hero { padding-bottom: var(--s-7); }
     .acciones .btn { width: 100%; }
-    .faq__respuesta { padding-left: var(--s-4); }
-    .faq__item summary { grid-template-columns: 1fr auto; gap: var(--s-3); }
-    .faq__item summary .numero { display: none; }
+    .senales { margin-top: var(--s-6); }
+    .directorio__cuenta { display: none; }
+    .faq__respuesta { padding-right: 0; }
   }
 </style>

@@ -1,22 +1,22 @@
-/* Sistema visual CE — tokens del Manual de Identidad de Marca (ver docs/plan-diseno.md).
-   Tipografía: grotesca tipo Helvetica (rol de «Helvetica» en el manual) para titulares y texto,
-   y Montserrat (tipografía de marca) para etiquetas, menú y botones. */
+/* Sistema visual CE — «Señal y abrazo» (docs/direccion-creativa.md), dentro del Manual de Identidad de Marca.
+   Montserrat (tipografía de marca) para titulares y pastillas; Inter Tight en el rol de Helvetica para el texto. */
 @import "@fontsource-variable/inter-tight/wght.css";
 @import "@fontsource-variable/montserrat/wght.css";
 
 :root {
   /* Institucionales */
-  --amarillo: #ffc300;
-  --negro: #000000;
-  --blanco: #ffffff;
-  /* Secundarios */
+  --amarillo: #ffc300;   /* Señal */
+  --negro: #000000;      /* Tinta */
+  --blanco: #ffffff;     /* Papel */
+  /* Secundarios del manual */
   --amarillo-60: #ffe180;
   --amarillo-30: #fff0bf;
-  --gris-oscuro: #404040;
+  --gris-oscuro: #404040; /* Grafito */
   --gris: #808080;
   --gris-claro: #bfbfbf;
+  --bruma: #f2f2f2;
   --linea: #e6e6e6;
-  /* Dorado del isologo (solo para el arco metálico y detalles) */
+  /* Dorado del isologo: solo de referencia, no es color de interfaz */
   --dorado-oscuro: #ac581c;
   --dorado: #c89a31;
   --dorado-claro: #d8c362;
@@ -24,14 +24,14 @@
   --font: "Inter Tight Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-marca: "Montserrat Variable", "Montserrat", "Helvetica Neue", Arial, sans-serif;
 
-  /* Escala tipográfica */
+  /* Escala tipográfica (cuarta justa) */
   --t-xs: 0.8125rem;
   --t-sm: 0.9375rem;
   --t-base: 1.0625rem;
   --t-lg: 1.25rem;
-  --t-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
-  --t-2xl: clamp(2.3rem, 1.5rem + 3.2vw, 4.25rem);
-  --t-display: clamp(2.5rem, 1.2rem + 4.4vw, 5.25rem);
+  --t-xl: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  --t-2xl: clamp(2.2rem, 1.4rem + 3vw, 4.25rem);
+  --t-display: clamp(3rem, 1.4rem + 6.4vw, 7.5rem);
 
   /* Espaciado */
   --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
@@ -39,10 +39,16 @@
 
   --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
   --max: 86rem;
+  /* Radios por jerarquía: placas y campos / fotos y paneles / pastillas */
   --radio: 0.375rem;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --header-h: 5.25rem;
-  --gris-boton: rgba(0, 0, 0, 0.07);
+  --radio-l: 1.5rem;
+  /* Movimiento: una curva, tres tiempos */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-accion: 240ms;
+  --t-entrada: 700ms;
+  --t-momento: 1400ms;
+  --header-h: 5rem;
+  --gris-boton: var(--bruma);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -54,23 +60,20 @@ body {
   font-size: var(--t-base);
   line-height: 1.55;
   color: var(--negro);
-  /* Atmósfera: brillo dorado arriba que se disuelve en blanco */
-  background:
-    radial-gradient(70rem 42rem at 78% -12rem, rgba(255, 195, 0, 0.30), transparent 70%),
-    radial-gradient(60rem 36rem at -10% -8rem, rgba(255, 225, 128, 0.32), transparent 70%),
-    linear-gradient(#fffbef, var(--blanco) 46rem);
-  background-color: var(--blanco);
+  background: var(--blanco);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 img, svg { display: block; max-width: 100%; }
-h1, h2, h3, h4 { margin: 0; line-height: 1.04; letter-spacing: -0.035em; font-weight: 500; text-wrap: balance; }
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-marca); line-height: 1.02; letter-spacing: -0.04em; font-weight: 800; text-wrap: balance; }
+h3, h4 { letter-spacing: -0.025em; font-weight: 700; line-height: 1.15; }
 p { margin: 0; text-wrap: pretty; }
 a { color: inherit; }
 ul[role="list"], ol[role="list"] { list-style: none; margin: 0; padding: 0; }
 button, input, select, textarea { font: inherit; color: inherit; }
+::selection { background: var(--amarillo); color: var(--negro); }
 
-:focus-visible { outline: 3px solid var(--negro); outline-offset: 3px; border-radius: 2px; }
+:focus-visible { outline: 3px solid var(--negro); outline-offset: 3px; border-radius: 4px; }
 .sobre-oscuro :focus-visible { outline-color: var(--amarillo); }
 
 .contenedor { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
@@ -80,39 +83,25 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .saltar {
   position: absolute; left: var(--s-4); top: -100px; z-index: 100;
-  background: var(--negro); color: var(--blanco); padding: var(--s-3) var(--s-4); border-radius: var(--radio);
+  background: var(--negro); color: var(--blanco); padding: var(--s-3) var(--s-4); border-radius: 999px;
 }
 .saltar:focus { top: var(--s-4); }
 
-/* Retícula de líneas punteadas detrás del contenido (4 columnas; 2 en móvil) */
-.reticula { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-.reticula__cols { display: grid; grid-template-columns: repeat(4, 1fr); height: 100%; }
-.reticula__cols span { border-left: 1px dashed rgba(0, 0, 0, 0.08); }
-.reticula__cols span:last-child { border-right: 1px dashed rgba(0, 0, 0, 0.08); }
-@media (max-width: 760px) { .reticula__cols { grid-template-columns: repeat(2, 1fr); } .reticula__cols span:nth-child(n + 3) { display: none; } .reticula__cols span:nth-child(2) { border-right: 1px dashed rgba(0, 0, 0, 0.08); } }
-
-/* Velo superior: el contenido se desenfoca al pasar bajo la cabecera */
-.velo {
-  position: fixed; top: 0; left: 0; right: 0; height: 7.5rem; z-index: 40; pointer-events: none;
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  -webkit-mask-image: linear-gradient(#000 35%, transparent); mask-image: linear-gradient(#000 35%, transparent);
-}
-
 /* Secciones: ritmo vertical */
-.seccion { padding-block: clamp(3.5rem, 2rem + 4.5vw, 6rem); }
-.seccion--suave { background: rgba(255, 249, 232, 0.55); }
+.seccion { padding-block: clamp(4rem, 2.5rem + 5vw, 7.5rem); }
+.seccion--suave { background: var(--bruma); }
 .seccion--oscura { background: var(--negro); color: var(--blanco); }
 
-/* Etiqueta de sección: cuadradito amarillo + mayúsculas espaciadas (Montserrat) */
-.etiqueta {
-  display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: var(--s-5);
-  font-family: var(--font-marca); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+/* Placa: rótulo de señalética en minúsculas de frase. Orienta; no se pone sobre cada título. */
+.etiqueta, .placa {
+  display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: var(--s-5);
+  padding: 0.3rem 0.6rem; border-radius: var(--radio); background: var(--amarillo); color: var(--negro);
+  font-family: var(--font-marca); font-size: var(--t-xs); font-weight: 700; letter-spacing: -0.005em; line-height: 1.3;
 }
-.etiqueta::before { content: ""; width: 0.45rem; height: 0.45rem; background: var(--amarillo); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12); }
 
-.titulo-seccion { font-size: var(--t-2xl); max-width: 20ch; font-weight: 450; }
-.intro { font-size: var(--t-lg); color: var(--gris-oscuro); max-width: 52ch; line-height: 1.5; }
-.seccion--oscura .intro { color: #d9d9d9; }
+.titulo-seccion { font-size: var(--t-2xl); max-width: 18ch; }
+.intro { font-size: var(--t-lg); color: var(--gris-oscuro); max-width: 50ch; line-height: 1.5; }
+.seccion--oscura .intro, .sobre-oscuro .intro { color: #d9d9d9; }
 
 /* Resaltado amarillo del manual: solo para una idea clave por página */
 .resalte {
@@ -120,58 +109,49 @@ button, input, select, textarea { font: inherit; color: inherit; }
   padding-inline: 0.12em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
 }
 
-/* Botones: rectangulares, en mayúsculas, con la flecha en un cuadrito contiguo.
-   El fondo del texto se pinta solo hasta el cuadrito, dejando 2px de separación. */
+/* Pastilla del manual (6.1): negra con círculo amarillo y flecha. La flecha avanza al pasar el cursor. */
 .btn {
-  --alto: 2.85rem; --fondo: var(--gris-boton); --texto: var(--negro); --fondo-flecha: rgba(0, 0, 0, 0.12); --texto-flecha: var(--negro);
-  display: inline-flex; align-items: center; justify-content: space-between;
-  min-height: var(--alto); padding: 0 1.15rem; border: 0; border-radius: 2px; cursor: pointer;
-  background: linear-gradient(var(--fondo), var(--fondo)) no-repeat left / calc(100% - var(--ancho-flecha, 0px)) 100%;
-  color: var(--texto); text-decoration: none;
-  font-family: var(--font-marca); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
-  transition: filter 200ms var(--ease);
+  --alto: 3.25rem; --fondo: var(--bruma); --texto: var(--negro); --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); --borde: transparent;
+  display: inline-flex; align-items: center; justify-content: space-between; gap: var(--s-4);
+  min-height: var(--alto); padding: 0 1.5rem; border: 1.5px solid var(--borde); border-radius: 999px; cursor: pointer;
+  background: var(--fondo); color: var(--texto); text-decoration: none;
+  font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700; letter-spacing: -0.01em; line-height: 1.2;
+  transition: background-color var(--t-accion) var(--ease), border-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease);
 }
-.btn:has(.btn__flecha) { --ancho-flecha: calc(var(--alto) + 2px); padding-right: 0; }
+.btn:has(.btn__flecha) { padding-right: 0.4rem; }
 .btn__flecha {
-  display: grid; place-items: center; flex: none; width: var(--alto); height: var(--alto); margin-left: calc(1.15rem + 2px);
-  background: var(--fondo-flecha); color: var(--texto-flecha); border-radius: 2px;
+  display: grid; place-items: center; flex: none; width: calc(var(--alto) - 0.8rem); height: calc(var(--alto) - 0.8rem);
+  border-radius: 50%; background: var(--fondo-flecha); color: var(--texto-flecha); overflow: hidden;
 }
-.btn__flecha svg { transition: transform 250ms var(--ease); }
-.btn:hover { filter: brightness(0.93); }
+.btn__flecha svg { transition: transform var(--t-accion) var(--ease); }
 .btn:hover .btn__flecha svg { transform: translateX(3px); }
 .btn:active { transform: translateY(1px); }
 .btn--negro { --fondo: var(--negro); --texto: var(--blanco); --fondo-flecha: var(--amarillo); --texto-flecha: var(--negro); }
-.btn--negro:hover { filter: none; --fondo: #262626; }
+.btn--negro:hover { --fondo: #262626; }
 .btn--amarillo { --fondo: var(--amarillo); --texto: var(--negro); --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); }
-.sobre-oscuro .btn--amarillo { --fondo-flecha: var(--amarillo-60); --texto-flecha: var(--negro); }
-.sobre-oscuro .btn--contorno { --fondo: rgba(255, 255, 255, 0.12); --texto: var(--blanco); --fondo-flecha: rgba(255, 255, 255, 0.2); --texto-flecha: var(--blanco); }
+.btn--amarillo:hover { --fondo: #ffd240; }
+.btn--contorno { --fondo: transparent; --borde: var(--negro); }
+.btn--contorno:hover { --fondo: var(--negro); --texto: var(--blanco); --fondo-flecha: var(--amarillo); --texto-flecha: var(--negro); }
+.sobre-oscuro .btn--contorno { --borde: rgba(255, 255, 255, 0.5); --texto: var(--blanco); --fondo-flecha: var(--blanco); --texto-flecha: var(--negro); }
+.sobre-oscuro .btn--contorno:hover { --fondo: var(--blanco); --texto: var(--negro); --borde: var(--blanco); --fondo-flecha: var(--amarillo); }
+.sobre-oscuro .btn--amarillo { --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); }
 .btn[aria-disabled="true"], .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
-.enlace { font-weight: 600; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.25em; text-decoration-color: var(--amarillo); }
+.enlace { font-weight: 600; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.25em; text-decoration-color: var(--amarillo); transition: text-decoration-color var(--t-accion) var(--ease); }
 .enlace:hover { text-decoration-color: currentColor; }
 
-/* EFECTOS (scripts/efectos.ts). Solo existen con la clase .efectos, que se omite con prefers-reduced-motion. */
-.palabra { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+/* MOVIMIENTO (scripts/efectos.ts). Solo existe con la clase .efectos, que se omite con prefers-reduced-motion. */
+.palabra { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.12em; margin-bottom: -0.12em; }
 .palabra__in { display: inline-block; }
-.efectos .revelable .palabra__in { transform: translateY(108%); transition: transform 900ms var(--ease) calc(var(--i, 0) * 35ms); }
+.efectos .revelable .palabra__in { transform: translateY(110%); transition: transform var(--t-entrada) var(--ease) calc(var(--i, 0) * 40ms); }
 .efectos .revelable.visible .palabra__in { transform: none; }
-/* Texto que aparece desde un desenfoque */
-.efectos .revelable-texto { opacity: 0; filter: blur(10px); transform: translateY(12px); transition: opacity 900ms var(--ease), filter 900ms var(--ease), transform 900ms var(--ease); transition-delay: var(--retraso, 0ms); }
-.efectos .revelable-texto.visible { opacity: 1; filter: none; transform: none; }
-/* Títulos que se «descifran»: los caracteres provisionales se muestran en gris */
-.descifrando { color: var(--gris); }
-/* Imágenes: cortina que sube y leve zoom de salida */
-.efectos .revelable--imagen { clip-path: inset(18% 0 0 0 round var(--radio)); transition: clip-path 1.2s var(--ease); }
-.efectos .revelable--imagen img { transform: scale(1.14); transition: transform 1.6s var(--ease); }
-.efectos .revelable--imagen.visible { clip-path: inset(0 0 0 0 round var(--radio)); }
-.efectos .revelable--imagen.visible img { transform: none; }
-.efectos [data-revelar] { opacity: 0; transform: translateY(16px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+.efectos [data-revelar] { opacity: 0; transform: translateY(16px); transition: opacity var(--t-entrada) var(--ease), transform var(--t-entrada) var(--ease); transition-delay: var(--retraso, 0ms); }
 .efectos [data-revelar].visible { opacity: 1; transform: none; }
 /* Cabecera que se oculta al bajar */
-.efectos .cabecera { transition: transform 350ms var(--ease); }
+.efectos .cabecera { transition: transform 350ms var(--ease), background-color var(--t-accion) var(--ease), box-shadow var(--t-accion) var(--ease); }
 .efectos .cabecera.oculta { transform: translateY(-110%); }
 
 /* Cabecera de páginas internas */
 .encabezado-pagina { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--s-6); }
-.titulo-pagina { font-size: clamp(2.5rem, 1.4rem + 4.2vw, 5rem); font-weight: 450; letter-spacing: -0.045em; line-height: 0.98; max-width: 18ch; }
+.titulo-pagina { font-size: clamp(2.6rem, 1.4rem + 4.6vw, 5.5rem); letter-spacing: -0.045em; line-height: 0.98; max-width: 16ch; }
 .encabezado-pagina .intro { margin-top: var(--s-5); }

@@ -4,14 +4,20 @@ import { programas } from "../data/programas";
 const anio = new Date().getFullYear();
 ---
 <footer class="pie sobre-oscuro">
-  <div class="contenedor pie__rejilla">
+  <!-- Llamada final, abrazada por el arco amarillo del manual que entra desde abajo -->
+  <div class="contenedor pie__llamada">
+    <svg class="pie__arco" viewBox="0 0 400 400" aria-hidden="true"><path d="M 327.3 72.7 A 180 180 0 1 0 327.3 327.3" fill="none" stroke="var(--amarillo)" stroke-width="40" /></svg>
+    <p class="pie__frase">Tu siguiente paso empieza con una conversación.</p>
+    <p class="pie__apoyo">Un asesor te ayuda a elegir el programa y te confirma horarios e inversión vigente.</p>
+    <a class="btn btn--amarillo" href={enlaceWhatsapp("Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.")} target="_blank" rel="noopener">
+      Escribir por WhatsApp
+      <span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
+    </a>
+  </div>
+
+  <div class="contenedor"><div class="pie__rejilla">
     <div class="pie__marca">
-      <img src="/brand/imagotipo-blanco.svg" alt="Cámara de Comercio Exterior" width="184" height="120" />
-      <p class="pie__frase">¿Listo para dar el siguiente paso?</p>
-      <a class="btn btn--amarillo" href={enlaceWhatsapp("Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.")} target="_blank" rel="noopener">
-        Escribir por WhatsApp
-        <span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
-      </a>
+      <img src="/brand/imagotipo-blanco.svg" alt="Cámara de Comercio Exterior" width="184" height="120" loading="lazy" />
     </div>
 
     <nav aria-label="Sitio">
@@ -39,52 +45,37 @@ const anio = new Date().getFullYear();
         </li>
         <li><a href="/contacto">Formulario de contacto</a></li>
       </ul>
-      <a class="pie__arriba" href="#contenido">
-        <span>Volver arriba</span>
-        <span class="pie__arriba-icono" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 12V3M3 6.5 7 2.5l4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
-      </a>
     </div>
-  </div>
+  </div></div>
 
-  <div class="contenedor pie__legal">
+  <div class="contenedor"><div class="pie__legal">
     <p>© {anio} {sitio.nombre} ({sitio.sigla}). Todos los derechos reservados.</p>
-  </div>
-
-  <!-- Lema de la campaña «Educación continua» en gran formato, recortado por el borde -->
-  <p class="pie__lema" aria-hidden="true">Aprende, certifícate y avanza</p>
+    <a class="pie__arriba" href="#contenido">Volver arriba</a>
+  </div></div>
 </footer>
 
 <style>
-  .pie {
-    position: relative; overflow: hidden; color: var(--blanco); padding-top: var(--s-8);
-    background:
-      radial-gradient(60rem 30rem at 50% 115%, rgba(200, 154, 49, 0.55), transparent 70%),
-      radial-gradient(40rem 22rem at 90% 100%, rgba(255, 195, 0, 0.18), transparent 70%),
-      linear-gradient(#111, var(--negro) 40%);
-  }
-  .pie__rejilla { position: relative; display: grid; grid-template-columns: 1.4fr 1fr 1.4fr 1.1fr; gap: var(--s-7) var(--s-6); }
-  .pie__marca img { width: 152px; height: auto; margin-bottom: var(--s-5); }
-  .pie__frase { font-size: var(--t-xl); font-weight: 450; letter-spacing: -0.025em; margin-bottom: var(--s-5); max-width: 16ch; line-height: 1.15; }
-  .pie__titulo { font-family: var(--font-marca); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amarillo); margin-bottom: var(--s-4); }
+  .pie { position: relative; overflow: hidden; border-radius: var(--radio-l) var(--radio-l) 0 0; background: var(--negro); color: var(--blanco); padding-top: clamp(5rem, 3rem + 6vw, 9rem); }
+  .pie__llamada { position: relative; display: grid; justify-items: start; gap: var(--s-5); padding-bottom: clamp(5rem, 3rem + 6vw, 8rem); }
+  .pie__frase { position: relative; max-width: 12ch; font-family: var(--font-marca); font-size: clamp(2.6rem, 1.4rem + 4.4vw, 6rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.95; }
+  .pie__apoyo { position: relative; max-width: 40ch; font-size: var(--t-lg); color: #d9d9d9; }
+  /* El arco abraza la llamada desde la derecha; es decorativo y queda detrás del texto */
+  .pie__arco { position: absolute; right: -3rem; top: 50%; width: min(30rem, 36vw); pointer-events: none; transform: translateY(-58%) rotate(180deg); }
+
+  .pie__rejilla { position: relative; display: grid; grid-template-columns: 1.2fr 1fr 1.4fr 1.1fr; gap: var(--s-7) var(--s-6); padding-block: var(--s-7); border-top: 1px solid rgba(255, 255, 255, 0.16); }
+  .pie__marca img { width: 152px; height: auto; }
+  .pie__titulo { font-size: var(--t-xs); color: #a6a6a6; margin-bottom: var(--s-4); }
   .pie ul { display: grid; gap: var(--s-2); }
-  .pie ul a { text-decoration: none; font-size: var(--t-sm); color: #e6e6e6; }
-  .pie ul a:hover { color: var(--blanco); text-decoration: underline; text-decoration-color: var(--amarillo); text-underline-offset: 4px; }
-  .pie__arriba {
-    display: inline-flex; align-items: stretch; gap: 2px; margin-top: var(--s-6); text-decoration: none;
-    font-family: var(--font-marca); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  .pie ul a { text-decoration: none; font-size: var(--t-sm); color: #f2f2f2; text-underline-offset: 4px; }
+  .pie ul a:hover { text-decoration: underline; text-decoration-color: var(--amarillo); text-decoration-thickness: 2px; }
+  .pie__legal { display: flex; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; padding-block: var(--s-5) var(--s-6); border-top: 1px solid rgba(255, 255, 255, 0.16); font-size: var(--t-xs); color: #a6a6a6; }
+  .pie__arriba { color: #f2f2f2; text-underline-offset: 4px; text-decoration-color: var(--amarillo); }
+  @media (max-width: 900px) {
+    .pie__rejilla { grid-template-columns: 1fr 1fr; } .pie__marca { grid-column: 1 / -1; }
+    /* En pantallas angostas el arco se vuelve una «C» pequeña sobre la frase */
+    .pie__arco { position: static; width: 5.5rem; transform: none; }
   }
-  .pie__arriba > span { display: grid; place-items: center; min-height: 2.5rem; padding: 0 0.9rem; background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
-  .pie__arriba-icono { width: 2.5rem; padding: 0 !important; }
-  .pie__arriba:hover > span { background: rgba(255, 255, 255, 0.18); }
-  .pie__legal { position: relative; margin-top: var(--s-8); }
-  .pie__legal p { padding-top: var(--s-4); border-top: 1px dashed rgba(255, 255, 255, 0.18); font-family: var(--font-marca); font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a6a6a6; }
-  .pie__lema {
-    margin: var(--s-5) 0 -0.24em; padding-inline: var(--gutter); white-space: nowrap; text-align: center;
-    font-size: clamp(1.6rem, 6.2vw, 8.4rem); font-weight: 500; letter-spacing: -0.05em; line-height: 1;
-    background: linear-gradient(180deg, #fff6d6 0%, var(--dorado-claro) 35%, var(--dorado) 60%, rgba(172, 88, 28, 0.15) 100%);
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    user-select: none;
+  @media (max-width: 520px) {
+    .pie__rejilla { grid-template-columns: 1fr; }
   }
-  @media (max-width: 900px) { .pie__rejilla { grid-template-columns: 1fr 1fr; } .pie__marca { grid-column: 1 / -1; } }
-  @media (max-width: 520px) { .pie__rejilla { grid-template-columns: 1fr; } }
 </style>
