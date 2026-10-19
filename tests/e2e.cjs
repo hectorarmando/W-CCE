@@ -57,7 +57,7 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
       ok(`${id}: campos con label`, info.inputsSinLabel === 0, info.inputsSinLabel);
       if (v.n === "escritorio") {
         ok(`${ruta}: title y description`, info.titulo.length > 10 && info.desc.length >= 70 && info.desc.length <= 170, `${info.titulo} | ${info.desc.length} car.`);
-        ok(`${ruta}: canonical y og:image`, info.canonical.startsWith("https://www.camaracomercioexterior.org") && info.og.endsWith(".png"), info.canonical);
+        ok(`${ruta}: canonical y og:image`, info.canonical.startsWith("https://www.camaracomercioexterior.org") && /\.(png|jpe?g)$/.test(info.og), info.canonical);
       }
       info.enlaces.forEach((h) => enlaces.add(h));
       await page.screenshot({ path: path.join(OUT, `${v.n}${ruta === "/" ? "_inicio" : ruta.replace(/\//g, "_")}.png`), fullPage: true });
@@ -91,13 +91,13 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
 
   await page.goto(BASE + "/programas?area=ia");
   const visiblesIA = await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).length);
-  ok("filtro por URL (?area=ia)", visiblesIA === 1, visiblesIA);
+  ok("filtro por URL (?area=ia)", visiblesIA === 3, visiblesIA);
   await page.click('[data-filtros] button[data-area="datos"]');
   const visiblesDatos = await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.area));
   ok("filtro por botón (datos)", visiblesDatos.length > 0 && visiblesDatos.every((a) => a === "datos"), visiblesDatos.length);
   ok("filtro actualiza la URL", page.url().includes("area=datos"), page.url());
   await page.click('[data-filtros] button[data-area="todas"]');
-  ok("filtro Todas restablece", (await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).length)) === 19);
+  ok("filtro Todas restablece", (await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).length)) === 23);
 
   // Formulario: validación
   await page.goto(BASE + "/contacto?programa=power-bi");

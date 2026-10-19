@@ -85,15 +85,18 @@ const preguntas = [
 
       <div class="tablero">
         <div class="tablero__cabeza" aria-hidden="true">
-          <span>Programa</span><span>Área</span><span>Duración</span><span>Modalidad</span><span></span>
+          <span></span><span>Programa</span><span>Área</span><span>Duración</span><span>Modalidad</span><span></span>
         </div>
         <ol role="list" class="tablero__filas">
           {programas.map((p) => (
             <li data-revelar>
               <a class="tablero__fila" href={`/programas/${p.slug}`} style={`--c:${p.color ?? areaPorId[p.area].color}`}>
+                <span class="tablero__portada">
+                  {p.imagen && <Picture src={p.imagen} formats={["avif", "webp"]} widths={[240, 480]} sizes="(max-width: 1000px) 40vw, 9rem" alt="" />}
+                </span>
                 <span class="tablero__nombre">{p.nombre}</span>
-                <span class="tablero__dato"><span class="tablero__rotulo">Área</span><i aria-hidden="true"></i>{areaPorId[p.area].nombre}</span>
-                <span class="tablero__dato"><span class="tablero__rotulo">Duración</span>{dato(p, "Duración") ?? "Consulta con un asesor"}</span>
+                <span class="tablero__dato tablero__dato--area"><span class="tablero__rotulo">Área</span><i aria-hidden="true"></i>{areaPorId[p.area].nombre}</span>
+                <span class="tablero__dato tablero__dato--duracion"><span class="tablero__rotulo">Duración</span>{dato(p, "Duración") ?? "Consulta con un asesor"}</span>
                 <span class="tablero__dato tablero__dato--modalidad"><span class="tablero__rotulo">Modalidad</span>{dato(p, "Modalidad")}</span>
                 <span class="tablero__ir"><span class="sr-only">Ver temario</span><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
               </a>
@@ -269,7 +272,11 @@ const preguntas = [
   /* Capítulos (tablero y empresas): bloques de color con esquinas suaves, separados del borde de la ventana */
   .tablero-seccion, .empresas-banda { margin-inline: clamp(0.5rem, 0.2rem + 0.8vw, 1rem); border-radius: var(--radio-l); }
   .tablero-seccion { background: var(--negro); color: var(--blanco); }
-  .tablero__cabeza, .tablero__fila { display: grid; grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.3fr) minmax(0, 1.1fr) minmax(0, 1.7fr) 3rem; gap: var(--s-5); align-items: center; }
+  .tablero__cabeza, .tablero__fila { display: grid; grid-template-columns: 9rem minmax(0, 2.4fr) minmax(0, 1.3fr) minmax(0, 1.1fr) minmax(0, 1.7fr) 3rem; gap: var(--s-5); align-items: center; }
+  /* Miniatura de la portada oficial; si un programa aún no tiene portada, queda un bloque con el color de su área */
+  .tablero__portada { display: block; aspect-ratio: 16 / 9; border-radius: var(--radio); overflow: hidden; background: linear-gradient(135deg, var(--c), #000 85%); }
+  .tablero__portada :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale 600ms var(--ease); }
+  .tablero__fila:hover .tablero__portada :global(img) { scale: 1.06; }
   .tablero__cabeza { padding: 0 var(--s-5) var(--s-3); font-size: var(--t-xs); color: #a6a6a6; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
   .tablero__filas { perspective: 900px; }
   .tablero__filas li { border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
@@ -370,10 +377,11 @@ const preguntas = [
 
   @media (max-width: 1000px) {
     .tablero__cabeza { display: none; }
-    .tablero__fila { grid-template-columns: 1fr 1fr auto; grid-template-areas: "nombre nombre ir" "area duracion ir" "modalidad modalidad ir"; gap: var(--s-2) var(--s-4); padding: var(--s-5) var(--s-3); }
+    .tablero__fila { grid-template-columns: 1fr 1fr auto; grid-template-areas: "portada portada portada" "nombre nombre ir" "area duracion ir" "modalidad modalidad ir"; gap: var(--s-2) var(--s-4); padding: var(--s-5) var(--s-3); }
+    .tablero__portada { grid-area: portada; margin-bottom: var(--s-3); }
     .tablero__nombre { grid-area: nombre; margin-bottom: var(--s-2); }
-    .tablero__dato:nth-of-type(2) { grid-area: area; }
-    .tablero__dato:nth-of-type(3) { grid-area: duracion; }
+    .tablero__dato--area { grid-area: area; }
+    .tablero__dato--duracion { grid-area: duracion; }
     .tablero__dato--modalidad { grid-area: modalidad; }
     .tablero__ir { grid-area: ir; }
     .tablero__rotulo { display: block; font-size: var(--t-xs); color: #a6a6a6; }

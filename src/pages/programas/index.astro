@@ -2,15 +2,16 @@
 import Base from "../../layouts/Base.astro";
 import { areas, programas, cursos, areaPorId } from "../../data/programas";
 import { enlaceWhatsapp } from "../../data/sitio";
+import { Picture } from "astro:assets";
 
 const items = [
   ...programas.map((p) => ({
-    nombre: p.nombre, area: p.area, color: p.color ?? areaPorId[p.area].color, resumen: p.resumen,
+    nombre: p.nombre, area: p.area, color: p.color ?? areaPorId[p.area].color, resumen: p.resumen, imagen: p.imagen,
     meta: p.datos.slice(0, 2).map((d) => d.valor).join(" / "),
     href: `/programas/${p.slug}`, externo: false, accion: "Ver temario",
   })),
   ...cursos.map((c) => ({
-    nombre: c.nombre, area: c.area, color: c.color ?? areaPorId[c.area].color, resumen: c.resumen,
+    nombre: c.nombre, area: c.area, color: c.color ?? areaPorId[c.area].color, resumen: c.resumen, imagen: c.imagen,
     meta: "Consulta temario, horarios e inversión",
     href: enlaceWhatsapp(`Hola, quiero información del curso de ${c.nombre}.`), externo: true, accion: "Consultar",
   })),
@@ -37,15 +38,21 @@ const items = [
       <p class="sr-only" aria-live="polite" data-estado></p>
 
       <ul role="list" class="lista" data-lista>
-        {items.map((it) => (
+        {items.map((it, n) => (
           <li data-area={it.area} style={`--c:${it.color}`}>
-            <a class="item" href={it.href} {...(it.externo ? { target: "_blank", rel: "noopener" } : {})}>
-              <span class="item__barra" aria-hidden="true"></span>
-              <span class="item__area">{areaPorId[it.area].nombre}</span>
-              <span class="item__nombre">{it.nombre}</span>
-              <span class="item__resumen">{it.resumen}</span>
-              <span class="item__meta">{it.meta}</span>
-              <span class="item__accion">{it.accion}{it.externo && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}</span>
+            <a class="tarjeta" href={it.href} {...(it.externo ? { target: "_blank", rel: "noopener" } : {})}>
+              <span class="tarjeta__portada">
+                {it.imagen
+                  ? <Picture src={it.imagen} formats={["avif", "webp"]} widths={[400, 640, 960]} sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 420px" loading={n < 3 ? "eager" : "lazy"} alt="" />
+                  : <span class="tarjeta__sin" aria-hidden="true">{it.nombre}</span>}
+              </span>
+              <span class="tarjeta__cuerpo">
+                <span class="tarjeta__area"><i aria-hidden="true"></i>{areaPorId[it.area].nombre}</span>
+                <span class="tarjeta__nombre">{it.nombre}</span>
+                <span class="tarjeta__resumen">{it.resumen}</span>
+                <span class="tarjeta__meta">{it.meta}</span>
+                <span class="tarjeta__accion">{it.accion}{it.externo && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}<span class="tarjeta__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></span>
+              </span>
             </a>
           </li>
         ))}
@@ -68,35 +75,36 @@ const items = [
   .filtros span { font-size: var(--t-xs); color: var(--gris-oscuro); font-weight: 700; }
   .filtros button[aria-pressed="true"] span { color: var(--amarillo); }
 
-  .lista { border-top: 1px solid var(--negro); }
-  .item {
-    display: grid; grid-template-columns: 6px minmax(10rem, 0.9fr) minmax(0, 1.6fr) minmax(0, 1.3fr) auto;
-    grid-template-areas: "barra nombre resumen meta accion" "barra area resumen meta accion";
-    column-gap: var(--s-5); row-gap: 4px; align-items: center;
-    padding: var(--s-5) 0; border-bottom: 1px solid var(--linea); text-decoration: none;
-    transition: background-color 200ms var(--ease);
+  /* Catálogo en tarjetas: la portada oficial arriba y los datos abajo; toda la tarjeta es un enlace */
+  .lista { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6) var(--s-5); }
+  .lista li[hidden] { display: none; }
+  .tarjeta { display: flex; flex-direction: column; height: 100%; text-decoration: none; }
+  .tarjeta__portada { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; background: var(--negro); }
+  .tarjeta__portada :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale 900ms var(--ease); }
+  .tarjeta:hover .tarjeta__portada :global(img) { scale: 1.04; }
+  /* Sin portada todavía: bloque negro con el color del área y el nombre, en el lenguaje de las portadas */
+  .tarjeta__sin {
+    display: flex; align-items: flex-end; height: 100%; padding: var(--s-5);
+    background: radial-gradient(90% 120% at 100% 0%, color-mix(in srgb, var(--c) 70%, transparent), transparent 60%), var(--negro);
+    color: var(--blanco); font-family: var(--font-marca); font-size: clamp(1.4rem, 1rem + 1.2vw, 2rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1;
   }
-  .item:hover { background: #fafafa; }
-  .item__barra { grid-area: barra; align-self: stretch; background: var(--c); border-radius: 3px; }
-  .item__nombre { grid-area: nombre; font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.015em; line-height: 1.25; }
-  .item__area { grid-area: area; font-size: var(--t-xs); color: var(--gris-oscuro); }
-  .item__resumen { grid-area: resumen; font-size: var(--t-sm); color: var(--gris-oscuro); }
-  .item__meta { grid-area: meta; font-size: var(--t-sm); font-weight: 600; }
-  .item__accion {
-    grid-area: accion; font-size: var(--t-sm); font-weight: 700; padding: 0.5rem 1rem; border-radius: 999px;
-    border: 1.5px solid var(--negro); white-space: nowrap; transition: all 150ms var(--ease);
+  .tarjeta__cuerpo { display: flex; flex-direction: column; gap: var(--s-2); flex: 1; padding: var(--s-4) var(--s-2) 0; }
+  .tarjeta__area { display: inline-flex; align-items: center; gap: 0.45rem; font-size: var(--t-xs); color: var(--gris-oscuro); }
+  .tarjeta__area i { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15); }
+  .tarjeta__nombre { font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
+  .tarjeta__resumen { font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .tarjeta__meta { font-size: var(--t-xs); font-weight: 600; }
+  .tarjeta__accion {
+    display: inline-flex; align-items: center; gap: var(--s-3); align-self: flex-start; margin-top: auto; padding-top: var(--s-3);
+    font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700;
   }
-  .item:hover .item__accion { background: var(--negro); color: var(--blanco); }
+  .tarjeta__flecha { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--negro); color: var(--amarillo); transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease), transform var(--t-accion) var(--ease); }
+  .tarjeta:hover .tarjeta__flecha, .tarjeta:focus-visible .tarjeta__flecha { background: var(--amarillo); color: var(--negro); transform: translateX(4px); }
+  .tarjeta:focus-visible { outline-offset: 6px; border-radius: var(--radio-l); }
   .vacio { padding: var(--s-7) 0; font-size: var(--t-lg); }
 
-  @media (max-width: 960px) {
-    .item {
-      grid-template-columns: 6px 1fr;
-      grid-template-areas: "barra area" "barra nombre" "barra resumen" "barra meta" "barra accion";
-      row-gap: var(--s-2);
-    }
-    .item__accion { justify-self: start; margin-top: var(--s-2); }
-  }
+  @media (max-width: 1100px) { .lista { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .lista { grid-template-columns: 1fr; gap: var(--s-7); } }
 </style>
 
 <script>

@@ -1,6 +1,27 @@
 // Oferta formativa. Fuente: docs/contenido-oficial.md (Fx = archivo de Drive).
 // Regla: no se publican precios, fechas ni docentes hasta que el área comercial los confirme (docs/pendientes.md).
 
+import type { ImageMetadata } from "astro";
+// Portadas oficiales de los cursos (entregadas por la CE, 1920×1080, con el título y el logo integrados)
+import imgImportadores from "../assets/cursos/academia-de-importadores.jpg";
+import imgIA from "../assets/cursos/inteligencia-artificial-aplicada.jpg";
+import imgPowerBI from "../assets/cursos/power-bi.jpg";
+import imgExcel from "../assets/cursos/excel-profesional.jpg";
+import imgPython from "../assets/cursos/python.jpg";
+import imgSQL from "../assets/cursos/sql.jpg";
+import imgOfimatica from "../assets/cursos/ofimatica.jpg";
+import imgMarketing from "../assets/cursos/marketing-publicidad-digital.jpg";
+import imgDiseno from "../assets/cursos/diseno-grafico.jpg";
+import imgUX from "../assets/cursos/diseno-ux-ui.jpg";
+import imgAutocad from "../assets/cursos/autocad.jpg";
+import imgRevit from "../assets/cursos/revit-bim.jpg";
+import imgModelado from "../assets/cursos/modelado-3d.jpg";
+import imgGestion from "../assets/cursos/gestion-agil.jpg";
+import imgPresentaciones from "../assets/cursos/presentaciones-ia.jpg";
+import imgAdultos from "../assets/cursos/ia-adultos-mayores.jpg";
+import imgContabilidad from "../assets/cursos/contabilidad.jpg";
+import imgRoblox from "../assets/cursos/roblox.jpg";
+
 export type AreaId = "comercio" | "datos" | "ia" | "marketing" | "ingenieria" | "gestion";
 
 export interface Area {
@@ -14,10 +35,10 @@ export interface Area {
 export const areas: Area[] = [
   { id: "comercio", nombre: "Comercio exterior", color: "#ffc300", descripcion: "Importación, logística, costos y negociación internacional." },
   { id: "datos", nombre: "Datos y productividad", color: "#2daf73", descripcion: "Excel, Power BI, SQL, Python y ofimática para decidir con información." },
-  { id: "ia", nombre: "Inteligencia artificial", color: "#072b4f", descripcion: "IA aplicada al trabajo, al contenido y a la automatización." },
-  { id: "marketing", nombre: "Marketing y diseño", color: "#8100c2", descripcion: "Marketing digital, publicidad, diseño gráfico y experiencia de usuario." },
+  { id: "ia", nombre: "Inteligencia artificial", color: "#072b4f", descripcion: "IA aplicada al trabajo, a las presentaciones y a la automatización, también para adultos mayores." },
+  { id: "marketing", nombre: "Marketing y diseño", color: "#8100c2", descripcion: "Marketing digital, publicidad, diseño gráfico, experiencia de usuario y videojuegos en Roblox." },
   { id: "ingenieria", nombre: "Ingeniería y construcción", color: "#404040", descripcion: "AutoCAD, Revit con gestión BIM y modelado 3D." },
-  { id: "gestion", nombre: "Gestión e idiomas", color: "#808080", descripcion: "Gestión ágil, liderazgo, inglés y portugués." },
+  { id: "gestion", nombre: "Gestión e idiomas", color: "#808080", descripcion: "Gestión ágil, liderazgo, contabilidad, inglés y portugués." },
 ];
 
 export interface Bloque { titulo: string; detalle?: string; }
@@ -28,6 +49,8 @@ export interface Programa {
   area: AreaId;
   /** Color propio del curso cuando el manual lo define. */
   color?: string;
+  /** Portada oficial del curso. */
+  imagen?: ImageMetadata;
   resumen: string;
   datos: { etiqueta: string; valor: string }[];
   temarioTitulo: string;
@@ -42,6 +65,7 @@ export interface Programa {
 export const programas: Programa[] = [
   {
     slug: "academia-de-importadores",
+    imagen: imgImportadores,
     nombre: "Academia de Importadores",
     area: "comercio",
     resumen: "Aprende a importar desde China y EE. UU.: compra internacional, logística, costos y estrategia comercial, con un proyecto de importación como cierre.",
@@ -70,6 +94,7 @@ export const programas: Programa[] = [
   },
   {
     slug: "inteligencia-artificial-aplicada",
+    imagen: imgIA,
     nombre: "Programa Profesional de Inteligencia Artificial Aplicada",
     area: "ia",
     color: "#072b4f",
@@ -106,6 +131,7 @@ export const programas: Programa[] = [
   },
   {
     slug: "power-bi",
+    imagen: imgPowerBI,
     nombre: "Power BI 8 en 1",
     area: "datos",
     color: "#f5d755",
@@ -136,6 +162,7 @@ export const programas: Programa[] = [
   },
   {
     slug: "excel-completo",
+    imagen: imgExcel,
     nombre: "Programa Completo de Excel",
     area: "datos",
     color: "#2daf73",
@@ -181,24 +208,29 @@ export const programas: Programa[] = [
   },
 ];
 
-export interface Curso { nombre: string; area: AreaId; color?: string; resumen: string; }
+export interface Curso { nombre: string; area: AreaId; color?: string; imagen?: ImageMetadata; resumen: string; }
 
 // Catálogo general: los nombres provienen del catálogo de cursos (F1) y de las paletas por curso del Manual de Identidad.
 // Los resúmenes son redacción propia, breve y descriptiva: validar con el área académica.
 export const cursos: Curso[] = [
-  { nombre: "Python", area: "datos", color: "#009cfe", resumen: "Automatización y análisis de datos, de básico a avanzado." },
-  { nombre: "SQL", area: "datos", color: "#7dba00", resumen: "Consultas y gestión de bases de datos para el negocio." },
-  { nombre: "Ofimática", area: "datos", color: "#f16621", resumen: "Herramientas esenciales de productividad en la oficina." },
-  { nombre: "Marketing digital", area: "marketing", color: "#8100c2", resumen: "Estrategias para atraer clientes y vender en canales digitales." },
+  { nombre: "Python", imagen: imgPython, area: "datos", color: "#009cfe", resumen: "Automatización y análisis de datos, de básico a avanzado." },
+  { nombre: "SQL", imagen: imgSQL, area: "datos", color: "#7dba00", resumen: "Consultas y gestión de bases de datos para el negocio." },
+  { nombre: "Ofimática", imagen: imgOfimatica, area: "datos", color: "#f16621", resumen: "Herramientas esenciales de productividad en la oficina." },
+  { nombre: "Marketing digital", imagen: imgMarketing, area: "marketing", color: "#8100c2", resumen: "Estrategias para atraer clientes y vender en canales digitales." },
   { nombre: "Publicidad digital", area: "marketing", color: "#8100c2", resumen: "Campañas en Facebook, TikTok y Google, con talleres en vivo." },
-  { nombre: "Diseño gráfico", area: "marketing", color: "#df245a", resumen: "Piezas visuales profesionales para comunicar mejor." },
-  { nombre: "Diseño UX/UI", area: "marketing", resumen: "Experiencias digitales centradas en el usuario." },
-  { nombre: "AutoCAD", area: "ingenieria", resumen: "Planos y diseño técnico para ingeniería y arquitectura." },
-  { nombre: "Revit y gestión BIM", area: "ingenieria", resumen: "Modelado y gestión colaborativa de proyectos de construcción." },
-  { nombre: "Modelado y visualización 3D", area: "ingenieria", resumen: "Representaciones tridimensionales para diseño y arquitectura." },
-  { nombre: "Gestión ágil de proyectos", area: "gestion", resumen: "Metodologías para entregar proyectos con más velocidad." },
+  { nombre: "Diseño gráfico", imagen: imgDiseno, area: "marketing", color: "#df245a", resumen: "Piezas visuales profesionales para comunicar mejor." },
+  { nombre: "Diseño UX/UI", imagen: imgUX, area: "marketing", resumen: "Experiencias digitales centradas en el usuario." },
+  { nombre: "AutoCAD", imagen: imgAutocad, area: "ingenieria", resumen: "Planos y diseño técnico para ingeniería y arquitectura." },
+  { nombre: "Revit y gestión BIM", imagen: imgRevit, area: "ingenieria", resumen: "Modelado y gestión colaborativa de proyectos de construcción." },
+  { nombre: "Modelado y visualización 3D", imagen: imgModelado, area: "ingenieria", resumen: "Representaciones tridimensionales para diseño y arquitectura." },
+  { nombre: "Gestión ágil de proyectos", imagen: imgGestion, area: "gestion", resumen: "Metodologías para entregar proyectos con más velocidad." },
   { nombre: "Habilidades esenciales para liderazgo", area: "gestion", resumen: "Competencias para dirigir equipos y gestionar el cambio." },
   { nombre: "Inglés americano", area: "gestion", color: "#d80027", resumen: "Comunicación en inglés para el trabajo y los negocios." },
+  // Cursos activos en campañas (docs/contenido-oficial.md §2.3) con portada oficial; resumen descriptivo a validar
+  { nombre: "Presentaciones de alto impacto con IA", imagen: imgPresentaciones, area: "ia", resumen: "Presentaciones claras y persuasivas apoyadas en herramientas de inteligencia artificial." },
+  { nombre: "Inteligencia artificial para adultos mayores", imagen: imgAdultos, area: "ia", resumen: "Primeros pasos con la inteligencia artificial para usarla en el día a día." },
+  { nombre: "Contabilidad rápida y eficaz", imagen: imgContabilidad, area: "gestion", resumen: "Bases contables prácticas para registrar y entender la información financiera." },
+  { nombre: "Crea tu videojuego en Roblox", imagen: imgRoblox, area: "marketing", resumen: "Diseña y publica tu propio videojuego en Roblox." },
   { nombre: "Portugués", area: "gestion", resumen: "Comunicación para mercados de habla portuguesa." },
 ];
 

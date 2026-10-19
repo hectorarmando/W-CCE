@@ -50,7 +50,7 @@ Regla: el amarillo nunca decora, siempre indica algo (dónde hacer clic, qué es
 
 ## Imágenes
 
-Solo fotos reales de la comunidad CE: eventos, aulas, equipo y estudiantes. Nada de banco de imágenes ni personas generadas con IA. Se recortan en círculo dentro del arco (portada) o en rectángulos amplios de esquinas suaves. Faltan retratos de docentes y estudiantes recortados sobre fondo claro, que es el estilo de las piezas del manual (ver `pendientes.md`).
+Dos familias, sin mezclar: fotos reales de la comunidad CE (eventos, aulas, equipo y estudiantes) y las portadas oficiales de cada curso (`src/assets/cursos/`), que ya traen su título y el logo. No se usan bancos de imágenes externos. Se recortan en círculo dentro del arco (portada) o en rectángulos amplios de esquinas suaves. Faltan retratos de docentes y estudiantes recortados sobre fondo claro, que es el estilo de las piezas del manual (ver `pendientes.md`).
 
 ## Interacciones distintivas
 

@@ -55,6 +55,27 @@ Cuando estén disponibles se agregan así:
 | `evento-presentacion-educacion-continua.jpg` | Nosotros («Cómo formamos») |
 | `evento-batucada.jpg` | Página 404 |
 
+**Portadas de cursos** (entregadas por la CE, `src/assets/cursos/`, 1920×1080 con título y logo integrados). Se usan en el catálogo (tarjetas), en el tablero del inicio y en la ficha de cada programa (también como imagen para redes):
+
+| Archivo | Curso |
+|---|---|
+| `academia-de-importadores.jpg` | Academia de Importadores («Aprende a importar de China») |
+| `inteligencia-artificial-aplicada.jpg` | Programa Profesional de IA Aplicada |
+| `power-bi.jpg` | Power BI 8 en 1 («Power BI + Business Intelligence») |
+| `excel-profesional.jpg` | Programa Completo de Excel («Excel Profesional») |
+| `python.jpg`, `sql.jpg`, `ofimatica.jpg` | Python, SQL, Ofimática |
+| `marketing-publicidad-digital.jpg` | Marketing digital («Marketing y Publicidad Digital») |
+| `diseno-grafico.jpg`, `diseno-ux-ui.jpg` | Diseño gráfico, Diseño UX/UI |
+| `autocad.jpg`, `revit-bim.jpg`, `modelado-3d.jpg` | AutoCAD, Revit y gestión BIM, Modelado y visualización 3D |
+| `gestion-agil.jpg` | Gestión ágil de proyectos |
+| `presentaciones-ia.jpg`, `ia-adultos-mayores.jpg`, `contabilidad.jpg`, `roblox.jpg` | Cursos agregados al catálogo con estas portadas |
+
+**Faltan portadas** (se muestran con un bloque negro con el color del área): Analista de Excel Intelligence + IA, Publicidad digital, Habilidades esenciales para liderazgo, Inglés americano y Portugués.
+
+**Por validar de los cursos agregados** (Presentaciones de alto impacto con IA, IA para adultos mayores, Contabilidad rápida y eficaz, Crea tu videojuego en Roblox; nombres tomados de sus portadas y de `contenido-oficial.md` §2.3):
+- los resúmenes son redacción propia y breve;
+- el área de Roblox («Marketing y diseño») y la de Contabilidad («Gestión e idiomas») son provisionales.
+
 **Por validar:**
 
 - **Autorización de imagen.** Confirmar el consentimiento de las personas que aparecen, sobre todo estudiantes, para su uso en la web.
