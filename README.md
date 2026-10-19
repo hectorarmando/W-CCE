@@ -26,10 +26,13 @@ src/
   data/sitio.ts          Datos institucionales y canal de WhatsApp (con fuente de cada dato)
   data/programas.ts      Áreas, programas con ficha y catálogo general
   layouts/Base.astro     <head> SEO, Open Graph, JSON-LD, cabecera y pie
-  components/            Header (menú desplegable y móvil), Footer, Arco, Flecha, FormularioContacto
+  components/            Header (menú desplegable y móvil), Footer, Arco, Flecha, FormularioContacto, LluviaDatos
+  components/ui/         Componentes React con estructura shadcn (works-wheel, data-rain); se usan como islas
+  lib/utils.ts           cn(): une clases de Tailwind (utilidad estándar de shadcn)
   pages/                 index, programas (catálogo con filtro), programas/[slug], empresas, nosotros, contacto, 404
-  scripts/               formulario.ts (validación y envío) y revelar.ts
+  scripts/               formulario.ts (validación y envío) y efectos.ts (movimiento)
   styles/global.css      Tokens del manual de marca y componentes base
+  styles/tailwind.css    Tailwind 4 para las islas React (sin preflight) y tokens de los componentes ui
 public/
   brand/                 Logos oficiales extraídos del manual (SVG optimizados)
   og/                    Imagen para redes (1200×630)
@@ -38,6 +41,26 @@ server/contacto.php      Receptor opcional del formulario
 tests/e2e.cjs            Pruebas end-to-end
 docs/                    Contenido oficial, plan de diseño, formularios y pendientes
 ```
+
+## Componentes React (islas, estructura shadcn)
+
+El sitio es Astro estático y usa React solo donde hace falta interacción compleja. La configuración ya está lista:
+`@astrojs/react`, Tailwind 4 vía `@tailwindcss/vite`, el alias `@/*` → `src/*` (tsconfig) y `components.json`.
+
+- **Dónde van:** `src/components/ui/`. Es la carpeta que espera la CLI de shadcn (`aliases.ui`). Así,
+  `npx shadcn@latest add <componente>` instala ahí y los imports `@/components/ui/...` de cualquier componente
+  de la comunidad funcionan sin cambios. Además separa las piezas genéricas de React de los componentes
+  `.astro` propios del sitio.
+- **Estilos:** `src/styles/tailwind.css` carga solo las capas `theme` y `utilities` (sin preflight), para no alterar
+  el reset de `global.css`. Los tokens de shadcn (`background`, `foreground`, `muted`…) apuntan a los colores
+  de la marca. Se importa únicamente en las páginas o componentes que usan islas.
+- **Cómo usarlos en una página:** `<WorksWheel client:only="react" items={...} />`. Con `client:only` el
+  componente no se renderiza en el servidor (útil si mide su tamaño al montarse) y con `client:visible`
+  se hidrata al entrar en pantalla.
+- **En uso:**
+  - `WorksWheel` está en `/comunidad`, con las fotos propias optimizadas con `getImage`.
+  - `DataRain` (a través de `LluviaDatos`) es el fondo de la portada de `/empresas`. Solo se activa con mouse
+    o trackpad en pantallas de 900 px o más, y únicamente mientras está a la vista.
 
 ## Editar contenido
 

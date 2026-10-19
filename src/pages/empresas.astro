@@ -3,9 +3,12 @@ import Base from "../layouts/Base.astro";
 import FormularioContacto from "../components/FormularioContacto.astro";
 import { areas } from "../data/programas";
 import { enlaceWhatsapp } from "../data/sitio";
+import LluviaDatos from "../components/LluviaDatos";
 ---
 <Base titulo="Capacitación para empresas" descripcion="Capacita a tu equipo con los programas de la Cámara de Comercio Exterior: comercio exterior, Excel, Power BI, inteligencia artificial y más, con condiciones corporativas.">
   <section class="encabezado-pagina sobre-oscuro empresas-hero">
+    <!-- Fondo: flujo de datos que se aparta alrededor del cursor (decorativo, aria-hidden) -->
+    <LluviaDatos client:only="react" count={2400} obstacleRadius={70} />
     <div class="contenedor">
       <h1 class="titulo-pagina">Capacitación para tu equipo</h1>
       <p class="intro">Lleva los programas de la Cámara de Comercio Exterior a tus colaboradores, con condiciones corporativas para grupos.</p>
@@ -51,7 +54,12 @@ import { enlaceWhatsapp } from "../data/sitio";
 </Base>
 
 <style>
-  .empresas-hero { background: var(--negro); color: var(--blanco); padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
+  .empresas-hero { position: relative; overflow: hidden; isolation: isolate; background: var(--negro); color: var(--blanco); padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
+  /* El texto va por encima del lienzo de la lluvia de datos */
+  .empresas-hero > .contenedor { position: relative; z-index: 2; }
+  /* Velo hacia la izquierda: las líneas pasan detrás del texto sin restarle contraste */
+  .empresas-hero::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.55) 38%, transparent 70%); }
+  @media (max-width: 700px) { .empresas-hero::after { background: rgba(0, 0, 0, 0.45); } }
   .empresas-hero .intro { color: #d9d9d9; }
   .acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
   .dos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--s-8); align-items: start; }

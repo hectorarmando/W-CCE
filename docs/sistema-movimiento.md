@@ -69,11 +69,21 @@ Todo lo que reacciona al hover reacciona igual al foco del teclado.
 
 ## Cursor
 
-Hay un solo efecto, en la portada y solo con mouse o trackpad (`hover: hover` y `pointer: fine`):
+Hay dos efectos, cada uno en una sola página y solo con mouse o trackpad (`hover: hover` y `pointer: fine`).
+
+**Portada del inicio** (la C se orienta hacia el cursor):
 
 - las capas se desplazan con el cursor a distinta velocidad: luz al 22 %, foto 10 px en sentido contrario y arco 16 px;
 - la abertura de la C gira hasta un 14 % del ángulo hacia el puntero;
 - al salir de la portada, todo vuelve al centro en 1 s.
+
+**Portada de Empresas — «lluvia de datos»** (`DataRain`, vía `LluviaDatos`): líneas en oro y amarillo caen
+detrás del título y se apartan alrededor del cursor, como un flujo de información que rodea a la persona.
+
+- Solo en pantallas de 900 px o más y solo mientras la banda está a la vista: al salir se desmonta y su
+  bucle se detiene.
+- Un velo oscuro a la izquierda mantiene el contraste del texto.
+- Con «reducir movimiento» se dibuja un solo cuadro quieto.
 
 No hay cursor personalizado.
 

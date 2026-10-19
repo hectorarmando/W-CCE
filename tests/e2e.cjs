@@ -167,6 +167,15 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   await page.waitForTimeout(1200);
   ok("rueda: el índice lleva a la foto", (await page.getAttribute('[role="listbox"]', "aria-activedescendant")) === "works-wheel-3");
 
+  // Lluvia de datos en Empresas: se monta en pantalla y se desmonta al salir (no consume CPU fuera de vista)
+  page = await ctx.newPage();
+  await page.goto(BASE + "/empresas");
+  await page.waitForSelector(".empresas-hero canvas.dr-main", { timeout: 8000 }).catch(() => {});
+  ok("lluvia: lienzo montado en la banda", (await page.locator(".empresas-hero canvas").count()) === 2);
+  await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(600);
+  ok("lluvia: se desmonta fuera de vista", (await page.locator(".empresas-hero canvas").count()) === 0);
+
   // Teclado: enlace para saltar al contenido
   page = await ctx.newPage();
   await page.goto(BASE + "/");

@@ -13,7 +13,8 @@ PAGINAS = {
     "/programas/inteligencia-artificial-aplicada": "programas/inteligencia-artificial-aplicada.html",
     "/programas/power-bi": "programas/power-bi.html", "/programas/excel-completo": "programas/excel-completo.html",
     "/programas/analista-excel-ia": "programas/analista-excel-ia.html",
-    "/empresas": "empresas.html", "/nosotros": "nosotros.html", "/contacto": "contacto.html", "/404": "404.html",
+    "/empresas": "empresas.html", "/nosotros": "nosotros.html", "/comunidad": "comunidad.html",
+    "/contacto": "contacto.html", "/404": "404.html",
 }
 recursos = {}
 
@@ -23,7 +24,11 @@ def recurso(ruta: str) -> str:
     if ruta not in recursos:
         datos = (DIST / ruta).read_bytes()
         mime = {"svg": "image/svg+xml", "woff2": "font/woff2", "png": "image/png",
-                "jpg": "image/jpeg", "webp": "image/webp", "avif": "image/avif"}[ruta.rsplit(".", 1)[1]]
+                "jpg": "image/jpeg", "webp": "image/webp", "avif": "image/avif", "js": "text/javascript"}[ruta.rsplit(".", 1)[1]]
+        if mime == "text/javascript":
+            # Los módulos se importan entre sí con rutas relativas («./x.js»), que no resuelven desde un blob:
+            # se reescriben como especificadores «astro/x.js» y el import map de cada página los dirige a su blob.
+            datos = re.sub(r"""(["'])\./([\w.-]+\.js)\1""", r"\1astro/\2\1", datos.decode()).encode()
         recursos[ruta] = {"mime": mime, "b64": base64.b64encode(datos).decode()}
     return f"__R:{ruta}__"
 
@@ -42,15 +47,24 @@ def foto(m) -> str:
     etiqueta = re.sub(r'\s(srcset|sizes)="[^"]*"', "", etiqueta)
     return re.sub(r'src="[^"]+"', f'src="{recurso(elegida)}"', etiqueta, count=1)
 
+# Islas React (src/components/ui): sus módulos viajan como recursos y un import map los resuelve
+modulos = sorted(f"/_astro/{f.name}" for f in (DIST / "_astro").glob("*.js"))
+# Dos claves por módulo: «/_astro/x.js» (component-url de la isla) y «astro/x.js» (imports entre módulos)
+import_map = json.dumps({"imports": {k: recurso(m) for m in modulos for k in (m, "astro/" + m.rsplit("/", 1)[1])}})
+
 paginas = {}
 for ruta, archivo in PAGINAS.items():
     html = (DIST / archivo).read_text(encoding="utf-8")
-    html = re.sub(r'<link rel="(icon|apple-touch-icon|sitemap|manifest|canonical)"[^>]*>', "", html)
+    html = re.sub(r'<link rel="(icon|apple-touch-icon|sitemap|manifest|canonical|preload)"[^>]*>', "", html)
     html = re.sub(r'<link rel="stylesheet" href="([^"]+)"[^>]*>', lambda m: f"<style>{css(m.group(1))}</style>", html)
     html = re.sub(r'src="(/brand/[^"]+)"', lambda m: f'src="{recurso(m.group(1))}"', html)
     # Fotos (<Picture>): se conserva una sola variante de ~1000 px por foto para que el archivo sea liviano
     html = re.sub(r"<source[^>]*>", "", html)
     html = re.sub(r"<img [^>]*?/_astro/[^>]*>", foto, html)
+    # Imágenes que viajan en las props de una isla (p. ej. la rueda de la comunidad)
+    html = re.sub(r"/_astro/[\w.-]+\.(?:webp|jpg|avif|png)", lambda m: recurso(m.group(0)), html)
+    if "<astro-island" in html:
+        html = html.replace("<head>", f'<head><script type="importmap">{import_map}</script>', 1)
     paginas[ruta] = html
 
 plantilla = r"""<!doctype html>
@@ -84,7 +98,7 @@ plantilla = r"""<!doctype html>
 <script>
 const PAGINAS = __PAGINAS__;
 const RECURSOS = __RECURSOS__;
-const NOMBRES = {"/":"Inicio","/programas":"Programas y cursos","/programas/academia-de-importadores":"Ficha · Academia de Importadores","/programas/inteligencia-artificial-aplicada":"Ficha · IA Aplicada","/programas/power-bi":"Ficha · Power BI","/programas/excel-completo":"Ficha · Excel","/programas/analista-excel-ia":"Ficha · Analista Excel + IA","/empresas":"Empresas","/nosotros":"Nosotros","/contacto":"Contacto","/404":"Página 404"};
+const NOMBRES = {"/":"Inicio","/programas":"Programas y cursos","/programas/academia-de-importadores":"Ficha · Academia de Importadores","/programas/inteligencia-artificial-aplicada":"Ficha · IA Aplicada","/programas/power-bi":"Ficha · Power BI","/programas/excel-completo":"Ficha · Excel","/programas/analista-excel-ia":"Ficha · Analista Excel + IA","/empresas":"Empresas","/nosotros":"Nosotros","/comunidad":"Comunidad","/contacto":"Contacto","/404":"Página 404"};
 const urls = {};
 for (const [ruta, r] of Object.entries(RECURSOS)) {
   // Las fuentes van como data: (un blob de otro origen no pasa la política CORS de @font-face)
@@ -92,7 +106,7 @@ for (const [ruta, r] of Object.entries(RECURSOS)) {
   const bytes = Uint8Array.from(atob(r.b64), c => c.charCodeAt(0));
   urls[ruta] = URL.createObjectURL(new Blob([bytes], { type: r.mime }));
 }
-const resolver = html => html.replace(/__R:([A-Za-z0-9_.\/-]+?\.(?:svg|woff2|png|jpg|webp|avif))__/g, (_, r) => urls[r] || "");
+const resolver = html => html.replace(/__R:([A-Za-z0-9_.\/-]+?\.(?:svg|woff2|png|jpg|webp|avif|js))__/g, (_, r) => urls[r] || "");
 const marco = document.getElementById("marco");
 const selector = document.getElementById("pagina");
 for (const ruta of Object.keys(PAGINAS)) selector.add(new Option(NOMBRES[ruta] || ruta, ruta));
