@@ -1,0 +1,25 @@
+/* Tailwind para las islas React de src/components/ui (estructura shadcn).
+   Sin preflight: el reset del sitio vive en global.css y no debe cambiar al cargar un componente.
+   Los tokens de shadcn apuntan a los de la marca (global.css), así que los componentes heredan la identidad CE. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@source "../components/ui";
+
+@theme inline {
+  --color-background: var(--blanco);
+  --color-foreground: var(--negro);
+  --color-muted: var(--bruma);
+  --color-muted-foreground: var(--gris-oscuro);
+  --color-primary: var(--amarillo);
+  --color-primary-foreground: var(--negro);
+  --font-sans: var(--font);
+}
+
+/* Reset mínimo solo dentro de las islas (.ui): lo que el preflight de Tailwind haría por estos componentes,
+   sin tocar el resto del sitio. */
+@layer base {
+  .ui :where(button) { appearance: none; background: transparent; border: 0; padding: 0; margin: 0; font: inherit; color: inherit; }
+  .ui :where(ol, ul) { list-style: none; margin: 0; padding: 0; }
+  .ui :where(img) { display: block; max-width: 100%; }
+}

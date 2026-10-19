@@ -10,7 +10,7 @@ const BASE = process.argv[2] || "http://127.0.0.1:4321";
 const OUT = process.env.CAPTURAS || path.join(__dirname, "capturas");
 fs.mkdirSync(OUT, { recursive: true });
 const PAGINAS = ["/", "/programas", "/programas/academia-de-importadores", "/programas/inteligencia-artificial-aplicada",
-  "/programas/power-bi", "/programas/excel-completo", "/programas/analista-excel-ia", "/empresas", "/nosotros", "/contacto"];
+  "/programas/power-bi", "/programas/excel-completo", "/programas/analista-excel-ia", "/empresas", "/nosotros", "/comunidad", "/contacto"];
 const VISTAS = [{ n: "escritorio", w: 1440, h: 900 }, { n: "tablet", w: 820, h: 1180 }, { n: "movil", w: 375, h: 812 }];
 
 const resultados = [];
@@ -147,6 +147,25 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   await page.click('#menu-movil a[href="/nosotros"]');
   await page.waitForURL("**/nosotros");
   ok("menú móvil navega", page.url().endsWith("/nosotros"));
+
+  // Rueda de la comunidad (isla React): se hidrata, gira con el teclado y no atrapa la página
+  page = await ctx.newPage();
+  await page.goto(BASE + "/comunidad");
+  const rueda = page.locator('[role="listbox"]');
+  await rueda.scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => document.querySelectorAll('[role="option"] img').length > 0, null, { timeout: 8000 }).catch(() => {});
+  ok("rueda: muestra las 10 fotos", (await page.locator('[role="option"]').count()) === 10);
+  const imgsOk = await page.$$eval('[role="option"] img', (l) => l.every((i) => i.complete && i.naturalWidth > 0));
+  ok("rueda: las fotos cargan", imgsOk);
+  await rueda.focus();
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("ArrowDown");
+  await page.waitForTimeout(900);
+  const activa = await page.getAttribute('[role="listbox"]', "aria-activedescendant");
+  ok("rueda: las flechas cambian la foto activa", activa === "works-wheel-1", activa);
+  await page.click('ol button:has-text("Entrega de kits")');
+  await page.waitForTimeout(1200);
+  ok("rueda: el índice lleva a la foto", (await page.getAttribute('[role="listbox"]', "aria-activedescendant")) === "works-wheel-3");
 
   // Teclado: enlace para saltar al contenido
   page = await ctx.newPage();

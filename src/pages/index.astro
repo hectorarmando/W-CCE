@@ -116,6 +116,7 @@ const preguntas = [
         <!-- Frase del banner institucional de la CE -->
         <h2 id="comunidad-titulo" class="titulo-seccion">Conectamos talento, impulsamos desarrollo.</h2>
         <p class="intro">Además de los programas virtuales, llevamos la formación a espacios presenciales con talleres y charlas, como los workshops de inteligencia artificial y de importación.</p>
+        <a class="btn btn--contorno comunidad__ver" href="/comunidad">Recorrer la galería <Flecha /></a>
       </div>
       <figure class="comunidad__foto comunidad__foto--principal" data-revelar="foto">
         <Picture src={fotoTren} formats={["avif", "webp"]} widths={[640, 1000, 1500, 2000]} sizes="(max-width: 860px) 100vw, 58vw" alt="Equipo de la Cámara de Comercio Exterior en un andén, junto a un tren con el logo de la CE" />
@@ -299,6 +300,7 @@ const preguntas = [
   }
   .comunidad__texto { grid-area: texto; align-self: center; padding-right: var(--s-5); }
   .comunidad__texto .intro { margin-top: var(--s-5); }
+  .comunidad__ver { margin-top: var(--s-6); }
   .comunidad__foto { margin: 0; overflow: hidden; border-radius: var(--radio-l); background: var(--bruma); }
   .comunidad__foto :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale 1.2s var(--ease); }
   .comunidad__foto:hover :global(img) { scale: 1.03; }
