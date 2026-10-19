@@ -57,7 +57,7 @@ Antes de publicar, revisa `docs/pendientes.md`: dominio, Libro de Reclamaciones,
 
 ## Marca
 
-Las reglas vienen del *Manual de Identidad de Marca* (skill `brand-guidelines`):
+Las reglas vienen del *Manual de Identidad de Marca* (skill `brand-guidelines`, incluido en `.claude/skills/` junto con `frontend-design` y `web-artifacts-builder`):
 - **Logos:** los archivos oficiales, sin redibujar, en la versión adecuada para cada fondo.
 - **Tamaño del logo:** respeta el mínimo digital (≥ 100×65 px).
 - **Colores:** amarillo `#ffc300`, negro y blanco.
