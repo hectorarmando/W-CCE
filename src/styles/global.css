@@ -112,11 +112,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .enlace { font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.25em; text-decoration-color: var(--amarillo); }
 .enlace:hover { text-decoration-color: currentColor; }
 
-/* Aparición al desplazarse: sutil y solo una vez (scripts/revelar.ts) */
-@media (prefers-reduced-motion: no-preference) {
-  .js [data-revelar] { opacity: 0; transform: translateY(16px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
-  .js [data-revelar].visible { opacity: 1; transform: none; }
-}
+/* EFECTOS (scripts/efectos.ts). Solo existen con la clase .efectos, que se omite con prefers-reduced-motion. */
+.palabra { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.palabra__in { display: inline-block; }
+.efectos .revelable .palabra__in { transform: translateY(108%); transition: transform 900ms var(--ease) calc(var(--i, 0) * 40ms); }
+.efectos .revelable.visible .palabra__in { transform: none; }
+/* Imágenes: cortina que sube y leve zoom de salida */
+.efectos .revelable--imagen { clip-path: inset(18% 0 0 0 round var(--radio)); transition: clip-path 1.2s var(--ease); }
+.efectos .revelable--imagen img { transform: scale(1.14); transition: transform 1.6s var(--ease); }
+.efectos .revelable--imagen.visible { clip-path: inset(0 0 0 0 round var(--radio)); }
+.efectos .revelable--imagen.visible img { transform: none; }
+.efectos [data-revelar] { opacity: 0; transform: translateY(16px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+.efectos [data-revelar].visible { opacity: 1; transform: none; }
+/* Cabecera que se oculta al bajar */
+.efectos .cabecera { transition: transform 350ms var(--ease), border-color 200ms var(--ease); }
+.efectos .cabecera.oculta { transform: translateY(-100%); }
+
 
 /* Cabecera de páginas internas */
 .encabezado-pagina { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--s-6); }

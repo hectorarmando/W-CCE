@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Arco from "../components/Arco.astro";
 import Flecha from "../components/Flecha.astro";
+import Cinta from "../components/Cinta.astro";
 import { sitio, enlaceWhatsapp } from "../data/sitio";
 import { areas, programas, cursos, areaPorId } from "../data/programas";
 import { Picture } from "astro:assets";
@@ -59,6 +60,8 @@ const formas = [
       </nav>
     </div>
   </section>
+
+  <Cinta />
 
   <!-- PROGRAMAS DESTACADOS -->
   <section class="seccion" aria-labelledby="destacados-titulo">
@@ -192,9 +195,9 @@ const formas = [
     <div class="contenedor">
       <h2 id="pasos-titulo" class="titulo-seccion">Cómo inscribirte</h2>
       <ol role="list" class="pasos">
-        <li><span class="pasos__n" aria-hidden="true">1</span><h3>Elige tu programa</h3><p>Revisa el temario, la duración y la modalidad en la página de cada programa.</p></li>
-        <li><span class="pasos__n" aria-hidden="true">2</span><h3>Habla con un asesor</h3><p>Por WhatsApp o el formulario: te confirma horarios, inversión vigente y medios de pago.</p></li>
-        <li><span class="pasos__n" aria-hidden="true">3</span><h3>Matricúlate y empieza</h3><p>Recibes tus accesos y te unes a las clases en vivo de tu grupo.</p></li>
+        <li style="--n:0"><span class="pasos__n" aria-hidden="true">1</span><h3>Elige tu programa</h3><p>Revisa el temario, la duración y la modalidad en la página de cada programa.</p></li>
+        <li style="--n:1"><span class="pasos__n" aria-hidden="true">2</span><h3>Habla con un asesor</h3><p>Por WhatsApp o el formulario: te confirma horarios, inversión vigente y medios de pago.</p></li>
+        <li style="--n:2"><span class="pasos__n" aria-hidden="true">3</span><h3>Matricúlate y empieza</h3><p>Recibes tus accesos y te unes a las clases en vivo de tu grupo.</p></li>
       </ol>
     </div>
   </section>
@@ -299,6 +302,12 @@ const formas = [
   .campana { position: relative; padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
   .campana__foto { margin: 0; height: clamp(22rem, 12rem + 34vw, 46rem); overflow: hidden; background: #ddd; }
   .campana__foto :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%; }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .campana__foto :global(picture) { display: block; height: 100%; animation: paralaje linear both; animation-timeline: view(); animation-range: cover; }
+      @keyframes paralaje { from { transform: translateY(-8%) scale(1.18); } to { transform: translateY(8%) scale(1.18); } }
+    }
+  }
   .campana__panel {
     position: relative; margin-top: clamp(-14rem, -6rem - 8vw, -6rem); max-width: 34rem;
     padding: clamp(1.75rem, 1rem + 2.5vw, 3rem); background: var(--negro); color: var(--blanco); border-radius: var(--radio);
@@ -327,6 +336,21 @@ const formas = [
   /* PASOS */
   .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6); margin-top: var(--s-7); counter-reset: paso; }
   .pasos li { padding-top: var(--s-5); border-top: 1px solid var(--linea); }
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    .pasos { grid-template-columns: 1fr; gap: var(--s-5); }
+    .pasos li {
+      position: sticky; top: calc(var(--header-h) + 1.5rem + var(--n) * 1.25rem);
+      display: grid; grid-template-columns: 9rem 1fr; column-gap: var(--s-7); align-items: start;
+      min-height: 15rem; padding: var(--s-7); border: 1px solid var(--linea); border-radius: 1rem; background: var(--blanco);
+      box-shadow: 0 -12px 40px -28px rgba(0,0,0,.35);
+    }
+    .pasos li:nth-child(3) { background: var(--negro); color: var(--blanco); border-color: var(--negro); }
+    .pasos li:nth-child(3) p { color: #d9d9d9; }
+    .pasos .pasos__n { grid-row: span 2; width: auto; height: auto; background: none; color: var(--amarillo); font-size: 7rem; line-height: 0.8; margin: 0; -webkit-text-stroke: 2px var(--negro); }
+    .pasos li:nth-child(3) .pasos__n { -webkit-text-stroke: 0; }
+    .pasos h3 { font-size: var(--t-2xl); }
+    .pasos p { font-size: var(--t-lg); max-width: 40ch; }
+  }
   .pasos__n { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--negro); color: var(--amarillo); font-weight: 900; margin-bottom: var(--s-5); }
   .pasos h3 { font-size: var(--t-lg); }
   .pasos p { margin-top: var(--s-3); color: var(--gris-oscuro); font-size: var(--t-sm); max-width: 32ch; }
