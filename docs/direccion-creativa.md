@@ -60,6 +60,8 @@ Solo fotos reales de la comunidad CE: eventos, aulas, equipo y estudiantes. Nada
 
 ## Lenguaje de movimiento
 
+El detalle completo (coreografías, scroll, cursor, transiciones de página y micro-interacciones) está en `sistema-movimiento.md`. El mapa de la experiencia sección por sección está en `experiencia-ux.md`.
+
 **Precisión suave**: una sola curva (`cubic-bezier(.16, 1, .3, 1)`) y tres duraciones.
 
 | Tiempo | Uso |

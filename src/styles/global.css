@@ -47,6 +47,7 @@
   --t-accion: 240ms;
   --t-entrada: 700ms;
   --t-momento: 1400ms;
+  --ease-salida: cubic-bezier(0.7, 0, 0.84, 0); /* solo para lo que se va (cambio de página) */
   --header-h: 5rem;
   --gris-boton: var(--bruma);
 }
@@ -147,6 +148,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .efectos .revelable.visible .palabra__in { transform: none; }
 .efectos [data-revelar] { opacity: 0; transform: translateY(16px); transition: opacity var(--t-entrada) var(--ease), transform var(--t-entrada) var(--ease); transition-delay: var(--retraso, 0ms); }
 .efectos [data-revelar].visible { opacity: 1; transform: none; }
+/* Fotos: se abren desde un marco más estrecho mientras la imagen se asienta */
+.efectos [data-revelar="foto"] { opacity: 1; transform: none; clip-path: inset(7% round var(--radio-l)); transition: clip-path 1.1s var(--ease) var(--retraso, 0ms); }
+.efectos [data-revelar="foto"].visible { clip-path: inset(0 round var(--radio-l)); }
+.efectos [data-revelar="foto"] img { transform: scale(1.1); transition: transform 1.4s var(--ease) var(--retraso, 0ms), scale 1.2s var(--ease); }
+.efectos [data-revelar="foto"].visible img { transform: none; }
 /* Cabecera que se oculta al bajar */
 .efectos .cabecera { transition: transform 350ms var(--ease), background-color var(--t-accion) var(--ease), box-shadow var(--t-accion) var(--ease); }
 .efectos .cabecera.oculta { transform: translateY(-110%); }
@@ -155,3 +161,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .encabezado-pagina { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--s-6); }
 .titulo-pagina { font-size: clamp(2.6rem, 1.4rem + 4.6vw, 5.5rem); letter-spacing: -0.045em; line-height: 0.98; max-width: 16ch; }
 .encabezado-pagina .intro { margin-top: var(--s-5); }
+
+/* Cambio de página: la cabecera se queda quieta; el contenido anterior se va rápido y el nuevo sube con calma */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  .cabecera { view-transition-name: cabecera; }
+  .senal-fija { view-transition-name: senal-fija; }
+  ::view-transition-old(root) { animation: pagina-sale 200ms var(--ease-salida) both; }
+  ::view-transition-new(root) { animation: pagina-entra 560ms var(--ease) 60ms both; }
+  @keyframes pagina-sale { to { opacity: 0; transform: translateY(-10px); } }
+  @keyframes pagina-entra { from { opacity: 0; transform: translateY(18px); } }
+}

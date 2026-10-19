@@ -33,6 +33,38 @@ function dividirPalabras(el: HTMLElement) {
   recorrer(el);
 }
 
+/**
+ * Portada «El abrazo»: con un mouse o trackpad, las capas (luz, foto y arco) se desplazan a distinta velocidad
+ * y la abertura de la C gira levemente hacia el cursor. Solo escribe variables CSS; el CSS hace el resto.
+ */
+function orientarAbrazo() {
+  const abrazo = document.querySelector<HTMLElement>("[data-abrazo]");
+  const zona = abrazo?.closest<HTMLElement>(".hero");
+  if (!abrazo || !zona || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  let x = 0, y = 0, pendiente = false;
+  const pintar = () => {
+    const r = abrazo.getBoundingClientRect();
+    const dx = (x - (r.left + r.width / 2)) / r.width;
+    const dy = (y - (r.top + r.height / 2)) / r.height;
+    const limitar = (v: number) => Math.max(-1, Math.min(1, v));
+    abrazo.style.setProperty("--px", limitar(dx).toFixed(3));
+    abrazo.style.setProperty("--py", limitar(dy).toFixed(3));
+    // Ángulo hacia el cursor, atenuado: la C se orienta, no gira por completo
+    const angulo = (Math.atan2(dy, dx) * 180) / Math.PI;
+    abrazo.style.setProperty("--giro", `${(angulo * 0.14).toFixed(2)}deg`);
+    pendiente = false;
+  };
+  zona.addEventListener("pointermove", (e) => {
+    x = e.clientX; y = e.clientY;
+    if (!pendiente) { pendiente = true; requestAnimationFrame(pintar); }
+  });
+  zona.addEventListener("pointerleave", () => {
+    abrazo.style.setProperty("--px", "0");
+    abrazo.style.setProperty("--py", "0");
+    abrazo.style.setProperty("--giro", "0deg");
+  });
+}
+
 function iniciar() {
   const senal = document.querySelector<HTMLElement>("[data-senal-fija]");
   if (!animar) {
@@ -64,6 +96,8 @@ function iniciar() {
     if (hermanos && hermanos.length > 1) el.style.setProperty("--retraso", `${[...hermanos].indexOf(el) * 80}ms`);
     observador.observe(el);
   });
+
+  orientarAbrazo();
 
   // Cabecera: se oculta al bajar y reaparece al subir (nunca con un menú abierto).
   // Señal fija: visible fuera de la parte superior y oculta cuando el pie (que tiene su propia llamada) está a la vista.

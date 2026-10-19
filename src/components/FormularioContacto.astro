@@ -107,7 +107,7 @@ const id = `f-${modo}`;
   .opcional { font-weight: 400; color: var(--gris-oscuro); }
   .campo input:not([type="checkbox"]), .campo select, .campo textarea {
     width: 100%; min-height: 3.1rem; padding: 0.75rem 0.9rem; border: 1.5px solid var(--gris-claro); border-radius: var(--radio);
-    background: var(--blanco); font-size: 1rem; transition: border-color 150ms var(--ease), box-shadow 150ms var(--ease);
+    background: var(--blanco); font-size: 1rem; transition: border-color var(--t-accion) var(--ease), box-shadow var(--t-accion) var(--ease);
   }
   .campo textarea { resize: vertical; min-height: 7rem; }
   .campo input:hover, .campo select:hover, .campo textarea:hover { border-color: var(--gris); }
@@ -127,6 +127,13 @@ const id = `f-${modo}`;
   .form__estado[data-tipo="error"] { background: #fdecea; border: 1px solid #f5c2bd; color: #6b1a14; }
   .form__estado a { font-weight: 800; }
   [data-enviar][aria-busy="true"] { cursor: progress; opacity: 0.75; }
+  /* Micro-interacciones: mientras se envía, el círculo late; el mensaje de estado entra subiendo */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-enviar][aria-busy="true"] .btn__flecha { animation: latir 900ms var(--ease) infinite; }
+    .form__estado:not([hidden]) { animation: estado-entra var(--t-entrada) var(--ease) both; }
+    @keyframes latir { 50% { transform: scale(0.82); } }
+    @keyframes estado-entra { from { opacity: 0; transform: translateY(10px); } }
+  }
   @media (max-width: 640px) { .form__rejilla { grid-template-columns: 1fr; } .form__pie .btn { width: 100%; justify-content: space-between; padding-left: 1.5rem; } }
 </style>
 
