@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.camaracomercioexterior.org/sitemap-index.xml

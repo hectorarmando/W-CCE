@@ -1,0 +1,124 @@
+/* Sistema visual CE — tokens del Manual de Identidad de Marca (ver docs/plan-diseno.md). */
+@import "@fontsource-variable/montserrat/wght.css";
+
+:root {
+  /* Institucionales */
+  --amarillo: #ffc300;
+  --negro: #000000;
+  --blanco: #ffffff;
+  /* Secundarios */
+  --amarillo-60: #ffe180;
+  --amarillo-30: #fff0bf;
+  --gris-oscuro: #404040;
+  --gris: #808080;
+  --gris-claro: #bfbfbf;
+  --linea: #e6e6e6;
+
+  --font: "Montserrat Variable", "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* Escala tipográfica (razón ~1.25 en cuerpo, saltos mayores en display) */
+  --t-xs: 0.8125rem;
+  --t-sm: 0.9375rem;
+  --t-base: 1.0625rem;
+  --t-lg: 1.25rem;
+  --t-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --t-2xl: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  --t-display: clamp(2.6rem, 1.2rem + 6vw, 6.25rem);
+
+  /* Espaciado */
+  --s-1: 0.25rem; --s-2: 0.5rem; --s-3: 0.75rem; --s-4: 1rem; --s-5: 1.5rem;
+  --s-6: 2rem; --s-7: 3rem; --s-8: 4.5rem; --s-9: 7rem;
+
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --max: 80rem;
+  --radio: 0.5rem;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --header-h: 5.25rem;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 1rem); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: var(--t-base);
+  line-height: 1.6;
+  color: var(--negro);
+  background: var(--blanco);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.05; letter-spacing: -0.025em; font-weight: 800; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+a { color: inherit; }
+ul[role="list"], ol[role="list"] { list-style: none; margin: 0; padding: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+:focus-visible { outline: 3px solid var(--negro); outline-offset: 3px; border-radius: 2px; }
+.sobre-oscuro :focus-visible { outline-color: var(--amarillo); }
+
+.contenedor { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.saltar {
+  position: absolute; left: var(--s-4); top: -100px; z-index: 100;
+  background: var(--negro); color: var(--blanco); padding: var(--s-3) var(--s-4); border-radius: var(--radio);
+}
+.saltar:focus { top: var(--s-4); }
+
+/* Secciones: ritmo vertical */
+.seccion { padding-block: clamp(4rem, 2.5rem + 6vw, 8rem); }
+.seccion--suave { background: #fafafa; }
+.seccion--oscura { background: var(--negro); color: var(--blanco); }
+
+.titulo-seccion { font-size: var(--t-2xl); max-width: 18ch; }
+.intro { font-size: var(--t-lg); color: var(--gris-oscuro); max-width: 52ch; line-height: 1.5; }
+.seccion--oscura .intro { color: #d9d9d9; }
+
+/* Resaltado amarillo del manual: solo para una idea clave por página */
+.resalte {
+  background: linear-gradient(transparent 12%, var(--amarillo) 12%, var(--amarillo) 92%, transparent 92%);
+  padding-inline: 0.12em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+}
+
+/* Botones: pastilla negra (CTA principal) y alternativas del manual */
+.btn {
+  --alto: 3.25rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s-3);
+  min-height: var(--alto); padding: 0 1.5rem; border-radius: 999px;
+  font-weight: 700; font-size: var(--t-sm); letter-spacing: 0.01em; text-decoration: none;
+  border: 2px solid transparent; cursor: pointer;
+  transition: transform 200ms var(--ease), background-color 200ms var(--ease), color 200ms var(--ease), border-color 200ms var(--ease);
+}
+.btn:active { transform: scale(0.98); }
+.btn--negro { background: var(--negro); color: var(--blanco); padding-right: 0.45rem; }
+.btn__flecha {
+  display: grid; place-items: center; width: 2.35rem; height: 2.35rem; border-radius: 50%;
+  background: var(--amarillo); color: var(--negro); transition: transform 250ms var(--ease);
+}
+.btn--negro:hover .btn__flecha, a:hover > .btn__flecha { transform: translateX(3px); }
+.btn--contorno { border-color: var(--negro); color: var(--negro); background: transparent; }
+.btn--contorno:hover { background: var(--negro); color: var(--blanco); }
+.btn--amarillo { background: var(--amarillo); color: var(--negro); }
+.btn--amarillo:hover { background: var(--amarillo-60); }
+.sobre-oscuro .btn--contorno { border-color: var(--blanco); color: var(--blanco); }
+.sobre-oscuro .btn--contorno:hover { background: var(--blanco); color: var(--negro); }
+.btn[aria-disabled="true"], .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.enlace { font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.25em; text-decoration-color: var(--amarillo); }
+.enlace:hover { text-decoration-color: currentColor; }
+
+/* Aparición al desplazarse: sutil y solo una vez (scripts/revelar.ts) */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-revelar] { opacity: 0; transform: translateY(16px); transition: opacity 700ms var(--ease), transform 700ms var(--ease); }
+  .js [data-revelar].visible { opacity: 1; transform: none; }
+}
+
+/* Cabecera de páginas internas */
+.encabezado-pagina { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) var(--s-6); }
+.titulo-pagina { font-size: clamp(2.4rem, 1.4rem + 4vw, 4.75rem); font-weight: 900; letter-spacing: -0.04em; line-height: 0.98; max-width: 16ch; }
+.encabezado-pagina .intro { margin-top: var(--s-5); }

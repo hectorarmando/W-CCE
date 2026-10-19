@@ -1,0 +1,53 @@
+---
+import Base from "../layouts/Base.astro";
+import FormularioContacto from "../components/FormularioContacto.astro";
+import { sitio, enlaceWhatsapp } from "../data/sitio";
+---
+<Base titulo="Contacto" descripcion="Escríbenos para recibir información de programas, horarios e inversión, o para capacitar a tu equipo. Atención por WhatsApp y formulario.">
+  <section class="encabezado-pagina">
+    <div class="contenedor">
+      <h1 class="titulo-pagina">Hablemos de lo que quieres aprender</h1>
+      <p class="intro">Déjanos tus datos y un asesor te ayudará a elegir el programa, con horarios e inversión vigentes.</p>
+    </div>
+  </section>
+
+  <section class="seccion contacto" aria-label="Formulario y canales">
+    <div class="contenedor contacto__rejilla">
+      <div class="contacto__form">
+        <h2 class="sr-only">Formulario de contacto</h2>
+        <FormularioContacto modo="persona" />
+      </div>
+
+      <aside class="canal" aria-labelledby="canal-titulo">
+        <h2 id="canal-titulo" class="canal__titulo">¿Prefieres escribir directamente?</h2>
+        <p>Nuestro equipo de atención responde por WhatsApp.</p>
+        <a class="canal__numero" href={enlaceWhatsapp("Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.")} target="_blank" rel="noopener">
+          {sitio.whatsapp.visible}
+        </a>
+        <p class="canal__nota">Para empresas: <a class="enlace" href="/empresas">capacitación para equipos</a>.</p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contacto { padding-top: var(--s-5); }
+  .contacto__rejilla { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--s-8); align-items: start; }
+  .canal { position: sticky; top: calc(var(--header-h) + 1.5rem); padding: var(--s-6); border-radius: 1rem; background: var(--negro); color: var(--blanco); }
+  .canal__titulo { font-size: var(--t-xl); }
+  .canal p { margin-top: var(--s-3); color: #d9d9d9; }
+  .canal__numero { display: inline-block; margin-top: var(--s-5); font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem); font-weight: 900; letter-spacing: -0.02em; color: var(--amarillo); text-decoration: none; }
+  .canal__numero:hover { text-decoration: underline; text-underline-offset: 6px; }
+  .canal__nota a { color: var(--blanco); }
+  .canal :focus-visible { outline-color: var(--amarillo); }
+  @media (max-width: 900px) { .contacto__rejilla { grid-template-columns: 1fr; } .canal { position: static; } }
+</style>
+
+<script>
+  // Preselecciona el programa si se llega desde una ficha (?programa=slug)
+  const slug = new URLSearchParams(location.search).get("programa");
+  if (slug) {
+    const opcion = document.querySelector<HTMLOptionElement>(`select[name="interes"] option[data-slug="${CSS.escape(slug)}"]`);
+    if (opcion) opcion.selected = true;
+  }
+</script>

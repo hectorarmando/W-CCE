@@ -1,0 +1,59 @@
+---
+import { sitio, navegacion, enlaceWhatsapp } from "../data/sitio";
+import { programas } from "../data/programas";
+const anio = new Date().getFullYear();
+---
+<footer class="pie sobre-oscuro">
+  <div class="contenedor pie__rejilla">
+    <div class="pie__marca">
+      <img src="/brand/imagotipo-blanco.svg" alt="Cámara de Comercio Exterior" width="184" height="120" />
+      <p>Capacitación profesional en comercio exterior, datos, inteligencia artificial y habilidades digitales.</p>
+    </div>
+
+    <nav aria-label="Sitio">
+      <p class="pie__titulo">Sitio</p>
+      <ul role="list">
+        <li><a href="/">Inicio</a></li>
+        {navegacion.map((n) => <li><a href={n.href}>{n.texto}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-label="Programas destacados">
+      <p class="pie__titulo">Programas</p>
+      <ul role="list">
+        {programas.map((p) => <li><a href={`/programas/${p.slug}`}>{p.nombre}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <p class="pie__titulo">Atención</p>
+      <ul role="list">
+        <li>
+          <a href={enlaceWhatsapp("Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.")} target="_blank" rel="noopener">
+            WhatsApp {sitio.whatsapp.visible}
+          </a>
+        </li>
+        <li><a href="/contacto">Formulario de contacto</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="contenedor pie__legal">
+    <p>© {anio} {sitio.nombre} ({sitio.sigla}). Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<style>
+  .pie { background: var(--negro); color: var(--blanco); padding-block: var(--s-8) var(--s-5); margin-top: 0; }
+  .pie__rejilla { display: grid; grid-template-columns: 1.4fr 1fr 1.4fr 1.2fr; gap: var(--s-7) var(--s-6); }
+  .pie__marca img { width: 152px; height: auto; margin-bottom: var(--s-5); }
+  .pie__marca p { color: var(--gris-claro); font-size: var(--t-sm); max-width: 30ch; }
+  .pie__titulo { font-size: var(--t-xs); font-weight: 700; color: var(--amarillo); margin-bottom: var(--s-4); }
+  .pie ul { display: grid; gap: var(--s-3); }
+  .pie a { text-decoration: none; font-size: var(--t-sm); color: #e6e6e6; }
+  .pie a:hover { color: var(--blanco); text-decoration: underline; text-decoration-color: var(--amarillo); text-underline-offset: 4px; }
+  .pie__legal { margin-top: var(--s-8); padding-top: var(--s-5); border-top: 1px solid #262626; }
+  .pie__legal p { font-size: var(--t-xs); color: var(--gris); }
+  @media (max-width: 900px) { .pie__rejilla { grid-template-columns: 1fr 1fr; } .pie__marca { grid-column: 1 / -1; } }
+  @media (max-width: 520px) { .pie__rejilla { grid-template-columns: 1fr; } }
+</style>

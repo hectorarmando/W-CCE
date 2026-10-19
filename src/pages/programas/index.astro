@@ -1,0 +1,130 @@
+---
+import Base from "../../layouts/Base.astro";
+import { areas, programas, cursos, areaPorId } from "../../data/programas";
+import { enlaceWhatsapp } from "../../data/sitio";
+
+const items = [
+  ...programas.map((p) => ({
+    nombre: p.nombre, area: p.area, color: p.color ?? areaPorId[p.area].color, resumen: p.resumen,
+    meta: p.datos.slice(0, 2).map((d) => d.valor).join(" / "),
+    href: `/programas/${p.slug}`, externo: false, accion: "Ver temario",
+  })),
+  ...cursos.map((c) => ({
+    nombre: c.nombre, area: c.area, color: c.color ?? areaPorId[c.area].color, resumen: c.resumen,
+    meta: "Consulta temario, horarios e inversión",
+    href: enlaceWhatsapp(`Hola, quiero información del curso de ${c.nombre}.`), externo: true, accion: "Consultar",
+  })),
+];
+---
+<Base titulo="Programas y cursos" descripcion="Catálogo de programas y cursos de la Cámara de Comercio Exterior: comercio exterior, Excel, Power BI, inteligencia artificial, marketing, diseño, ingeniería e idiomas.">
+  <section class="encabezado-pagina">
+    <div class="contenedor">
+      <h1 class="titulo-pagina">Programas y cursos</h1>
+      <p class="intro">Los programas con temario completo tienen su propia página. Para el resto del catálogo, un asesor te comparte el temario, los horarios y la inversión vigente.</p>
+    </div>
+  </section>
+
+  <section class="seccion catalogo" aria-label="Catálogo">
+    <div class="contenedor">
+      <div class="filtros" role="group" aria-label="Filtrar por área" data-filtros>
+        <button type="button" aria-pressed="true" data-area="todas">Todas <span>{items.length}</span></button>
+        {areas.map((a) => (
+          <button type="button" aria-pressed="false" data-area={a.id} style={`--c:${a.color}`}>
+            <i aria-hidden="true"></i>{a.nombre} <span>{items.filter((i) => i.area === a.id).length}</span>
+          </button>
+        ))}
+      </div>
+      <p class="sr-only" aria-live="polite" data-estado></p>
+
+      <ul role="list" class="lista" data-lista>
+        {items.map((it) => (
+          <li data-area={it.area} style={`--c:${it.color}`}>
+            <a class="item" href={it.href} {...(it.externo ? { target: "_blank", rel: "noopener" } : {})}>
+              <span class="item__barra" aria-hidden="true"></span>
+              <span class="item__area">{areaPorId[it.area].nombre}</span>
+              <span class="item__nombre">{it.nombre}</span>
+              <span class="item__resumen">{it.resumen}</span>
+              <span class="item__meta">{it.meta}</span>
+              <span class="item__accion">{it.accion}{it.externo && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="vacio" hidden data-vacio>No hay programas en esta área por ahora. <a class="enlace" href={enlaceWhatsapp("Hola, busco un curso que no encuentro en el catálogo.")} target="_blank" rel="noopener">Cuéntanos qué buscas</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .filtros { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-7); }
+  .filtros button {
+    display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 1rem;
+    border: 1.5px solid var(--gris-claro); border-radius: 999px; background: var(--blanco);
+    font-size: var(--t-sm); font-weight: 600; cursor: pointer; transition: all 150ms var(--ease);
+  }
+  .filtros button:hover { border-color: var(--negro); }
+  .filtros button[aria-pressed="true"] { background: var(--negro); border-color: var(--negro); color: var(--blanco); }
+  .filtros i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--c); }
+  .filtros span { font-size: var(--t-xs); color: var(--gris-oscuro); font-weight: 700; }
+  .filtros button[aria-pressed="true"] span { color: var(--amarillo); }
+
+  .lista { border-top: 1px solid var(--negro); }
+  .item {
+    display: grid; grid-template-columns: 6px minmax(10rem, 0.9fr) minmax(0, 1.6fr) minmax(0, 1.3fr) auto;
+    grid-template-areas: "barra nombre resumen meta accion" "barra area resumen meta accion";
+    column-gap: var(--s-5); row-gap: 4px; align-items: center;
+    padding: var(--s-5) 0; border-bottom: 1px solid var(--linea); text-decoration: none;
+    transition: background-color 200ms var(--ease);
+  }
+  .item:hover { background: #fafafa; }
+  .item__barra { grid-area: barra; align-self: stretch; background: var(--c); border-radius: 3px; }
+  .item__nombre { grid-area: nombre; font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.015em; line-height: 1.25; }
+  .item__area { grid-area: area; font-size: var(--t-xs); color: var(--gris-oscuro); }
+  .item__resumen { grid-area: resumen; font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .item__meta { grid-area: meta; font-size: var(--t-sm); font-weight: 600; }
+  .item__accion {
+    grid-area: accion; font-size: var(--t-sm); font-weight: 700; padding: 0.5rem 1rem; border-radius: 999px;
+    border: 1.5px solid var(--negro); white-space: nowrap; transition: all 150ms var(--ease);
+  }
+  .item:hover .item__accion { background: var(--negro); color: var(--blanco); }
+  .vacio { padding: var(--s-7) 0; font-size: var(--t-lg); }
+
+  @media (max-width: 960px) {
+    .item {
+      grid-template-columns: 6px 1fr;
+      grid-template-areas: "barra area" "barra nombre" "barra resumen" "barra meta" "barra accion";
+      row-gap: var(--s-2);
+    }
+    .item__accion { justify-self: start; margin-top: var(--s-2); }
+  }
+</style>
+
+<script>
+  const grupo = document.querySelector<HTMLElement>("[data-filtros]");
+  const filas = document.querySelectorAll<HTMLElement>("[data-lista] > li");
+  const vacio = document.querySelector<HTMLElement>("[data-vacio]");
+  const estado = document.querySelector<HTMLElement>("[data-estado]");
+  const botones = grupo ? [...grupo.querySelectorAll<HTMLButtonElement>("button")] : [];
+  const validas = new Set(botones.map((b) => b.dataset.area));
+
+  function filtrar(area: string, actualizarUrl = true) {
+    if (!validas.has(area)) area = "todas";
+    botones.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.area === area)));
+    let visibles = 0;
+    filas.forEach((f) => {
+      const mostrar = area === "todas" || f.dataset.area === area;
+      f.hidden = !mostrar;
+      if (mostrar) visibles++;
+    });
+    if (vacio) vacio.hidden = visibles > 0;
+    if (estado) estado.textContent = `${visibles} resultados`;
+    if (actualizarUrl) {
+      const url = new URL(location.href);
+      if (area === "todas") url.searchParams.delete("area"); else url.searchParams.set("area", area);
+      try { history.replaceState(null, "", url); } catch { /* p. ej. documentos sin URL propia */ }
+    }
+  }
+
+  botones.forEach((b) => b.addEventListener("click", () => filtrar(b.dataset.area ?? "todas")));
+  filtrar(new URLSearchParams(location.search).get("area") ?? "todas", false);
+</script>

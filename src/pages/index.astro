@@ -1,0 +1,287 @@
+---
+import Base from "../layouts/Base.astro";
+import Arco from "../components/Arco.astro";
+import Flecha from "../components/Flecha.astro";
+import { sitio, enlaceWhatsapp } from "../data/sitio";
+import { areas, programas, cursos, areaPorId } from "../data/programas";
+
+const [destacado, ...resto] = programas;
+const cuenta = (id: string) => programas.filter((p) => p.area === id).length + cursos.filter((c) => c.area === id).length;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: sitio.nombre,
+  alternateName: sitio.sigla,
+  url: `https://${sitio.dominio}`,
+  logo: `https://${sitio.dominio}/brand/isologo-color.svg`,
+  contactPoint: { "@type": "ContactPoint", telephone: "+51902148893", contactType: "customer service", availableLanguage: "es" },
+};
+
+// Beneficios que aparecen en los brochures y sílabos 2026 (F6, F10, F11, F12)
+const formas = [
+  { titulo: "Clases en vivo", texto: "Aprendes con el docente en tiempo real y resuelves tus dudas en clase. Varios programas suman clases de refuerzo en vivo." },
+  { titulo: "Clases grabadas y recursos", texto: "Repasa cuando lo necesites: grabaciones, plantillas y materiales del programa." },
+  { titulo: "Proyectos aplicados", texto: "Cierras con un proyecto real: un capstone en Power BI, un sistema de IA o tu propio proyecto de importación." },
+  { titulo: "Certificado verificable", texto: "Certificado digital de la Cámara de Comercio Exterior con código QR para validar su autenticidad." },
+];
+---
+<Base titulo={sitio.nombre} descripcion={sitio.descripcion} jsonLd={jsonLd}>
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-titulo">
+    <div class="contenedor hero__rejilla">
+      <div class="hero__texto">
+        <h1 id="hero-titulo" class="hero__titulo">Aprende lo que hoy exige el negocio internacional.</h1>
+        <p class="hero__sub">Programas en vivo de comercio exterior, análisis de datos, inteligencia artificial y habilidades digitales, con proyectos aplicados y certificado digital verificable.</p>
+        <div class="hero__acciones">
+          <a class="btn btn--negro" href="/programas">Ver programas <Flecha /></a>
+          <a class="btn btn--contorno" href={enlaceWhatsapp("Hola, quiero que un asesor me ayude a elegir un programa.")} target="_blank" rel="noopener">Hablar con un asesor</a>
+        </div>
+      </div>
+
+      <nav class="hero__visual" aria-label="Áreas de formación">
+        <Arco class="hero__arco" animado grosor={17} />
+        <ul role="list" class="hero__areas">
+          {areas.map((a, i) => (
+            <li style={`--c:${a.color}; --i:${i}`}>
+              <a href={`/programas?area=${a.id}`}><span class="punto" aria-hidden="true"></span>{a.nombre}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  <!-- PROGRAMAS DESTACADOS -->
+  <section class="seccion" aria-labelledby="destacados-titulo">
+    <div class="contenedor">
+      <div class="cabeza">
+        <h2 id="destacados-titulo" class="titulo-seccion">Programas con temario completo</h2>
+        <a class="enlace" href="/programas">Ver todo el catálogo</a>
+      </div>
+
+      <div class="destacados">
+        <a class="destacado" href={`/programas/${destacado.slug}`}>
+          <span class="destacado__area">{areaPorId[destacado.area].nombre}</span>
+          <h3 class="destacado__nombre">{destacado.nombre}</h3>
+          <p class="destacado__resumen">{destacado.resumen}</p>
+          <dl class="destacado__datos">
+            {destacado.datos.map((d) => (<div><dt>{d.etiqueta}</dt><dd>{d.valor}</dd></div>))}
+          </dl>
+          <span class="destacado__ir">Ver temario <Flecha /></span>
+        </a>
+
+        <ul role="list" class="filas">
+          {resto.map((p) => (
+            <li>
+              <a class="fila" href={`/programas/${p.slug}`} style={`--c:${p.color ?? areaPorId[p.area].color}`}>
+                <span class="fila__barra" aria-hidden="true"></span>
+                <span class="fila__cuerpo">
+                  <span class="fila__nombre">{p.nombre}</span>
+                  <span class="fila__dato">{p.datos.map((d) => d.valor).slice(0, 2).join(" / ")}</span>
+                </span>
+                <svg class="fila__flecha" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M10.5 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO ESTUDIAS -->
+  <section class="seccion seccion--suave" aria-labelledby="formas-titulo">
+    <div class="contenedor formas">
+      <div>
+        <h2 id="formas-titulo" class="titulo-seccion">Estudias en línea, pero <span class="resalte">no estudias solo</span>.</h2>
+        <p class="intro">Todos los programas son virtuales y combinan sesiones con el docente, material para repasar y un proyecto que demuestra lo que aprendiste.</p>
+      </div>
+      <ul role="list" class="formas__lista">
+        {formas.map((f) => (<li><h3>{f.titulo}</h3><p>{f.texto}</p></li>))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ÁREAS -->
+  <section class="seccion" aria-labelledby="areas-titulo">
+    <div class="contenedor">
+      <h2 id="areas-titulo" class="titulo-seccion">Seis áreas, un mismo enfoque práctico</h2>
+      <ul role="list" class="areas">
+        {areas.map((a) => (
+          <li>
+            <a class="area" href={`/programas?area=${a.id}`} style={`--c:${a.color}`}>
+              <span class="area__marca" aria-hidden="true"></span>
+              <span class="area__nombre">{a.nombre}</span>
+              <span class="area__desc">{a.descripcion}</span>
+              <span class="area__cuenta">{cuenta(a.id)} {cuenta(a.id) === 1 ? "programa" : "programas y cursos"}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- EMPRESAS -->
+  <section class="seccion seccion--oscura sobre-oscuro" aria-labelledby="empresas-titulo">
+    <div class="contenedor empresas">
+      <h2 id="empresas-titulo" class="titulo-seccion">¿Necesitas capacitar a tu equipo?</h2>
+      <div>
+        <p class="intro">Coordinamos programas del catálogo para grupos de colaboradores, con condiciones corporativas. Cuéntanos cuántas personas son y qué necesitan aprender.</p>
+        <div class="hero__acciones">
+          <a class="btn btn--amarillo" href="/empresas">Capacitación para empresas</a>
+          <a class="btn btn--contorno" href={enlaceWhatsapp("Hola, quiero información sobre cursos para empresas y precio corporativo.")} target="_blank" rel="noopener">Escribir por WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASOS -->
+  <section class="seccion" aria-labelledby="pasos-titulo">
+    <div class="contenedor">
+      <h2 id="pasos-titulo" class="titulo-seccion">Cómo inscribirte</h2>
+      <ol role="list" class="pasos">
+        <li><span class="pasos__n" aria-hidden="true">1</span><h3>Elige tu programa</h3><p>Revisa el temario, la duración y la modalidad en la página de cada programa.</p></li>
+        <li><span class="pasos__n" aria-hidden="true">2</span><h3>Habla con un asesor</h3><p>Por WhatsApp o el formulario: te confirma horarios, inversión vigente y medios de pago.</p></li>
+        <li><span class="pasos__n" aria-hidden="true">3</span><h3>Matricúlate y empieza</h3><p>Recibes tus accesos y te unes a las clases en vivo de tu grupo.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CIERRE -->
+  <section class="cierre" aria-labelledby="cierre-titulo">
+    <Arco class="cierre__arco" grosor={14} />
+    <div class="contenedor cierre__contenido">
+      <h2 id="cierre-titulo" class="titulo-seccion">¿No sabes por dónde empezar?</h2>
+      <p class="intro">Cuéntanos a qué te dedicas y qué quieres lograr. Un asesor te recomienda el programa adecuado.</p>
+      <div class="hero__acciones">
+        <a class="btn btn--negro" href="/contacto">Dejar mis datos <Flecha /></a>
+        <a class="btn btn--contorno" href={enlaceWhatsapp("Hola, quiero que me recomienden un programa.")} target="_blank" rel="noopener">WhatsApp {sitio.whatsapp.visible}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* HERO */
+  .hero { position: relative; overflow: hidden; padding-block: clamp(2.5rem, 1rem + 5vw, 6rem) clamp(3rem, 1rem + 6vw, 7rem); }
+  .hero__rejilla { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--s-7); align-items: center; }
+  .hero__titulo { font-size: clamp(2.6rem, 1.3rem + 4.6vw, 5.4rem); font-weight: 900; letter-spacing: -0.045em; line-height: 0.96; max-width: 13ch; }
+  .hero__sub { margin-top: var(--s-6); font-size: var(--t-lg); line-height: 1.5; color: var(--gris-oscuro); max-width: 46ch; }
+  .hero__acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
+
+  .hero__visual { position: relative; aspect-ratio: 1; width: min(100%, 34rem); justify-self: end; display: grid; place-items: center; }
+  /* El arco desborda un poco su caja para que la lista quepa holgada dentro de la "C" */
+  .hero__visual :global(.hero__arco) { position: absolute; inset: -13%; width: 126%; height: 126%; }
+  /* La lista vive dentro de la "C": desplazada hacia la abertura derecha para no tocar el trazo */
+  .hero__areas { position: relative; display: grid; gap: 0; width: 60%; margin-left: 10%; }
+  .hero__areas a {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.2rem; border-bottom: 1px solid var(--linea); white-space: nowrap;
+    font-weight: 700; font-size: clamp(0.95rem, 0.8rem + 0.5vw, 1.15rem); text-decoration: none; letter-spacing: -0.01em;
+  }
+  .hero__areas a:hover { border-bottom-color: var(--negro); }
+  .punto { flex: none; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__areas li { opacity: 0; transform: translateX(-8px); animation: entrar 600ms var(--ease) forwards; animation-delay: calc(700ms + var(--i) * 70ms); }
+    @keyframes entrar { to { opacity: 1; transform: none; } }
+  }
+
+  /* DESTACADOS */
+  .cabeza { display: flex; justify-content: space-between; align-items: end; gap: var(--s-5); flex-wrap: wrap; margin-bottom: var(--s-7); }
+  .destacados { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--s-6); align-items: start; }
+  .destacado {
+    position: relative; display: block; padding: clamp(1.5rem, 1rem + 2vw, 2.75rem); border-radius: 1rem;
+    background: var(--amarillo); color: var(--negro); text-decoration: none; overflow: hidden; isolation: isolate;
+    transition: transform 300ms var(--ease);
+  }
+  .destacado:hover { transform: translateY(-3px); }
+  .destacado__area { font-size: var(--t-sm); font-weight: 600; }
+  .destacado__nombre { font-size: var(--t-2xl); font-weight: 900; margin-top: var(--s-4); max-width: 12ch; }
+  .destacado__resumen { margin-top: var(--s-4); max-width: 44ch; }
+  .destacado__datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: var(--s-4); margin: var(--s-6) 0; padding-top: var(--s-5); border-top: 2px solid var(--negro); }
+  .destacado__datos dt { font-size: var(--t-xs); }
+  .destacado__datos dd { margin: 2px 0 0; font-weight: 700; font-size: var(--t-sm); line-height: 1.35; }
+  .destacado__ir { display: inline-flex; align-items: center; gap: var(--s-3); font-weight: 800; }
+  .destacado__ir :global(.btn__flecha) { background: var(--negro); color: var(--amarillo); }
+
+  .filas { border-top: 1px solid var(--negro); }
+  .fila {
+    display: grid; grid-template-columns: 6px 1fr auto; gap: var(--s-5); align-items: center;
+    padding: var(--s-5) 0; border-bottom: 1px solid var(--linea); text-decoration: none;
+  }
+  .fila__barra { align-self: stretch; background: var(--c); border-radius: 3px; }
+  .fila__nombre { display: block; font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.015em; line-height: 1.25; }
+  .fila__dato { display: block; margin-top: 4px; font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .fila__flecha { transition: transform 250ms var(--ease); }
+  .fila:hover .fila__flecha { transform: translateX(4px); }
+  .fila:hover .fila__nombre { text-decoration: underline; text-decoration-color: var(--amarillo); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+
+  /* FORMAS */
+  .formas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--s-8); align-items: start; }
+  .formas .intro { margin-top: var(--s-5); }
+  .formas__lista { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-6) var(--s-6); }
+  .formas__lista li { padding-top: var(--s-4); border-top: 2px solid var(--negro); }
+  .formas__lista h3 { font-size: var(--t-lg); }
+  .formas__lista p { margin-top: var(--s-3); color: var(--gris-oscuro); font-size: var(--t-sm); }
+
+  /* ÁREAS */
+  .areas { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: var(--s-7); border-top: 1px solid var(--negro); border-left: 1px solid var(--linea); }
+  .area {
+    position: relative; display: grid; gap: var(--s-3); align-content: start; min-height: 13rem; height: 100%;
+    padding: var(--s-6) var(--s-5); border-right: 1px solid var(--linea); border-bottom: 1px solid var(--linea);
+    text-decoration: none; transition: background-color 250ms var(--ease);
+  }
+  .area:hover { background: #fafafa; }
+  .area__marca { width: 2.75rem; height: 6px; border-radius: 3px; background: var(--c); }
+  .area__nombre { font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.015em; margin-top: var(--s-2); }
+  .area__desc { font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .area__cuenta { font-size: var(--t-xs); font-weight: 700; margin-top: auto; padding-top: var(--s-3); }
+
+  /* EMPRESAS */
+  .empresas { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-7); align-items: end; }
+  .empresas .titulo-seccion { font-size: var(--t-display); max-width: 11ch; }
+
+  /* PASOS */
+  .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6); margin-top: var(--s-7); counter-reset: paso; }
+  .pasos li { padding-top: var(--s-5); border-top: 1px solid var(--linea); }
+  .pasos__n { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--negro); color: var(--amarillo); font-weight: 900; margin-bottom: var(--s-5); }
+  .pasos h3 { font-size: var(--t-lg); }
+  .pasos p { margin-top: var(--s-3); color: var(--gris-oscuro); font-size: var(--t-sm); max-width: 32ch; }
+
+  /* CIERRE */
+  .cierre { position: relative; overflow: hidden; padding-block: clamp(5rem, 3rem + 8vw, 10rem); background: var(--amarillo-30); }
+  .cierre :global(.cierre__arco) { position: absolute; width: clamp(28rem, 50vw, 46rem); right: -12%; top: 50%; transform: translateY(-50%); }
+  .cierre__contenido { position: relative; }
+  .cierre .intro { margin-top: var(--s-5); color: var(--negro); }
+
+  @media (max-width: 1024px) {
+    .destacados, .formas { grid-template-columns: 1fr; gap: var(--s-7); }
+    .areas { grid-template-columns: repeat(2, 1fr); }
+  }
+  /* Por debajo de 1180px la lista no cabe en la "C" junto al titular: el arco pasa debajo, centrado */
+  @media (max-width: 1180px) {
+    .hero__rejilla { grid-template-columns: 1fr; gap: var(--s-8); }
+    .hero__visual { justify-self: center; width: min(100%, 27rem); margin-block: var(--s-6); }
+  }
+  /* En pantallas angostas la lista no cabe dentro de la "C": el arco queda como gesto de marca
+     y las áreas se recorren en la sección "Seis áreas" más abajo */
+  @media (max-width: 560px) {
+    .hero { padding-bottom: var(--s-6); }
+    .hero__rejilla { gap: var(--s-5); }
+    .hero__rejilla { position: relative; }
+    .hero__texto { position: relative; z-index: 1; }
+    /* El arco abraza el titular desde la derecha, recortado por el borde */
+    .hero__visual { position: absolute; top: -1.5rem; right: -5.5rem; width: 13rem; margin: 0; z-index: 0; }
+    .hero__areas { display: none; }
+  }
+  @media (max-width: 860px) {
+    .empresas { grid-template-columns: 1fr; align-items: start; gap: var(--s-5); }
+    .pasos { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .areas, .formas__lista { grid-template-columns: 1fr; }
+    .area { min-height: 0; }
+    .hero__acciones .btn { width: 100%; }
+    .cierre :global(.cierre__arco) { width: 16rem; right: -5rem; top: auto; bottom: -5rem; transform: none; }
+    .cierre { padding-bottom: 12rem; }
+  }
+</style>
