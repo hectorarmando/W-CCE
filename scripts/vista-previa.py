@@ -22,7 +22,8 @@ def recurso(ruta: str) -> str:
     ruta = ruta.lstrip("/")
     if ruta not in recursos:
         datos = (DIST / ruta).read_bytes()
-        mime = {"svg": "image/svg+xml", "woff2": "font/woff2", "png": "image/png"}[ruta.rsplit(".", 1)[1]]
+        mime = {"svg": "image/svg+xml", "woff2": "font/woff2", "png": "image/png",
+                "jpg": "image/jpeg", "webp": "image/webp", "avif": "image/avif"}[ruta.rsplit(".", 1)[1]]
         recursos[ruta] = {"mime": mime, "b64": base64.b64encode(datos).decode()}
     return f"__R:{ruta}__"
 
@@ -32,12 +33,24 @@ def css(ruta: str) -> str:
     texto = re.sub(r"@font-face\{[^}]*(cyrillic|vietnamese)[^}]*\}", "", texto)
     return re.sub(r"url\((/_astro/[^)]+\.woff2)\)", lambda m: f"url({recurso(m.group(1))})", texto)
 
+def foto(m) -> str:
+    etiqueta = m.group(0)
+    candidatos = [(int(w), u) for u, w in re.findall(r"(/_astro/\S+?\.(?:jpg|webp|avif)) (\d+)w", etiqueta)]
+    if not candidatos:
+        candidatos = [(0, re.search(r'src="([^"]+)"', etiqueta).group(1))]
+    _, elegida = min(candidatos, key=lambda c: abs(c[0] - 1000))
+    etiqueta = re.sub(r'\s(srcset|sizes)="[^"]*"', "", etiqueta)
+    return re.sub(r'src="[^"]+"', f'src="{recurso(elegida)}"', etiqueta, count=1)
+
 paginas = {}
 for ruta, archivo in PAGINAS.items():
     html = (DIST / archivo).read_text(encoding="utf-8")
     html = re.sub(r'<link rel="(icon|apple-touch-icon|sitemap|manifest|canonical)"[^>]*>', "", html)
     html = re.sub(r'<link rel="stylesheet" href="([^"]+)"[^>]*>', lambda m: f"<style>{css(m.group(1))}</style>", html)
     html = re.sub(r'src="(/brand/[^"]+)"', lambda m: f'src="{recurso(m.group(1))}"', html)
+    # Fotos (<Picture>): se conserva una sola variante de ~1000 px por foto para que el archivo sea liviano
+    html = re.sub(r"<source[^>]*>", "", html)
+    html = re.sub(r"<img [^>]*?/_astro/[^>]*>", foto, html)
     paginas[ruta] = html
 
 plantilla = r"""<!doctype html>
@@ -79,7 +92,7 @@ for (const [ruta, r] of Object.entries(RECURSOS)) {
   const bytes = Uint8Array.from(atob(r.b64), c => c.charCodeAt(0));
   urls[ruta] = URL.createObjectURL(new Blob([bytes], { type: r.mime }));
 }
-const resolver = html => html.replace(/__R:([A-Za-z0-9_.\/-]+?\.(?:svg|woff2|png))__/g, (_, r) => urls[r] || "");
+const resolver = html => html.replace(/__R:([A-Za-z0-9_.\/-]+?\.(?:svg|woff2|png|jpg|webp|avif))__/g, (_, r) => urls[r] || "");
 const marco = document.getElementById("marco");
 const selector = document.getElementById("pagina");
 for (const ruta of Object.keys(PAGINAS)) selector.add(new Option(NOMBRES[ruta] || ruta, ruta));

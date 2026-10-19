@@ -40,11 +40,27 @@ Cuando estén disponibles se agregan así:
 
 ## Fotografía
 
-El manual pide personas reales (alumnos y docentes) recortadas sobre fondo claro, con actitud positiva. No había fotos autorizadas disponibles, así que no se usaron imágenes de banco ni generadas. Puntos sugeridos para incorporarlas:
+**Fotos incorporadas** (entregadas por la CE, en `src/assets/fotos/`):
 
-1. Hero del inicio: una persona recortada dentro del arco, en reemplazo de la lista de áreas o junto a ella.
-2. Fichas de programa: foto del docente o render de la herramienta, como en las piezas por curso del manual.
-3. Página Empresas: equipo en capacitación.
+| Archivo | Dónde se usa |
+|---|---|
+| `evento-auditorio.jpg` | Inicio («Conectamos talento, impulsamos desarrollo») y portada de Nosotros |
+| `evento-charla-ia-generativa.jpg` | Inicio |
+| `evento-registro.jpg` | Inicio |
+| `evento-entrega-kits.jpg` | Inicio |
+| `marca-el-exito-lo-logramos-juntos.jpg` | Nosotros («Somos CE») |
+
+**Por validar:**
+
+- **Autorización de imagen.** Confirmar el consentimiento de las personas que aparecen, sobre todo estudiantes, para su uso en la web.
+- **Marcas de terceros.** En las fotos se ven marcas de terceros (UTP e Interbank en el fondo). Los textos del sitio **no** mencionan alianzas ni convenios con ellas. Confirmar si se puede publicar o si conviene recortar o desenfocar esas marcas.
+- **Frases del material gráfico.** Se usan «Conectamos talento, impulsamos desarrollo» (banner) y «El éxito lo logramos juntos.» (bolsas). Confirmar que siguen vigentes como mensajes institucionales.
+
+**Pendientes de fotografía:**
+
+1. Hero del inicio: una persona recortada dentro del arco, como pide el manual.
+2. Fichas de programa: foto del docente o render de la herramienta.
+3. Página Empresas: equipo en capacitación corporativa.
 
 Formato recomendado: WebP o AVIF de 1600 px de ancho como máximo, con `alt` descriptivo y `loading="lazy"` fuera del primer pantallazo.
 

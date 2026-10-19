@@ -2,12 +2,18 @@
 import Base from "../layouts/Base.astro";
 import Arco from "../components/Arco.astro";
 import { sitio } from "../data/sitio";
+import { Picture } from "astro:assets";
+import fotoAuditorio from "../assets/fotos/evento-auditorio.jpg";
+import fotoMarca from "../assets/fotos/marca-el-exito-lo-logramos-juntos.jpg";
 ---
 <Base titulo="Nosotros" descripcion="Conoce a la Cámara de Comercio Exterior (CE): nuestra visión de ser un Centro de Capacitación Profesional Internacional y nuestros valores.">
   <section class="encabezado-pagina">
     <div class="contenedor">
       <h1 class="titulo-pagina">Un centro de capacitación con mirada internacional</h1>
     </div>
+    <figure class="contenedor portada">
+      <Picture src={fotoAuditorio} formats={["avif", "webp"]} widths={[640, 1000, 1400, 2000]} sizes="(max-width: 1280px) 100vw, 1200px" alt="Participantes y equipo de la Cámara de Comercio Exterior en un auditorio lleno al cierre de un evento" loading="eager" fetchpriority="high" />
+    </figure>
   </section>
 
   <section class="seccion vision" aria-labelledby="vision">
@@ -46,8 +52,16 @@ import { sitio } from "../data/sitio";
 
   <section class="seccion sigla" aria-labelledby="sigla">
     <div class="contenedor dos">
-      <h2 id="sigla" class="titulo-seccion">Somos CE</h2>
-      <div class="texto-largo"><p>La forma correcta y oficial de abreviar Cámara de Comercio Exterior es <strong>CE</strong>, por sus iniciales. Te pedimos usarla en comunicaciones, documentos y menciones a la institución.</p></div>
+      <figure class="sigla__foto">
+        <Picture src={fotoMarca} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 900px) 100vw, 40vw" alt="Bolsa negra con el imagotipo de la Cámara de Comercio Exterior y la frase «El éxito lo logramos juntos.»" />
+      </figure>
+      <div>
+        <h2 id="sigla" class="titulo-seccion">Somos CE</h2>
+        <div class="texto-largo">
+          <p>La forma correcta y oficial de abreviar Cámara de Comercio Exterior es <strong>CE</strong>, por sus iniciales. Te pedimos usarla en comunicaciones, documentos y menciones a la institución.</p>
+          <p class="lema">El éxito lo logramos juntos.</p>
+        </div>
+      </div>
     </div>
   </section>
 </Base>
@@ -68,6 +82,15 @@ import { sitio } from "../data/sitio";
   .texto-largo { display: grid; gap: var(--s-4); font-size: var(--t-lg); line-height: 1.55; color: var(--gris-oscuro); max-width: 58ch; }
   .texto-largo strong { color: var(--negro); }
   .sigla { padding-top: 0; }
+  .sigla .dos { align-items: center; }
+  .sigla__foto, .portada { margin: 0; }
+  .sigla__foto { overflow: hidden; border-radius: var(--radio); aspect-ratio: 4 / 3; }
+  .sigla__foto :global(img), .portada :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .sigla .titulo-seccion { margin-bottom: var(--s-5); }
+  .lema { font-size: var(--t-xl); font-weight: 800; color: var(--negro); letter-spacing: -0.015em; }
+  .portada { margin: var(--s-7) auto 0; }
+  .portada :global(img) { aspect-ratio: 21 / 9; border-radius: var(--radio); }
+  @media (max-width: 640px) { .portada :global(img) { aspect-ratio: 4 / 3; } }
   @media (max-width: 900px) {
     .vision__rejilla, .dos { grid-template-columns: 1fr; gap: var(--s-6); }
     .vision__simbolo { max-width: 18rem; }

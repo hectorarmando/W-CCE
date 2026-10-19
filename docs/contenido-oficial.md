@@ -423,3 +423,12 @@ Estos son los datos que suele tener un sitio corporativo y que **no se encontrar
 11. Documentos legales: Términos y condiciones, Política de privacidad, Libro de reclamaciones (obligatorio en Perú), política de reembolsos para cursos.
 12. Fichas de docentes con biografía y foto autorizada.
 13. Una definición oficial de la razón social y del dominio que se mostrarán en el sitio (ver los conflictos de las secciones 1 y 5).
+
+---
+
+## Anexo: material gráfico entregado por la CE (fotos de evento, oct-2026)
+
+Frases visibles en piezas institucionales fotografiadas. Se usan en el sitio como mensajes de marca.
+
+- Banner: «Conectamos talento, impulsamos desarrollo» · «Tu futuro profesional comienza aquí».
+- Bolsas: «El éxito lo logramos juntos.»

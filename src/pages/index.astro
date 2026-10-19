@@ -4,6 +4,11 @@ import Arco from "../components/Arco.astro";
 import Flecha from "../components/Flecha.astro";
 import { sitio, enlaceWhatsapp } from "../data/sitio";
 import { areas, programas, cursos, areaPorId } from "../data/programas";
+import { Picture } from "astro:assets";
+import fotoAuditorio from "../assets/fotos/evento-auditorio.jpg";
+import fotoCharla from "../assets/fotos/evento-charla-ia-generativa.jpg";
+import fotoRegistro from "../assets/fotos/evento-registro.jpg";
+import fotoKits from "../assets/fotos/evento-entrega-kits.jpg";
 
 const [destacado, ...resto] = programas;
 const cuenta = (id: string) => programas.filter((p) => p.area === id).length + cursos.filter((c) => c.area === id).length;
@@ -99,6 +104,29 @@ const formas = [
       <ul role="list" class="formas__lista">
         {formas.map((f) => (<li><h3>{f.titulo}</h3><p>{f.texto}</p></li>))}
       </ul>
+    </div>
+  </section>
+
+  <!-- COMUNIDAD: fotos de eventos presenciales de la CE -->
+  <section class="seccion comunidad" aria-labelledby="comunidad-titulo">
+    <div class="contenedor comunidad__rejilla">
+      <div class="comunidad__texto">
+        <!-- Frase del banner institucional de la CE -->
+        <h2 id="comunidad-titulo" class="titulo-seccion">Conectamos talento, impulsamos desarrollo.</h2>
+        <p class="intro">Además de los programas virtuales, llevamos la formación a espacios presenciales con talleres y charlas, como los workshops de inteligencia artificial y de importación.</p>
+      </div>
+      <figure class="comunidad__foto comunidad__foto--principal">
+        <Picture src={fotoAuditorio} formats={["avif", "webp"]} widths={[640, 960, 1400, 2000]} sizes="(max-width: 860px) 100vw, 58vw" alt="Participantes y equipo de la Cámara de Comercio Exterior en un auditorio lleno al cierre de un evento" />
+      </figure>
+      <figure class="comunidad__foto comunidad__foto--charla">
+        <Picture src={fotoCharla} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 860px) 100vw, 33vw" alt="Ponente explicando qué son las IA generativas frente a una proyección" />
+      </figure>
+      <figure class="comunidad__foto comunidad__foto--registro">
+        <Picture src={fotoRegistro} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 860px) 50vw, 33vw" alt="Fila de estudiantes registrándose junto al banner de la Cámara de Comercio Exterior" />
+      </figure>
+      <figure class="comunidad__foto comunidad__foto--kits">
+        <Picture src={fotoKits} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 860px) 50vw, 33vw" alt="Entrega de bolsas con el logo de la Cámara de Comercio Exterior a una participante" />
+      </figure>
     </div>
   </section>
 
@@ -223,6 +251,21 @@ const formas = [
   .formas__lista h3 { font-size: var(--t-lg); }
   .formas__lista p { margin-top: var(--s-3); color: var(--gris-oscuro); font-size: var(--t-sm); }
 
+  /* COMUNIDAD: retícula editorial con fotos reales */
+  .comunidad__rejilla {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-4);
+    grid-template-areas: "texto principal principal" "charla registro kits";
+  }
+  .comunidad__texto { grid-area: texto; align-self: end; padding: 0 var(--s-5) var(--s-5) 0; }
+  .comunidad__texto .intro { margin-top: var(--s-5); }
+  .comunidad__foto { margin: 0; overflow: hidden; border-radius: var(--radio); background: #eee; }
+  .comunidad__foto :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .comunidad__foto--principal { grid-area: principal; aspect-ratio: 16 / 9; }
+  .comunidad__foto--charla { grid-area: charla; aspect-ratio: 4 / 3; }
+  .comunidad__foto--charla :global(img) { object-position: 42% 40%; }
+  .comunidad__foto--registro { grid-area: registro; aspect-ratio: 4 / 3; }
+  .comunidad__foto--kits { grid-area: kits; aspect-ratio: 4 / 3; }
+
   /* ÁREAS */
   .areas { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: var(--s-7); border-top: 1px solid var(--negro); border-left: 1px solid var(--linea); }
   .area {
@@ -253,6 +296,10 @@ const formas = [
   .cierre__contenido { position: relative; }
   .cierre .intro { margin-top: var(--s-5); color: var(--negro); }
 
+  @media (max-width: 860px) {
+    .comunidad__rejilla { grid-template-columns: 1fr 1fr; grid-template-areas: "texto texto" "principal principal" "charla charla" "registro kits"; gap: var(--s-3); }
+    .comunidad__texto { padding: 0 0 var(--s-4); }
+  }
   @media (max-width: 1024px) {
     .destacados, .formas { grid-template-columns: 1fr; gap: var(--s-7); }
     .areas { grid-template-columns: repeat(2, 1fr); }
