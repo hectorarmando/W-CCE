@@ -80,6 +80,14 @@ const preguntas = [
           </div>
         ))}
       </div>
+      <!-- «El abrazo»: el arco amarillo de la C rodea el titular; se dibuja al cargar, se orienta hacia el cursor
+           y gira como un dial al bajar (scripts/efectos.ts escribe --px, --py y --giro) -->
+      <div class="abrazo" data-abrazo aria-hidden="true">
+        <div class="abrazo__luz"></div>
+        <div class="abrazo__giro">
+          <svg class="abrazo__arco" viewBox="0 0 400 400"><path d="M 327.3 72.7 A 180 180 0 1 0 327.3 327.3" fill="none" stroke="var(--amarillo)" stroke-width="16" pathLength="100" /></svg>
+        </div>
+      </div>
       <div class="contenedor hero__centro">
         <!-- Lema oficial de la campaña «Educación continua» -->
         <h1 id="hero-titulo" class="hero__titulo">Aprende, certifícate y <span class="acento">avanza.</span></h1>
@@ -113,7 +121,7 @@ const preguntas = [
                   <h3 class="historia__titulo">{h.titulo}</h3>
                   <p>{h.texto}</p>
                 </div>
-                <figure class="historia__foto"><Picture src={h.foto} formats={["avif", "webp"]} widths={[320, 520]} sizes="12rem" alt={h.alt} /></figure>
+                <figure class="historia__foto" data-revelar="foto"><Picture src={h.foto} formats={["avif", "webp"]} widths={[320, 520]} sizes="12rem" alt={h.alt} /></figure>
               </article>
             </li>
           ))}
@@ -155,7 +163,7 @@ const preguntas = [
         </div>
         <ul role="list" class="carrusel" data-carrusel="areas">
           {areas.map((a, i) => (
-            <li class="area-celda">
+            <li class="area-celda" data-revelar>
               <a class="area" href={`/programas?area=${a.id}`} style={`--c:${a.color}; --t:${a.id === "comercio" ? "#000" : "#fff"}`}>
                 <span class="area__lienzo">
                   <span class="area__rotulo">{a.nombre}</span>
@@ -182,7 +190,7 @@ const preguntas = [
         </div>
         <ul role="list" class="carrusel" data-carrusel="rutas">
           {programas.map((p) => (
-            <li class="ruta-celda">
+            <li class="ruta-celda" data-revelar>
               <a class="ruta" href={`/programas/${p.slug}`} style={`--c:${p.color ?? areaPorId[p.area].color}`}>
                 <span class="portada">
                   {p.imagen
@@ -221,7 +229,7 @@ const preguntas = [
         </div>
         <ul role="list" class="carrusel" data-carrusel="cursos">
           {cursosOferta.map((c) => (
-            <li class="curso-celda" data-area={c.area}>
+            <li class="curso-celda" data-revelar data-area={c.area}>
               <a class="curso" href={c.href} target="_blank" rel="noopener" style={`--c:${c.color}`}>
                 <span class="portada">
                   {c.imagen
@@ -340,6 +348,21 @@ const preguntas = [
   .hero__nota { margin-top: var(--s-4); font-size: var(--t-sm); color: #a6a6a6; }
   .hero__nota a { color: var(--blanco); text-underline-offset: 3px; text-decoration-color: var(--amarillo); }
   .hero__flotantes { position: absolute; inset: 0; pointer-events: none; }
+  /* El abrazo (efecto de la versión anterior): arco + halo detrás del titular */
+  .abrazo { --px: 0; --py: 0; --giro: 0deg; position: absolute; left: 50%; top: 50%; width: min(56rem, 96vw); aspect-ratio: 1; translate: -50% -50%; pointer-events: none; }
+  .abrazo__luz { position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle at calc(50% + var(--px) * 25%) calc(50% + var(--py) * 25%), rgba(255, 195, 0, 0.22), transparent 62%); filter: blur(30px); }
+  .abrazo__giro { position: absolute; inset: 0; transform: translate(calc(var(--px) * 18px), calc(var(--py) * 18px)) rotate(var(--giro)); transition: transform 1s var(--ease); }
+  .abrazo__arco { width: 100%; height: 100%; overflow: visible; opacity: 0.5; }
+  @media (prefers-reduced-motion: no-preference) {
+    .abrazo__arco path { stroke-dasharray: 100; stroke-dashoffset: 100; animation: trazar var(--t-momento) var(--ease) 0.2s forwards; }
+    .abrazo__luz { animation: encender 1.8s var(--ease) 0.5s both; }
+    @keyframes trazar { to { stroke-dashoffset: 0; } }
+    @keyframes encender { from { opacity: 0; } }
+    @supports (animation-timeline: scroll()) {
+      .abrazo__arco { animation: dial linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+      @keyframes dial { to { transform: rotate(-40deg); } }
+    }
+  }
   .flotante { position: absolute; width: clamp(12rem, 8rem + 9vw, 21rem); aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12); }
   .flotante :global(img) { width: 100%; height: 100%; object-fit: cover; }
   .flotante--1 { left: -3rem; top: 9%; transform: rotate(-9deg); }
@@ -358,6 +381,10 @@ const preguntas = [
   .carrusel::-webkit-scrollbar { display: none; }
   .carrusel > li { scroll-snap-align: start; }
   .carrusel > li[hidden] { display: none; }
+  /* Entrada tipo panel de salidas (efecto de la versión anterior): cada tarjeta gira como una paleta */
+  .carrusel { perspective: 1200px; }
+  :global(.efectos) .carrusel > li[data-revelar] { opacity: 0; transform: rotateX(-70deg); transform-origin: 50% 0; transition: transform 900ms var(--ease), opacity 500ms var(--ease); transition-delay: var(--retraso, 0ms); }
+  :global(.efectos) .carrusel > li[data-revelar]:global(.visible) { opacity: 1; transform: none; }
   .carrusel__flechas { display: flex; gap: var(--s-2); flex: none; }
   .carrusel__flechas button { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.1); color: var(--blanco); cursor: pointer; transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease); }
   .carrusel__flechas button:hover { background: var(--amarillo); color: var(--negro); }
@@ -387,7 +414,15 @@ const preguntas = [
   .pantalla__barra i { width: 9px; height: 9px; border-radius: 50%; background: #404040; }
   .pantalla__barra span { margin-left: var(--s-2); }
   .pantalla__video { position: relative; aspect-ratio: 16 / 9; }
+  .pantalla__video { overflow: hidden; }
   .pantalla__video :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  /* Parallax (efecto de la versión anterior): la imagen se desplaza dentro de su marco */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .pantalla__video :global(img) { height: 116%; animation: deriva linear both; animation-timeline: view(); animation-range: cover; }
+      @keyframes deriva { from { translate: 0 0; } to { translate: 0 -13%; } }
+    }
+  }
   .pantalla__vivo { position: absolute; left: var(--s-4); bottom: var(--s-4); padding: 0.3rem 0.7rem; border-radius: 999px; background: #d80027; color: var(--blanco); font-size: var(--t-xs); font-weight: 700; }
   .haciendo__texto .intro { margin-top: var(--s-4); font-size: var(--t-base); }
 
