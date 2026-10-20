@@ -3,6 +3,7 @@ import { enlaceWhatsapp } from "../data/sitio";
 import { programas, areas } from "../data/programas";
 import { oferta, indiceBusqueda } from "../data/oferta";
 import Buscador from "./Buscador.astro";
+import SelectorPais from "./SelectorPais.astro";
 
 const actual = Astro.url.pathname.replace(/\.html$/, "");
 const activo = (href: string) => actual === href || actual.startsWith(href + "/");
@@ -59,6 +60,8 @@ const mensaje = "Hola, quiero información sobre los programas de la Cámara de 
     </ul>
 
     <a class="btn btn--amarillo cabecera__cta" href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener">Hablar con un asesor</a>
+
+    <SelectorPais />
 
     <button class="menu-movil__abrir" type="button" aria-expanded="false" aria-controls="menu-movil" data-menu-movil>
       <span class="sr-only">Abrir menú</span>

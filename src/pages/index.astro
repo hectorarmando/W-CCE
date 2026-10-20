@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import Flecha from "../components/Flecha.astro";
 import Buscador from "../components/Buscador.astro";
+import Precio from "../components/Precio.astro";
 import { sitio, enlaceWhatsapp } from "../data/sitio";
 import { areas, programas, areaPorId } from "../data/programas";
 import { oferta } from "../data/oferta";
@@ -203,6 +204,7 @@ const preguntas = [
                   {dato(p, "Duración") && <span>{dato(p, "Duración")}</span>}
                   {dato(p, "Modalidad") && <span>{dato(p, "Modalidad")}</span>}
                 </span>
+                <Precio id={p.slug} class="ruta__precio" respaldo="" />
                 <span class="ruta__ir">Ver temario <span class="circulo" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></span>
               </a>
             </li>
@@ -238,6 +240,7 @@ const preguntas = [
                 </span>
                 <span class="curso__area">{areaPorId[c.area].nombre}</span>
                 <span class="curso__nombre">{c.nombre}</span>
+                <Precio id={c.id} class="curso__precio" respaldo="" />
                 <span class="curso__ir">Consultar por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></span>
               </a>
             </li>
@@ -456,6 +459,10 @@ const preguntas = [
   .circulo { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--amarillo); color: var(--negro); transition: transform var(--t-accion) var(--ease); }
   .ruta:hover .circulo { transform: translateX(4px); }
   .curso__area { font-size: var(--t-xs); color: #a6a6a6; }
+  /* Precio en la moneda del país (vacío hasta que se carguen los precios oficiales) */
+  .ruta :global(.precio:empty), .curso :global(.precio:empty) { display: none; }
+  .ruta :global(.precio--con), .curso :global(.precio--con) { font-family: var(--font-marca); font-size: var(--t-lg); }
+  .ruta :global(.precio s), .curso :global(.precio s) { font-size: var(--t-sm); color: #a6a6a6; font-weight: 400; }
   .curso__nombre { font-family: var(--font-marca); font-size: var(--t-base); font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
   .curso__ir { margin-top: auto; padding-top: var(--s-2); font-size: var(--t-sm); font-weight: 700; color: var(--amarillo); }
   .ruta:focus-visible, .curso:focus-visible { outline-offset: 4px; border-radius: var(--radio-l); }

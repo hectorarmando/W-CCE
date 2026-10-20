@@ -196,6 +196,36 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   const visiblesCursos = await page.$$eval('[data-carrusel="cursos"] > li', (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.area));
   ok("pestañas: filtran cursos por área", visiblesCursos.length > 0 && visiblesCursos.every((a) => a === "ingenieria"), visiblesCursos.length);
 
+  // Precios por país: detección por zona horaria, selector, mensaje de WhatsApp y formato de moneda
+  const ctxCo = await browser.newContext({ viewport: { width: 1440, height: 900 }, timezoneId: "America/Bogota", locale: "es-CO" });
+  page = await ctxCo.newPage();
+  await page.goto(BASE + "/");
+  ok("país: detecta Colombia por zona horaria", (await page.getAttribute("html", "data-pais")) === "CO");
+  ok("país: el botón muestra COP", (await page.textContent("[data-pais-moneda]")) === "COP");
+  await page.click("[data-pais-boton]");
+  ok("país: el panel se abre", await page.isVisible("[data-pais-panel]"));
+  await page.click('[data-pais-panel] [data-pais="MX"]');
+  ok("país: el panel se cierra al elegir", !(await page.isVisible("[data-pais-panel]")));
+  ok("país: cambia a México", (await page.getAttribute("html", "data-pais")) === "MX");
+  const wa = await page.getAttribute(".senal-fija", "href");
+  ok("país: WhatsApp indica el país", decodeURIComponent(wa).includes("Escribo desde México"), wa);
+  await page.reload();
+  ok("país: la elección se recuerda", (await page.getAttribute("html", "data-pais")) === "MX");
+  ok("país: sin precios cargados se mantiene el respaldo", (await page.goto(BASE + "/programas/power-bi"), (await page.textContent(".datos__inversion [data-precio]")).includes("asesor")));
+  // Formato con precios de EJEMPLO inyectados solo en la prueba (no existen en el sitio)
+  await page.route("**/programas/power-bi*", async (route) => {
+    const r = await route.fetch();
+    const html = (await r.text()).replace(/("precios":)\{\}/, '$1{"power-bi":{"MX":{"precio":1999,"antes":2999},"PE":{"precio":449}}}');
+    await route.fulfill({ response: r, body: html });
+  });
+  await page.goto(BASE + "/programas/power-bi");
+  const precioMx = (await page.textContent(".datos__inversion [data-precio]")).trim();
+  ok("precio: formato México ($ 1,999 MXN y tachado)", precioMx.startsWith("$ 1,999 MXN") && precioMx.includes("2,999"), precioMx);
+  await page.evaluate(() => localStorage.setItem("ce-pais", "PE"));
+  await page.reload();
+  ok("precio: formato Perú (S/ 449)", (await page.textContent(".datos__inversion [data-precio]")).trim() === "S/ 449");
+  await ctxCo.close();
+
   // Teclado: enlace para saltar al contenido
   page = await ctx.newPage();
   await page.goto(BASE + "/");

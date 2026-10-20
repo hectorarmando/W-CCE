@@ -4,6 +4,7 @@ import Flecha from "../../components/Flecha.astro";
 import { programas, areaPorId, type Programa } from "../../data/programas";
 import { sitio, enlaceWhatsapp } from "../../data/sitio";
 import { Picture, getImage } from "astro:assets";
+import Precio from "../../components/Precio.astro";
 
 export function getStaticPaths() {
   return programas.map((p) => ({ params: { slug: p.slug }, props: { programa: p } }));
@@ -46,6 +47,7 @@ const jsonLd = {
         </div>
         <dl class="datos">
           {programa.datos.map((d) => (<div><dt>{d.etiqueta}</dt><dd>{d.valor}</dd></div>))}
+          <div class="datos__inversion"><dt>Inversión</dt><dd><Precio id={programa.slug} /></dd></div>
         </dl>
       </div>
       {programa.imagen && (
@@ -129,6 +131,8 @@ const jsonLd = {
   .datos div { padding: var(--s-4) 0; border-bottom: 1px solid var(--linea); }
   .datos dt { font-size: var(--t-xs); color: var(--gris-oscuro); }
   .datos dd { margin: 2px 0 0; font-weight: 700; }
+  .datos__inversion :global(.precio--con strong) { font-family: var(--font-marca); font-size: var(--t-xl); letter-spacing: -0.03em; }
+  .datos__inversion :global(.precio s) { margin-left: 0.4rem; font-weight: 400; color: var(--gris-oscuro); }
 
   .dos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: var(--s-8); align-items: start; }
   .temario { border-top: 1px solid var(--negro); }

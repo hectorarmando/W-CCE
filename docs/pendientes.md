@@ -76,6 +76,8 @@ Cuando estén disponibles se agregan así:
 - los resúmenes son redacción propia y breve;
 - el área de Roblox («Marketing y diseño») y la de Contabilidad («Gestión e idiomas») son provisionales.
 
+**Precios por país** (ver `precios-por-pais.md`): el sistema de detección de país y monedas está listo, pero falta la tabla oficial de precios por curso y país (`plantilla-precios.csv`). También falta confirmar si los precios incluyen impuestos en cada país y el hosting, para activar la detección en el servidor.
+
 **Por validar:**
 
 - **Autorización de imagen.** Confirmar el consentimiento de las personas que aparecen, sobre todo estudiantes, para su uso en la web.

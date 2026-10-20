@@ -4,7 +4,13 @@ import type { ImageMetadata } from "astro";
 import { programas, cursos, areaPorId, type AreaId } from "./programas";
 import { enlaceWhatsapp } from "./sitio";
 
+/** Id estable de un curso del catálogo, a partir de su nombre («Diseño UX/UI» → "diseno-ux-ui"). */
+export const idCurso = (nombre: string) =>
+  nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
 export interface ItemOferta {
+  /** Id para precios y enlaces: slug de la ficha o id del curso. */
+  id: string;
   nombre: string;
   area: AreaId;
   color: string;
@@ -21,12 +27,12 @@ export interface ItemOferta {
 
 export const oferta: ItemOferta[] = [
   ...programas.map((p) => ({
-    nombre: p.nombre, area: p.area, color: p.color ?? areaPorId[p.area].color, resumen: p.resumen, imagen: p.imagen,
+    id: p.slug, nombre: p.nombre, area: p.area, color: p.color ?? areaPorId[p.area].color, resumen: p.resumen, imagen: p.imagen,
     meta: p.datos.slice(0, 2).map((d) => d.valor).join(" / "),
     href: `/programas/${p.slug}`, externo: false, accion: "Ver temario", programa: true,
   })),
   ...cursos.map((c) => ({
-    nombre: c.nombre, area: c.area, color: c.color ?? areaPorId[c.area].color, resumen: c.resumen, imagen: c.imagen,
+    id: idCurso(c.nombre), nombre: c.nombre, area: c.area, color: c.color ?? areaPorId[c.area].color, resumen: c.resumen, imagen: c.imagen,
     meta: "Consulta temario, horarios e inversión",
     href: enlaceWhatsapp(`Hola, quiero información del curso de ${c.nombre}.`), externo: true, accion: "Consultar", programa: false,
   })),

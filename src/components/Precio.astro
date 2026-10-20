@@ -1,0 +1,7 @@
+---
+// Precio de un programa o curso en la moneda del país del visitante (lo completa src/scripts/precios.ts).
+// Sin precio cargado para ese país, se queda el texto de respaldo.
+interface Props { id: string; respaldo?: string; class?: string; }
+const { id, respaldo = "Consulta con un asesor", class: clase } = Astro.props;
+---
+<span class:list={["precio", clase]} data-precio={id} data-respaldo={respaldo}>{respaldo}</span>
