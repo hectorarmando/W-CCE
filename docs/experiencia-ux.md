@@ -5,6 +5,22 @@ Cómo se recorre el sitio de la Cámara de Comercio Exterior (CE) y por qué cad
 - `direccion-creativa.md`: la identidad;
 - `sistema-movimiento.md`: el movimiento.
 
+## Estructura vigente del inicio (oct-2026)
+
+A pedido de la CE, el inicio sigue la estructura de la página de Platzi, con los colores y el logo de la marca y sin precios, testimonios ni cifras que no estén confirmados:
+
+1. Cabecera oscura: logo, «Explorar» (áreas y programas), buscador «¿Qué quieres aprender?», enlaces y «Hablar con un asesor».
+2. Portada centrada: lema «Aprende, certifícate y avanza.» con la palabra clave en amarillo, dos botones y portadas de cursos flotando en las esquinas.
+3. «Creamos momentos que impulsan carreras»: carrusel de momentos reales de eventos. Ocupa el lugar de los testimonios hasta que haya testimonios autorizados.
+4. «Aprende haciendo»: placas de color, una ventana de clase en vivo y el texto.
+5. «Elige qué aprender hoy»: carrusel de áreas con ilustraciones geométricas de color.
+6. Programas con temario completo y cursos con pestañas por área, en carruseles con portadas.
+7. «Por eso te guardamos un lugar»: tarjetas inclinadas con fotos y metas flotantes.
+8. «Elige cómo empezar»: para ti o para tu empresa. Reemplaza la tabla de planes, porque la inversión la confirma un asesor.
+9. Preguntas frecuentes y pie.
+
+Las secciones de abajo describen el diseño anterior y siguen siendo válidas para las páginas internas.
+
 ## Para quién y para qué
 
 - **Visitante principal:** profesionales y estudiantes de Perú y Latinoamérica que quieren mejorar su perfil en comercio exterior, datos o IA. Llegan casi siempre desde el celular, por anuncios o redes, con una pregunta concreta: ¿qué aprendo, cómo es y cuánto cuesta?

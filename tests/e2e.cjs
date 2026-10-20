@@ -151,21 +151,21 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   // Rueda de la comunidad (isla React): se hidrata, gira con el teclado y no atrapa la página
   page = await ctx.newPage();
   await page.goto(BASE + "/comunidad");
-  const rueda = page.locator('[role="listbox"]');
+  const rueda = page.locator('.rueda [role="listbox"]');
   await rueda.scrollIntoViewIfNeeded();
-  await page.waitForFunction(() => document.querySelectorAll('[role="option"] img').length > 0, null, { timeout: 8000 }).catch(() => {});
-  ok("rueda: muestra las 10 fotos", (await page.locator('[role="option"]').count()) === 10);
-  const imgsOk = await page.$$eval('[role="option"] img', (l) => l.every((i) => i.complete && i.naturalWidth > 0));
+  await page.waitForFunction(() => document.querySelectorAll('.rueda [role="option"] img').length > 0, null, { timeout: 8000 }).catch(() => {});
+  ok("rueda: muestra las 10 fotos", (await page.locator('.rueda [role="option"]').count()) === 10);
+  const imgsOk = await page.$$eval('.rueda [role="option"] img', (l) => l.every((i) => i.complete && i.naturalWidth > 0));
   ok("rueda: las fotos cargan", imgsOk);
   await rueda.focus();
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("ArrowDown");
   await page.waitForTimeout(900);
-  const activa = await page.getAttribute('[role="listbox"]', "aria-activedescendant");
+  const activa = await page.getAttribute('.rueda [role="listbox"]', "aria-activedescendant");
   ok("rueda: las flechas cambian la foto activa", activa === "works-wheel-1", activa);
   await page.click('ol button:has-text("Entrega de kits")');
   await page.waitForTimeout(1200);
-  ok("rueda: el índice lleva a la foto", (await page.getAttribute('[role="listbox"]', "aria-activedescendant")) === "works-wheel-3");
+  ok("rueda: el índice lleva a la foto", (await page.getAttribute('.rueda [role="listbox"]', "aria-activedescendant")) === "works-wheel-3");
 
   // Lluvia de datos en Empresas: se monta en pantalla y se desmonta al salir (no consume CPU fuera de vista)
   page = await ctx.newPage();
@@ -175,6 +175,26 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
   await page.waitForTimeout(600);
   ok("lluvia: se desmonta fuera de vista", (await page.locator(".empresas-hero canvas").count()) === 0);
+
+  // Buscador de la cabecera: resultados al escribir, flechas y Enter llevan a la ficha
+  page = await ctx.newPage();
+  await page.goto(BASE + "/");
+  await page.fill("#buscar-cabecera", "power");
+  const resultadosBusqueda = await page.$$eval("#buscar-cabecera-lista li", (l) => l.map((x) => x.textContent));
+  ok("buscador: encuentra Power BI", resultadosBusqueda.some((t) => t.includes("Power BI")), resultadosBusqueda.join(" | "));
+  ok("buscador: aria-expanded", (await page.getAttribute("#buscar-cabecera", "aria-expanded")) === "true");
+  await page.keyboard.press("ArrowDown");
+  await Promise.all([page.waitForURL(/power-bi/), page.keyboard.press("Enter")]);
+  ok("buscador: Enter abre la ficha", page.url().includes("/programas/power-bi"), page.url());
+  await page.goto(BASE + "/");
+  await page.fill("#buscar-cabecera", "xyzxyz");
+  ok("buscador: sin resultados ofrece asesor", (await page.textContent("#buscar-cabecera-lista")).includes("asesor"));
+  await page.keyboard.press("Escape");
+  ok("buscador: Escape cierra", (await page.getAttribute("#buscar-cabecera", "aria-expanded")) === "false");
+  // Pestañas de cursos
+  await page.click('[data-pestanas] button[data-area="ingenieria"]');
+  const visiblesCursos = await page.$$eval('[data-carrusel="cursos"] > li', (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.area));
+  ok("pestañas: filtran cursos por área", visiblesCursos.length > 0 && visiblesCursos.every((a) => a === "ingenieria"), visiblesCursos.length);
 
   // Teclado: enlace para saltar al contenido
   page = await ctx.newPage();

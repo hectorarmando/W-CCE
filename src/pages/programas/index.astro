@@ -1,21 +1,11 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { areas, programas, cursos, areaPorId } from "../../data/programas";
+import { areas, areaPorId } from "../../data/programas";
+import { oferta } from "../../data/oferta";
 import { enlaceWhatsapp } from "../../data/sitio";
 import { Picture } from "astro:assets";
 
-const items = [
-  ...programas.map((p) => ({
-    nombre: p.nombre, area: p.area, color: p.color ?? areaPorId[p.area].color, resumen: p.resumen, imagen: p.imagen,
-    meta: p.datos.slice(0, 2).map((d) => d.valor).join(" / "),
-    href: `/programas/${p.slug}`, externo: false, accion: "Ver temario",
-  })),
-  ...cursos.map((c) => ({
-    nombre: c.nombre, area: c.area, color: c.color ?? areaPorId[c.area].color, resumen: c.resumen, imagen: c.imagen,
-    meta: "Consulta temario, horarios e inversión",
-    href: enlaceWhatsapp(`Hola, quiero información del curso de ${c.nombre}.`), externo: true, accion: "Consultar",
-  })),
-];
+const items = oferta;
 ---
 <Base titulo="Programas y cursos" descripcion="Catálogo de programas y cursos de la Cámara de Comercio Exterior: comercio exterior, Excel, Power BI, inteligencia artificial, marketing, diseño, ingeniería e idiomas.">
   <section class="encabezado-pagina">
