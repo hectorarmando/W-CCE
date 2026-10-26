@@ -153,6 +153,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .efectos [data-revelar="foto"].visible { clip-path: inset(0 round var(--radio-l)); }
 .efectos [data-revelar="foto"] img { transform: scale(1.1); transition: transform 1.4s var(--ease) var(--retraso, 0ms), scale 1.2s var(--ease); }
 .efectos [data-revelar="foto"].visible img { transform: none; }
+/* Motion (scripts/aparecer.ts): estado inicial oculto solo mientras espera su entrada */
+.por-aparecer { opacity: 0; }
 /* Cabecera que se oculta al bajar */
 .efectos .cabecera { transition: transform 350ms var(--ease), background-color var(--t-accion) var(--ease), box-shadow var(--t-accion) var(--ease); }
 .efectos .cabecera.oculta { transform: translateY(-110%); }

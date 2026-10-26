@@ -1,20 +1,19 @@
 ---
+// Inicio — estructura aprobada (oct-2026): portada con un botón, servicios, por qué elegirnos, testimonios,
+// preguntas frecuentes y contacto con mapa. Estilo claro y minimalista (sugerencia de ui-ux-pro-max) con los
+// colores y tipografías del manual de la CE; animaciones con Motion (scripts/aparecer.ts). Celular primero.
 import Base from "../layouts/Base.astro";
-import Flecha from "../components/Flecha.astro";
-import Buscador from "../components/Buscador.astro";
 import Precio from "../components/Precio.astro";
-import BannersCampana from "../components/BannersCampana.astro";
+import FormularioContacto from "../components/FormularioContacto.astro";
+import MapaPaises from "../components/MapaPaises.astro";
 import { sitio, enlaceWhatsapp } from "../data/sitio";
-import { areas, programas, areaPorId } from "../data/programas";
+import { programas, cursos } from "../data/programas";
 import { oferta } from "../data/oferta";
+import { testimonios } from "../data/testimonios";
+import { paisPorCodigo } from "../data/paises";
 import { Picture } from "astro:assets";
 import fotoAuditorio from "../assets/fotos/evento-auditorio.jpg";
 import fotoCharla from "../assets/fotos/evento-charla-ia-generativa.jpg";
-import fotoTren from "../assets/fotos/equipo-tren-ce.jpg";
-import fotoCinta from "../assets/fotos/evento-corte-de-cinta.jpg";
-import fotoRegistro from "../assets/fotos/evento-registro.jpg";
-import fotoKits from "../assets/fotos/evento-entrega-kits.jpg";
-import fotoBatucada from "../assets/fotos/evento-batucada-banner.jpg";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -26,41 +25,37 @@ const jsonLd = {
   contactPoint: { "@type": "ContactPoint", telephone: "+51902148893", contactType: "customer service", availableLanguage: "es" },
 };
 
-const dato = (p: (typeof programas)[number], etiqueta: string) => p.datos.find((d) => d.etiqueta === etiqueta)?.valor;
-const cuenta = (id: string) => oferta.filter((o) => o.area === id).length;
-const cursosOferta = oferta.filter((o) => !o.programa);
+const mensajeAsesor = "Hola, quiero que un asesor me ayude a elegir un programa.";
 const porNombre = (n: string) => oferta.find((o) => o.nombre === n)!;
-// Portadas flotando en las esquinas de la portada (dos a cada lado)
+// Portadas oficiales flotando en las esquinas de la portada (solo escritorio)
 const flotantes = ["Programa Completo de Excel", "Academia de Importadores", "Programa Profesional de Inteligencia Artificial Aplicada", "Power BI 8 en 1"].map(porNombre);
-// Visual de «aprende haciendo»: la portada del programa de IA dentro de una ventana de clase
-const pantalla = porNombre("Programa Profesional de Inteligencia Artificial Aplicada");
+const dato = (p: (typeof programas)[number], etiqueta: string) => p.datos.find((d) => d.etiqueta === etiqueta)?.valor;
 
-// Momentos reales de la comunidad (fotos propias de la CE). No son testimonios: esos se publicarán con autorización.
-const historias = [
-  { tipo: "Workshop", titulo: "Charla de IA generativa", texto: "Talleres presenciales para usar la inteligencia artificial con criterio.", foto: fotoCharla, alt: "Ponente explicando qué son las IA generativas frente a una proyección" },
-  { tipo: "Comunidad", titulo: "Auditorio lleno al cierre", texto: "Participantes y equipo de la CE al cerrar un evento presencial.", foto: fotoAuditorio, alt: "Participantes y equipo de la Cámara de Comercio Exterior en un auditorio lleno" },
-  { tipo: "Campaña", titulo: "Lanzamiento de «Educación continua»", texto: "Corte de cinta con el lema «Aprende, certifícate y avanza».", foto: fotoCinta, alt: "Corte de cinta con el lema «Aprende, certifícate y avanza»" },
-  { tipo: "Evento", titulo: "Registro de participantes", texto: "Inscripción en uno de nuestros eventos presenciales.", foto: fotoRegistro, alt: "Fila de estudiantes registrándose junto al banner de la Cámara de Comercio Exterior" },
-  { tipo: "Equipo", titulo: "La CE en movimiento", texto: "Nuestro equipo durante la campaña «Educación continua».", foto: fotoTren, alt: "Equipo de la Cámara de Comercio Exterior en un andén, junto a un tren con el logo de la CE" },
+// Servicios: lo que ofrece la CE según el material oficial
+const servicios = [
+  { titulo: "Programas con temario completo", texto: `${programas.length} rutas de varias semanas con clases en vivo y un proyecto final.`, cta: "Ver programas", href: "/programas", imagen: porNombre("Academia de Importadores").imagen!, alt: "" },
+  { titulo: "Cursos por área", texto: `${cursos.length} cursos de datos, IA, marketing, diseño, ingeniería, gestión e idiomas.`, cta: "Ver cursos", href: "/programas", imagen: porNombre("Python").imagen!, alt: "" },
+  { titulo: "Capacitación para empresas", texto: "Programas del catálogo para grupos de colaboradores, con precio corporativo.", cta: "Pedir presupuesto", href: "/empresas", imagen: fotoAuditorio, alt: "Auditorio lleno en un evento de la Cámara de Comercio Exterior" },
+  { titulo: "Workshops presenciales", texto: "Charlas y talleres presenciales, como los de IA generativa y de importación.", cta: "Consultar fechas", href: enlaceWhatsapp("Hola, quiero información sobre los próximos workshops presenciales."), externo: true, imagen: fotoCharla, alt: "Ponente en un workshop de IA generativa" },
 ];
 
-// Ilustraciones geométricas de las áreas: arcos de la «C» de la marca combinados con formas simples
-const figuras = [
-  '<circle cx="100" cy="92" r="52" fill="none" stroke="#000" stroke-width="26" stroke-dasharray="250 77" transform="rotate(40 100 92)"/><rect x="138" y="20" width="36" height="36" rx="8" fill="#fff"/><circle cx="40" cy="132" r="14" fill="#fff"/>',
-  '<rect x="34" y="40" width="70" height="70" rx="14" fill="#fff"/><circle cx="130" cy="94" r="44" fill="none" stroke="#000" stroke-width="22"/><path d="M150 20l18 18-18 18-18-18z" fill="#ffc300"/>',
-  '<circle cx="100" cy="86" r="56" fill="#ffc300"/><circle cx="100" cy="86" r="30" fill="none" stroke="#fff" stroke-width="16" stroke-dasharray="140 49"/><circle cx="160" cy="34" r="10" fill="#fff"/>',
-  '<path d="M30 130 100 30l70 100z" fill="#ffc300"/><circle cx="100" cy="98" r="24" fill="#fff"/><rect x="150" y="16" width="26" height="26" rx="6" fill="#fff"/>',
-  '<rect x="40" y="36" width="54" height="94" rx="8" fill="#ffc300"/><rect x="104" y="64" width="54" height="66" rx="8" fill="#fff"/><circle cx="160" cy="34" r="14" fill="none" stroke="#ffc300" stroke-width="8"/>',
-  '<circle cx="78" cy="84" r="44" fill="none" stroke="#ffc300" stroke-width="22" stroke-dasharray="210 67" transform="rotate(40 78 84)"/><circle cx="140" cy="84" r="30" fill="#fff"/><rect x="146" y="20" width="22" height="22" rx="11" fill="#ffc300"/>',
+// Por qué elegirnos: solo hechos del material oficial (brochures y sílabos 2026)
+const razones = [
+  { icono: "vivo", titulo: "Clases en vivo", texto: "Aprendes con el docente en tiempo real y resuelves tus dudas en clase." },
+  { icono: "proyecto", titulo: "Proyecto aplicado", texto: "Cierras cada programa con un proyecto real que demuestra lo que aprendiste." },
+  { icono: "certificado", titulo: "Certificado con código QR", texto: "Certificado digital de la Cámara de Comercio Exterior que cualquier empresa puede verificar." },
+  { icono: "mundo", titulo: "100 % en línea", texto: "Estudia desde Perú o desde cualquier país, con grabaciones para repasar." },
+  { icono: "paises", titulo: "Atención en 7 países", texto: "Perú, Ecuador, Costa Rica, Colombia, México, Panamá y Argentina." },
+  { icono: "asesor", titulo: "Asesoría por WhatsApp", texto: "Un asesor te ayuda a elegir y te confirma horarios e inversión vigente." },
 ];
-
-// «Por eso te guardamos un lugar»
-const lugares = [
-  { titulo: "Clases en vivo", texto: "Con el docente y en grupo", foto: fotoCharla, alt: "Ponente en una charla de inteligencia artificial" },
-  { titulo: "Eventos presenciales", texto: "Talleres, charlas y workshops", foto: fotoKits, alt: "Entrega de bolsas con el logo de la Cámara de Comercio Exterior a una participante" },
-  { titulo: "Educación continua", texto: "Una comunidad que sigue aprendiendo", foto: fotoBatucada, alt: "Batucada junto al banner «Educación continua» de la Cámara de Comercio Exterior" },
-];
-const metas = ["Importar desde China", "Dominar Excel", "Analizar datos con Power BI", "Usar IA en tu trabajo", "Crecer en tu empresa", "Cambiar de carrera", "Diseñar y vender en digital"];
+const iconos: Record<string, string> = {
+  vivo: '<circle cx="20" cy="20" r="4"/><path d="M12.5 12.5a10.6 10.6 0 0 0 0 15M27.5 12.5a10.6 10.6 0 0 1 0 15M7.5 7.5a17.7 17.7 0 0 0 0 25M32.5 7.5a17.7 17.7 0 0 1 0 25"/>',
+  proyecto: '<circle cx="20" cy="20" r="14"/><circle cx="20" cy="20" r="8"/><circle cx="20" cy="20" r="2"/><path d="M20 2v6M20 32v6M2 20h6M32 20h6"/>',
+  certificado: '<rect x="6" y="5" width="22" height="28" rx="2"/><path d="M11 12h12M11 17h8"/><circle cx="29" cy="27" r="6"/><path d="m26 32-1 6 4-2 4 2-1-6"/>',
+  mundo: '<rect x="5" y="8" width="30" height="20" rx="2"/><path d="M14 33h12M20 28v5"/>',
+  paises: '<circle cx="20" cy="20" r="15"/><path d="M5 20h30M20 5c4.5 4.2 6.5 9.2 6.5 15S24.5 30.8 20 35c-4.5-4.2-6.5-9.2-6.5-15S15.5 9.2 20 5Z"/>',
+  asesor: '<path d="M8 30l2.2-6.4A12 12 0 1 1 15 28.7Z"/><path d="M15 17h10M15 22h6"/>',
+};
 
 const preguntas = [
   { p: "¿Las clases son en vivo?", r: "Sí. Los programas incluyen sesiones en vivo con el docente, y varios suman clases de refuerzo en vivo y material grabado para repasar cuando lo necesites." },
@@ -72,529 +67,286 @@ const preguntas = [
 ];
 ---
 <Base titulo={sitio.nombre} descripcion={sitio.descripcion} jsonLd={jsonLd}>
-  <div class="inicio sobre-oscuro">
-    <!-- 1. PORTADA centrada, con portadas de cursos flotando en las esquinas -->
-    <section class="hero" aria-labelledby="hero-titulo">
-      <div class="hero__flotantes" aria-hidden="true">
-        {flotantes.map((f, i) => (
-          <div class={`flotante flotante--${i + 1}`}>
-            <Picture src={f.imagen!} formats={["avif", "webp"]} widths={[320, 520]} sizes="22rem" loading="eager" alt="" />
-          </div>
+  <!-- 1. PORTADA: frase fuerte y un solo botón (WhatsApp) -->
+  <section class="hero sobre-oscuro" aria-labelledby="hero-titulo">
+    <div class="hero__flotantes" aria-hidden="true">
+      {flotantes.map((f, i) => (
+        <div class={`flotante flotante--${i + 1}`}>
+          <Picture src={f.imagen!} formats={["avif", "webp"]} widths={[320, 520]} sizes="20rem" loading="lazy" alt="" />
+        </div>
+      ))}
+    </div>
+    <!-- «El abrazo»: el arco de la C se dibuja, se orienta hacia el cursor y gira al bajar (scripts/efectos.ts) -->
+    <div class="abrazo" data-abrazo aria-hidden="true">
+      <div class="abrazo__luz"></div>
+      <div class="abrazo__giro">
+        <svg class="abrazo__arco" viewBox="0 0 400 400"><path d="M 327.3 72.7 A 180 180 0 1 0 327.3 327.3" fill="none" stroke="var(--amarillo)" stroke-width="16" pathLength="100" /></svg>
+      </div>
+    </div>
+    <div class="contenedor hero__centro">
+      <p class="hero__marca">Educación continua</p>
+      <!-- Lema oficial de la campaña «Educación continua» -->
+      <h1 id="hero-titulo" class="hero__titulo">Aprende, certifícate y <span class="acento">avanza.</span></h1>
+      <p class="hero__sub">Programas en vivo de comercio exterior, datos e inteligencia artificial, con proyecto aplicado y certificado digital verificable. Te ayudamos a elegir por WhatsApp.</p>
+      <a class="btn btn--amarillo hero__cta" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.5-.3Z"/></svg>
+        Escríbenos por WhatsApp
+        <span class="sr-only"> (se abre en una pestaña nueva)</span>
+      </a>
+      <a class="hero__secundario" href="/programas">o explora los programas</a>
+    </div>
+  </section>
+
+  <!-- 2. SERVICIOS -->
+  <section class="seccion" aria-labelledby="servicios-titulo">
+    <div class="contenedor">
+      <div class="encabezado" data-aparecer>
+        <h2 id="servicios-titulo" class="titulo-bloque">Lo que ofrecemos</h2>
+        <p class="intro">Formación práctica para profesionales, estudiantes y empresas.</p>
+      </div>
+      <ul role="list" class="servicios" data-aparecer-grupo>
+        {servicios.map((s) => (
+          <li>
+            <a class="servicio" data-elevar href={s.href} {...(s.externo ? { target: "_blank", rel: "noopener" } : {})}>
+              <span class="servicio__imagen"><Picture src={s.imagen} formats={["avif", "webp"]} widths={[400, 640]} sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 25vw" alt={s.alt} /></span>
+              <span class="servicio__cuerpo">
+                <span class="servicio__titulo">{s.titulo}</span>
+                <span class="servicio__texto">{s.texto}</span>
+                <span class="servicio__cta">{s.cta}{s.externo && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}<span class="circulo" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <h3 class="subtitulo" data-aparecer>Programas destacados</h3>
+      <ul role="list" class="destacados" data-aparecer-grupo>
+        {programas.map((p) => (
+          <li>
+            <a class="destacado" data-elevar href={`/programas/${p.slug}`}>
+              <span class="destacado__portada">{p.imagen ? <Picture src={p.imagen} formats={["avif", "webp"]} widths={[320, 520]} sizes="(max-width: 640px) 75vw, 17rem" alt="" /> : <span class="destacado__sin" aria-hidden="true">{p.nombre}</span>}</span>
+              <span class="destacado__nombre">{p.nombre}</span>
+              <span class="destacado__dato">{dato(p, "Duración") ?? dato(p, "Modalidad")}</span>
+              <Precio id={p.slug} class="destacado__precio" respaldo="" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. POR QUÉ ELEGIRNOS -->
+  <section class="seccion seccion--tarjeta" aria-labelledby="razones-titulo">
+    <div class="contenedor">
+      <div class="encabezado" data-aparecer>
+        <h2 id="razones-titulo" class="titulo-bloque">Por qué elegirnos</h2>
+        <p class="intro">Estudias en línea, pero no estudias solo.</p>
+      </div>
+      <ul role="list" class="razones" data-aparecer-grupo>
+        {razones.map((r) => (
+          <li class="razon">
+            <span class="razon__icono" aria-hidden="true"><svg viewBox="0 0 40 40" set:html={iconos[r.icono]} /></span>
+            <h3>{r.titulo}</h3>
+            <p>{r.texto}</p>
+          </li>
+        ))}
+      </ul>
+      <div class="cta-medio" data-aparecer>
+        <a class="btn btn--negro" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">Hablar con un asesor <span class="sr-only">(WhatsApp, se abre en una pestaña nueva)</span><span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. TESTIMONIOS: solo se muestra cuando hay testimonios reales autorizados (src/data/testimonios.ts) -->
+  {testimonios.length > 0 && (
+    <section class="seccion" aria-labelledby="testimonios-titulo">
+      <div class="contenedor">
+        <div class="encabezado" data-aparecer>
+          <h2 id="testimonios-titulo" class="titulo-bloque">Lo que dicen nuestros estudiantes</h2>
+        </div>
+        <ul role="list" class="testimonios" data-aparecer-grupo>
+          {testimonios.map((t) => (
+            <li>
+              <figure class="testimonio">
+                <blockquote>«{t.texto}»</blockquote>
+                <figcaption>
+                  {t.foto && <Picture src={t.foto} formats={["avif", "webp"]} widths={[96, 192]} sizes="3rem" alt="" class="testimonio__foto" />}
+                  <span><strong>{t.nombre}</strong>{t.programa}{t.pais && ` · ${paisPorCodigo[t.pais].nombre}`}{t.detalle && <small>{t.detalle}</small>}</span>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- 5. PREGUNTAS FRECUENTES -->
+  <section class="seccion faq" aria-labelledby="faq-titulo">
+    <div class="contenedor faq__rejilla">
+      <div class="encabezado" data-aparecer>
+        <h2 id="faq-titulo" class="titulo-bloque">Preguntas frecuentes</h2>
+        <p class="intro">¿Tu duda no está aquí? Escríbenos y te respondemos.</p>
+      </div>
+      <div class="faq__lista" data-aparecer>
+        {preguntas.map((q) => (
+          <details class="faq__item" name="faq">
+            <summary><span class="faq__pregunta">{q.p}</span><span class="faq__mas" aria-hidden="true"></span></summary>
+            <p class="faq__respuesta">{q.r}</p>
+          </details>
         ))}
       </div>
-      <!-- «El abrazo»: el arco amarillo de la C rodea el titular; se dibuja al cargar, se orienta hacia el cursor
-           y gira como un dial al bajar (scripts/efectos.ts escribe --px, --py y --giro) -->
-      <div class="abrazo" data-abrazo aria-hidden="true">
-        <div class="abrazo__luz"></div>
-        <div class="abrazo__giro">
-          <svg class="abrazo__arco" viewBox="0 0 400 400"><path d="M 327.3 72.7 A 180 180 0 1 0 327.3 327.3" fill="none" stroke="var(--amarillo)" stroke-width="16" pathLength="100" /></svg>
-        </div>
-      </div>
-      <div class="contenedor hero__centro">
-        <!-- Lema oficial de la campaña «Educación continua» -->
-        <h1 id="hero-titulo" class="hero__titulo">Aprende, certifícate y <span class="acento">avanza.</span></h1>
-        <p class="hero__sub">Programas y cursos en vivo de comercio exterior, datos, inteligencia artificial, marketing, diseño e ingeniería, con certificado digital de la Cámara de Comercio Exterior.</p>
-        <div class="acciones acciones--centro">
-          <a class="btn btn--amarillo" href="/programas">Explorar programas <Flecha /></a>
-          <a class="btn btn--contorno" href="/empresas">Capacitación para empresas</a>
-        </div>
-        <!-- En pantallas angostas la cabecera no muestra el buscador: aparece aquí -->
-        <div class="hero__buscar"><Buscador id="buscar-portada" variante="portada" /></div>
-        <p class="hero__nota">Asesoría por WhatsApp <a href={enlaceWhatsapp("Hola, quiero que un asesor me ayude a elegir un programa.")} target="_blank" rel="noopener">{sitio.whatsapp.visible}</a></p>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- CAMPAÑAS: banners de campañas oficiales, justo después de la portada -->
-    <div class="contenedor bloque-campanas"><BannersCampana /></div>
-
-    <!-- 2. HISTORIAS: momentos reales de la comunidad (los testimonios llegarán cuando estén autorizados) -->
-    <section class="seccion seccion--corta" aria-labelledby="historias-titulo">
-      <div class="contenedor">
-        <div class="cabeza">
-          <h2 id="historias-titulo" class="titulo-bloque">Creamos momentos que impulsan carreras</h2>
-          <div class="carrusel__flechas" data-flechas="historias">
-            <button type="button" data-dir="-1" aria-label="Momentos anteriores"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M12 7H3M6.5 3 2.5 7l4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
-            <button type="button" data-dir="1" aria-label="Momentos siguientes"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
-          </div>
-        </div>
-        <ul role="list" class="carrusel" data-carrusel="historias">
-          {historias.map((h) => (
-            <li class="historia-celda">
-              <article class="historia">
-                <div class="historia__texto">
-                  <span class="historia__tipo">{h.tipo}</span>
-                  <h3 class="historia__titulo">{h.titulo}</h3>
-                  <p>{h.texto}</p>
-                </div>
-                <figure class="historia__foto" data-revelar="foto"><Picture src={h.foto} formats={["avif", "webp"]} widths={[320, 520]} sizes="12rem" alt={h.alt} /></figure>
-              </article>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <!-- 3. APRENDE HACIENDO: placas de color, visual central y texto -->
-    <section class="seccion" aria-labelledby="haciendo-titulo">
-      <div class="contenedor haciendo">
-        <ul role="list" class="placas">
-          <li class="placa-color placa-color--a"><span>En vivo</span><strong>Clases con el docente en tiempo real</strong></li>
-          <li class="placa-color placa-color--b"><span>Práctico</span><strong>Un proyecto aplicado al cierre</strong></li>
-          <li class="placa-color placa-color--c"><span>Verificable</span><strong>Certificado digital con código QR</strong></li>
-        </ul>
-        <div class="pantalla" aria-hidden="true">
-          <div class="pantalla__barra"><i></i><i></i><i></i><span>Clase en vivo</span></div>
-          <div class="pantalla__video">
-            <Picture src={pantalla.imagen!} formats={["avif", "webp"]} widths={[640, 960]} sizes="(max-width: 900px) 100vw, 40vw" alt="" />
-            <span class="pantalla__vivo">● En vivo</span>
-          </div>
-        </div>
-        <div class="haciendo__texto">
-          <h2 id="haciendo-titulo" class="titulo-bloque">Aprende haciendo, en cada clase</h2>
-          <p class="intro">Todos los programas son virtuales y combinan sesiones con el docente, material para repasar y un proyecto que demuestra lo que aprendiste.</p>
+  <!-- 6. CONTACTO CON MAPA -->
+  <section class="seccion seccion--tarjeta" id="contacto" aria-labelledby="contacto-titulo">
+    <div class="contenedor contacto">
+      <div class="contacto__texto" data-aparecer>
+        <h2 id="contacto-titulo" class="titulo-bloque">Hablemos de lo que quieres aprender</h2>
+        <p class="intro">Escríbenos por WhatsApp o déjanos tus datos y un asesor te contacta.</p>
+        <a class="btn btn--amarillo contacto__wa" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">WhatsApp {sitio.whatsapp.visible}<span class="sr-only"> (se abre en una pestaña nueva)</span><span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></a>
+        <div class="contacto__form">
+          <h3 class="sr-only">Formulario de contacto</h3>
+          <FormularioContacto modo="persona" />
         </div>
       </div>
-    </section>
-
-    <!-- 4. ELIGE QUÉ APRENDER HOY: áreas con ilustración geométrica de color -->
-    <section class="seccion seccion--corta" aria-labelledby="areas-titulo">
-      <div class="contenedor">
-        <div class="cabeza">
-          <h2 id="areas-titulo" class="titulo-bloque">Elige qué aprender hoy</h2>
-          <div class="carrusel__flechas" data-flechas="areas">
-            <button type="button" data-dir="-1" aria-label="Áreas anteriores"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M12 7H3M6.5 3 2.5 7l4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
-            <button type="button" data-dir="1" aria-label="Áreas siguientes"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
-          </div>
-        </div>
-        <ul role="list" class="carrusel" data-carrusel="areas">
-          {areas.map((a, i) => (
-            <li class="area-celda" data-revelar>
-              <a class="area" href={`/programas?area=${a.id}`} style={`--c:${a.color}; --t:${a.id === "comercio" ? "#000" : "#fff"}`}>
-                <span class="area__lienzo">
-                  <span class="area__rotulo">{a.nombre}</span>
-                  <svg class="area__figura" viewBox="0 0 200 160" aria-hidden="true" set:html={figuras[i % figuras.length]} />
-                </span>
-                <span class="area__pie">{a.nombre} <span aria-hidden="true">→</span></span>
-                <span class="area__cuenta">{cuenta(a.id)} {cuenta(a.id) === 1 ? "programa" : "programas y cursos"}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+      <div class="contacto__mapa" data-aparecer>
+        <h3 class="contacto__mapa-titulo">Atendemos en 7 países</h3>
+        <MapaPaises />
       </div>
-    </section>
-
-    <!-- 5. PROGRAMAS CON TEMARIO COMPLETO -->
-    <section class="seccion seccion--corta" aria-labelledby="rutas-titulo">
-      <div class="contenedor">
-        <div class="cabeza">
-          <h2 id="rutas-titulo" class="titulo-bloque">Programas con temario completo</h2>
-          <div class="carrusel__flechas" data-flechas="rutas">
-            <button type="button" data-dir="-1" aria-label="Programas anteriores"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M12 7H3M6.5 3 2.5 7l4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
-            <button type="button" data-dir="1" aria-label="Programas siguientes"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
-          </div>
-        </div>
-        <ul role="list" class="carrusel" data-carrusel="rutas">
-          {programas.map((p) => (
-            <li class="ruta-celda" data-revelar>
-              <a class="ruta" href={`/programas/${p.slug}`} style={`--c:${p.color ?? areaPorId[p.area].color}`}>
-                <span class="portada">
-                  {p.imagen
-                    ? <Picture src={p.imagen} formats={["avif", "webp"]} widths={[480, 720, 960]} sizes="(max-width: 640px) 85vw, 26rem" alt="" />
-                    : <span class="portada__sin" aria-hidden="true">{p.nombre}</span>}
-                </span>
-                <span class="ruta__area"><i aria-hidden="true"></i>{areaPorId[p.area].nombre}</span>
-                <span class="ruta__nombre">{p.nombre}</span>
-                <span class="ruta__datos">
-                  {dato(p, "Duración") && <span>{dato(p, "Duración")}</span>}
-                  {dato(p, "Modalidad") && <span>{dato(p, "Modalidad")}</span>}
-                </span>
-                <Precio id={p.slug} class="ruta__precio" respaldo="" />
-                <span class="ruta__ir">Ver temario <span class="circulo" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <!-- 6. CURSOS con pestañas por área -->
-    <section class="seccion seccion--corta" aria-labelledby="cursos-titulo">
-      <div class="contenedor">
-        <div class="cabeza">
-          <h2 id="cursos-titulo" class="titulo-bloque">Cursos para dar el siguiente paso</h2>
-          <div class="carrusel__flechas" data-flechas="cursos">
-            <button type="button" data-dir="-1" aria-label="Cursos anteriores"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M12 7H3M6.5 3 2.5 7l4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
-            <button type="button" data-dir="1" aria-label="Cursos siguientes"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
-          </div>
-        </div>
-        <div class="pestanas" role="group" aria-label="Filtrar cursos por área" data-pestanas>
-          <button type="button" aria-pressed="true" data-area="todas">Todos</button>
-          {areas.filter((a) => cursosOferta.some((c) => c.area === a.id)).map((a) => (
-            <button type="button" aria-pressed="false" data-area={a.id}>{a.nombre}</button>
-          ))}
-        </div>
-        <ul role="list" class="carrusel" data-carrusel="cursos">
-          {cursosOferta.map((c) => (
-            <li class="curso-celda" data-revelar data-area={c.area}>
-              <a class="curso" href={c.href} target="_blank" rel="noopener" style={`--c:${c.color}`}>
-                <span class="portada">
-                  {c.imagen
-                    ? <Picture src={c.imagen} formats={["avif", "webp"]} widths={[400, 640]} sizes="(max-width: 640px) 70vw, 19rem" alt="" />
-                    : <span class="portada__sin" aria-hidden="true">{c.nombre}</span>}
-                </span>
-                <span class="curso__area">{areaPorId[c.area].nombre}</span>
-                <span class="curso__nombre">{c.nombre}</span>
-                <Precio id={c.id} class="curso__precio" respaldo="" />
-                <span class="curso__ir">Consultar por WhatsApp<span class="sr-only"> (se abre en una pestaña nueva)</span></span>
-              </a>
-            </li>
-          ))}
-        </ul>
-        <p class="ver-todo"><a class="enlace-mas" href="/programas">Ver los {oferta.length} programas y cursos</a></p>
-      </div>
-    </section>
-
-    <!-- 7. POR ESO TE GUARDAMOS UN LUGAR: tarjetas inclinadas y metas flotantes -->
-    <section class="seccion lugar" aria-labelledby="lugar-titulo">
-      <div class="contenedor">
-        <h2 id="lugar-titulo" class="titulo-bloque lugar__titulo">Por eso te guardamos un lugar</h2>
-        <ul role="list" class="lugar__tarjetas">
-          {lugares.map((l, i) => (
-            <li class={`lugar__tarjeta lugar__tarjeta--${i + 1}`}>
-              <figure><Picture src={l.foto} formats={["avif", "webp"]} widths={[400, 640]} sizes="(max-width: 700px) 80vw, 18rem" alt={l.alt} /></figure>
-              <strong>{l.titulo}</strong>
-              <span>{l.texto}</span>
-            </li>
-          ))}
-        </ul>
-        <div class="metas">
-          <ul role="list" class="metas__lista" aria-label="Metas que puedes alcanzar">
-            {metas.map((m, i) => <li class={`meta meta--${i + 1}`}>{m}</li>)}
-          </ul>
-          <p class="metas__titulo">Convierte tus metas en tu siguiente logro profesional.</p>
-          <p class="metas__sub">Empieza hoy a hacerlo realidad.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 8. ELIGE CÓMO EMPEZAR (en lugar de planes: la inversión la confirma un asesor) -->
-    <section class="seccion" aria-labelledby="empezar-titulo">
-      <div class="contenedor">
-        <h2 id="empezar-titulo" class="titulo-bloque centrado">Elige cómo empezar</h2>
-        <div class="opciones">
-          <article class="opcion">
-            <span class="opcion__para">Para ti</span>
-            <h3>Estudia un programa o curso</h3>
-            <ul role="list">
-              <li>Clases en vivo y material para repasar</li>
-              <li>Proyecto aplicado al cierre</li>
-              <li>Certificado digital con código QR</li>
-              <li>Horarios e inversión vigentes confirmados por un asesor</li>
-            </ul>
-            <a class="btn btn--amarillo" href={enlaceWhatsapp("Hola, quiero que un asesor me ayude a elegir un programa.")} target="_blank" rel="noopener">Hablar con un asesor <Flecha /></a>
-          </article>
-          <article class="opcion opcion--destacada">
-            <span class="opcion__para">Para tu empresa</span>
-            <h3>Capacita a tu equipo</h3>
-            <ul role="list">
-              <li>Programas del catálogo para grupos de colaboradores</li>
-              <li>Condiciones corporativas</li>
-              <li>Propuesta según el área y el número de personas</li>
-              <li>Coordinación de accesos e inicio de clases</li>
-            </ul>
-            <a class="btn btn--negro" href="/empresas">Solicitar propuesta <Flecha /></a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 9. PREGUNTAS FRECUENTES -->
-    <section class="seccion seccion--panel faq" aria-labelledby="faq-titulo">
-      <div class="contenedor faq__rejilla">
-        <div>
-          <h2 id="faq-titulo" class="titulo-bloque">Preguntas frecuentes</h2>
-          <p class="intro">¿Tu duda no está aquí? <a class="enlace" href="/contacto">Escríbenos</a> y te respondemos.</p>
-        </div>
-        <div class="faq__lista">
-          {preguntas.map((q) => (
-            <details class="faq__item" name="faq">
-              <summary><span class="faq__pregunta">{q.p}</span><span class="faq__mas" aria-hidden="true"></span></summary>
-              <p class="faq__respuesta">{q.r}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </Base>
 
 <style>
-  /* Inicio oscuro con la estructura de una plataforma de cursos; colores de la marca (negro y amarillo) */
-  :global(body:has(.inicio)) { background: var(--negro); }
-  .inicio { background: var(--negro); color: var(--blanco); overflow-x: clip; }
-  .inicio :global(.intro) { color: #bfbfbf; }
-  .bloque-campanas { padding-top: var(--s-6); }
-  .seccion--corta { padding-block: clamp(2.5rem, 1.5rem + 3vw, 4.5rem); }
-  .seccion--panel { background: #0d0d0d; border-block: 1px solid rgba(255, 255, 255, 0.06); }
-  .titulo-bloque { font-size: clamp(1.6rem, 1.1rem + 1.8vw, 2.6rem); letter-spacing: -0.035em; line-height: 1.1; }
-  .centrado { text-align: center; }
-  .acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
-  .acciones--centro { justify-content: center; }
-  .cabeza { display: flex; justify-content: space-between; align-items: center; gap: var(--s-5); margin-bottom: var(--s-5); }
-  .enlace-mas { font-family: var(--font-marca); font-weight: 700; font-size: var(--t-sm); color: var(--amarillo); text-underline-offset: 5px; }
-  .enlace-mas:hover { color: var(--blanco); }
-  .ver-todo { margin-top: var(--s-5); text-align: center; }
+  /* Estilo claro y minimalista (ui-ux-pro-max: «Minimalism & Swiss») con la marca CE. Celular primero:
+     la base es el teléfono y las consultas min-width amplían hacia tableta y escritorio. */
+  .seccion--tarjeta { background: #fafafa; border-block: 1px solid var(--linea); }
+  .titulo-bloque { font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.9rem); letter-spacing: -0.04em; line-height: 1.05; }
+  .encabezado { display: grid; gap: var(--s-3); margin-bottom: var(--s-6); max-width: 40rem; }
+  .encabezado .intro { margin: 0; }
+  .circulo { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--negro); color: var(--amarillo); flex: none; }
 
   /* 1. PORTADA */
-  .hero { position: relative; overflow: hidden; padding-block: clamp(4rem, 2rem + 7vw, 8.5rem) clamp(3.5rem, 2rem + 5vw, 6.5rem); background: radial-gradient(50rem 26rem at 50% 0%, rgba(255, 195, 0, 0.16), transparent 70%), var(--negro); }
+  .hero { position: relative; overflow: hidden; background: radial-gradient(40rem 22rem at 50% 0%, rgba(255, 195, 0, 0.16), transparent 70%), var(--negro); color: var(--blanco); padding-block: clamp(3.5rem, 2rem + 6vw, 7.5rem); }
   .hero__centro { position: relative; z-index: 1; display: grid; justify-items: center; text-align: center; }
-  .hero__titulo { font-size: clamp(2.8rem, 1.2rem + 5.6vw, 6.2rem); letter-spacing: -0.05em; line-height: 0.95; max-width: 12ch; }
+  .hero__marca { padding: 0.3rem 0.8rem; border-radius: 999px; background: rgba(255, 255, 255, 0.1); font-size: var(--t-xs); font-weight: 700; color: var(--amarillo); }
+  .hero__titulo { margin-top: var(--s-5); font-size: clamp(2.6rem, 1.2rem + 6vw, 6.2rem); letter-spacing: -0.05em; line-height: 0.95; max-width: 11ch; }
   .acento { color: var(--amarillo); }
-  .hero__sub { margin-top: var(--s-5); font-size: var(--t-lg); line-height: 1.5; color: #bfbfbf; max-width: 52ch; }
-  .hero__buscar { display: none; width: 100%; max-width: 32rem; margin-top: var(--s-5); text-align: left; }
-  @media (max-width: 1000px) { .hero__buscar { display: block; } }
-  .hero__nota { margin-top: var(--s-4); font-size: var(--t-sm); color: #a6a6a6; }
-  .hero__nota a { color: var(--blanco); text-underline-offset: 3px; text-decoration-color: var(--amarillo); }
-  .hero__flotantes { position: absolute; inset: 0; pointer-events: none; }
-  /* El abrazo (efecto de la versión anterior): arco + halo detrás del titular */
-  .abrazo { --px: 0; --py: 0; --giro: 0deg; position: absolute; left: 50%; top: 50%; width: min(56rem, 96vw); aspect-ratio: 1; translate: -50% -50%; pointer-events: none; }
-  /* Halo: degradado fijo que se desplaza con transform (compositor), no un fondo que se repinta en cada movimiento */
-  .abrazo__luz { position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 195, 0, 0.22), transparent 62%); filter: blur(30px); transform: translate(calc(var(--px) * 12%), calc(var(--py) * 12%)); transition: transform 600ms var(--ease); }
+  .hero__sub { margin-top: var(--s-5); font-size: var(--t-lg); line-height: 1.5; color: #d9d9d9; max-width: 48ch; }
+  .hero__cta { --alto: 3.5rem; width: 100%; max-width: 22rem; justify-content: center; gap: var(--s-3); margin-top: var(--s-6); font-size: var(--t-base); }
+  .hero__secundario { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--s-2); color: #d9d9d9; font-size: var(--t-sm); text-underline-offset: 4px; text-decoration-color: var(--amarillo); }
+  .hero__secundario:hover { color: var(--blanco); }
+  .hero__flotantes { display: none; }
+  .abrazo { --px: 0; --py: 0; --giro: 0deg; position: absolute; left: 50%; top: 50%; width: min(56rem, 120vw); aspect-ratio: 1; translate: -50% -50%; pointer-events: none; }
+  .abrazo__luz { position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 195, 0, 0.2), transparent 62%); filter: blur(30px); transform: translate(calc(var(--px) * 12%), calc(var(--py) * 12%)); transition: transform 600ms var(--ease); }
   .abrazo__giro { position: absolute; inset: 0; transform: translate(calc(var(--px) * 18px), calc(var(--py) * 18px)) rotate(var(--giro)); transition: transform 1s var(--ease); }
-  .abrazo__arco { width: 100%; height: 100%; overflow: visible; opacity: 0.5; }
+  .abrazo__arco { width: 100%; height: 100%; overflow: visible; opacity: 0.45; }
   @media (prefers-reduced-motion: no-preference) {
     .abrazo__arco path { stroke-dasharray: 100; stroke-dashoffset: 100; animation: trazar var(--t-momento) var(--ease) 0.2s forwards; }
-    .abrazo__luz { animation: encender 1.8s var(--ease) 0.5s both; }
     @keyframes trazar { to { stroke-dashoffset: 0; } }
-    @keyframes encender { from { opacity: 0; } }
     @supports (animation-timeline: scroll()) {
       .abrazo__arco { animation: dial linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
       @keyframes dial { to { transform: rotate(-40deg); } }
     }
   }
-  .flotante { position: absolute; width: clamp(12rem, 8rem + 9vw, 21rem); aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12); }
-  .flotante :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .flotante--1 { left: -3rem; top: 9%; transform: rotate(-9deg); }
-  .flotante--2 { left: 3%; bottom: 8%; transform: rotate(6deg); width: clamp(10rem, 7rem + 7vw, 17rem); }
-  .flotante--3 { right: -3rem; top: 7%; transform: rotate(9deg); }
-  .flotante--4 { right: 4%; bottom: 10%; transform: rotate(-6deg); width: clamp(10rem, 7rem + 7vw, 17rem); }
-  @media (prefers-reduced-motion: no-preference) {
-    /* Flotación breve al cargar: dos idas y vueltas (menos de 5 s) y quietas; nada decorativo se mueve sin fin */
-    .flotante { animation: flotar 2.4s ease-in-out 2 alternate; }
-    .flotante--2, .flotante--4 { animation-delay: 0.3s; }
-    @keyframes flotar { to { translate: 0 -14px; } }
-  }
 
-  /* CARRUSELES (comunes) */
-  /* position: relative contiene los textos .sr-only (absolutos) dentro del carrusel */
-  .carrusel { position: relative; display: grid; grid-auto-flow: column; gap: var(--s-4); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--s-3); scrollbar-width: none; overscroll-behavior-x: contain; }
-  .carrusel::-webkit-scrollbar { display: none; }
-  .carrusel > li { scroll-snap-align: start; }
-  .carrusel > li[hidden] { display: none; }
-  /* Entrada tipo panel de salidas (efecto de la versión anterior): cada tarjeta gira como una paleta */
-  .carrusel { perspective: 1200px; }
-  :global(.efectos) .carrusel > li[data-revelar] { opacity: 0; transform: rotateX(-70deg); transform-origin: 50% 0; transition: transform 600ms var(--ease), opacity 400ms var(--ease); transition-delay: var(--retraso, 0ms); }
-  :global(.efectos) .carrusel > li[data-revelar]:global(.visible) { opacity: 1; transform: none; }
-  .carrusel__flechas { display: flex; gap: var(--s-2); flex: none; }
-  .carrusel__flechas button { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.1); color: var(--blanco); cursor: pointer; transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease); }
-  .carrusel__flechas button:hover { background: var(--amarillo); color: var(--negro); }
-  .carrusel__flechas button:disabled { opacity: 0.3; cursor: default; background: rgba(255, 255, 255, 0.1); color: var(--blanco); }
+  /* 2. SERVICIOS */
+  .servicios { display: grid; gap: var(--s-4); }
+  .servicio { display: grid; height: 100%; overflow: hidden; border-radius: var(--radio-l); background: var(--blanco); text-decoration: none; box-shadow: 0 0 0 1px var(--linea); transition: box-shadow var(--t-accion) var(--ease); }
+  .servicio:hover { box-shadow: 0 0 0 1px var(--linea), 0 18px 36px -18px rgba(0, 0, 0, 0.25); }
+  .servicio:focus-visible { outline-offset: 4px; }
+  .servicio__imagen { display: block; aspect-ratio: 16 / 9; background: var(--bruma); }
+  .servicio__imagen :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .servicio__cuerpo { display: grid; gap: var(--s-2); padding: var(--s-5); align-content: start; }
+  .servicio__titulo { font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 800; letter-spacing: -0.025em; }
+  .servicio__texto { color: var(--gris-oscuro); font-size: var(--t-sm); }
+  .servicio__cta { display: inline-flex; align-items: center; gap: var(--s-3); margin-top: var(--s-2); font-family: var(--font-marca); font-weight: 700; font-size: var(--t-sm); }
 
-  /* 2. HISTORIAS */
-  .historia-celda { width: min(26rem, 86vw); }
-  .historia { display: grid; grid-template-columns: 1fr 9.5rem; gap: var(--s-4); height: 100%; padding: var(--s-4); border-radius: var(--radio-l); background: #161616; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08); }
-  .historia__texto { display: grid; align-content: start; gap: var(--s-2); }
-  .historia__tipo { font-size: var(--t-xs); color: var(--amarillo); font-weight: 700; }
-  .historia__titulo { font-size: var(--t-lg); line-height: 1.2; }
-  .historia p { font-size: var(--t-sm); color: #bfbfbf; }
-  .historia__foto { margin: 0; aspect-ratio: 3 / 4; border-radius: var(--radio); overflow: hidden; }
-  .historia__foto :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .subtitulo { margin: var(--s-8) 0 var(--s-4); font-size: var(--t-xl); }
+  .destacados { display: grid; grid-auto-flow: column; grid-auto-columns: min(17rem, 75vw); gap: var(--s-4); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--s-3); scrollbar-width: thin; position: relative; }
+  .destacados > li { scroll-snap-align: start; }
+  .destacado { display: grid; gap: var(--s-2); text-decoration: none; border-radius: var(--radio-l); }
+  .destacado__portada { display: block; aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; background: var(--negro); }
+  .destacado__portada :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .destacado__sin { display: flex; align-items: flex-end; height: 100%; padding: var(--s-4); color: var(--blanco); font-family: var(--font-marca); font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.03em; line-height: 1.05; background: radial-gradient(90% 120% at 100% 0%, rgba(45, 175, 115, 0.7), transparent 60%), var(--negro); }
+  .destacado__nombre { font-family: var(--font-marca); font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+  .destacado__dato { font-size: var(--t-xs); color: var(--gris-oscuro); }
+  .destacado :global(.precio:empty) { display: none; }
+  .destacado :global(.precio--con) { font-family: var(--font-marca); }
 
-  /* 3. APRENDE HACIENDO */
-  .haciendo { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr) minmax(0, 0.9fr); gap: var(--s-6); align-items: center; }
-  .placas { display: grid; gap: var(--s-3); }
-  .placa-color { display: grid; gap: var(--s-2); padding: var(--s-4); border-radius: var(--radio-l); color: var(--negro); }
-  .placa-color span { justify-self: start; padding: 0.2rem 0.6rem; border-radius: 999px; background: rgba(0, 0, 0, 0.12); font-size: var(--t-xs); font-weight: 700; }
-  .placa-color strong { font-family: var(--font-marca); font-size: var(--t-lg); line-height: 1.2; letter-spacing: -0.02em; }
-  .placa-color--a { background: var(--amarillo); }
-  .placa-color--b { background: var(--blanco); margin-left: var(--s-6); }
-  .placa-color--c { background: #d8c362; }
-  .pantalla { border-radius: var(--radio-l); overflow: hidden; background: #161616; box-shadow: 0 40px 80px -30px rgba(255, 195, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.12); }
-  .pantalla__barra { display: flex; align-items: center; gap: 6px; padding: 0.6rem 0.9rem; font-size: var(--t-xs); color: #a6a6a6; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-  .pantalla__barra i { width: 9px; height: 9px; border-radius: 50%; background: #404040; }
-  .pantalla__barra span { margin-left: var(--s-2); }
-  .pantalla__video { position: relative; aspect-ratio: 16 / 9; }
-  .pantalla__video { overflow: hidden; }
-  .pantalla__video :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  /* Parallax (efecto de la versión anterior): la imagen se desplaza dentro de su marco */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .pantalla__video :global(img) { height: 116%; animation: deriva linear both; animation-timeline: view(); animation-range: cover; }
-      @keyframes deriva { from { translate: 0 0; } to { translate: 0 -13%; } }
-    }
-  }
-  .pantalla__vivo { position: absolute; left: var(--s-4); bottom: var(--s-4); padding: 0.3rem 0.7rem; border-radius: 999px; background: #d80027; color: var(--blanco); font-size: var(--t-xs); font-weight: 700; }
-  .haciendo__texto .intro { margin-top: var(--s-4); font-size: var(--t-base); }
+  /* 3. POR QUÉ ELEGIRNOS */
+  .razones { display: grid; gap: var(--s-4); }
+  .razon { display: grid; gap: var(--s-2); padding: var(--s-5); border-radius: var(--radio-l); background: var(--blanco); box-shadow: 0 0 0 1px var(--linea); }
+  .razon__icono { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: var(--s-2); border-radius: 50%; background: var(--amarillo); }
+  .razon__icono svg { width: 1.6rem; height: 1.6rem; fill: none; stroke: var(--negro); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .razon h3 { font-size: var(--t-lg); }
+  .razon p { color: var(--gris-oscuro); font-size: var(--t-sm); }
+  .cta-medio { display: flex; justify-content: center; margin-top: var(--s-7); }
 
-  /* 4. ÁREAS: lienzos de color con figuras */
-  .area-celda { width: min(15rem, 62vw); }
-  .area { display: grid; gap: var(--s-2); text-decoration: none; }
-  .area__lienzo { position: relative; display: block; aspect-ratio: 3 / 4; border-radius: var(--radio-l); overflow: hidden; background: var(--c); transition: transform var(--t-accion) var(--ease); }
-  .area:hover .area__lienzo { transform: translateY(-4px); }
-  .area__rotulo { position: absolute; left: var(--s-3); top: var(--s-3); padding: 0.3rem 0.7rem; border-radius: 999px; background: var(--blanco); color: var(--negro); font-size: var(--t-xs); font-weight: 700; }
-  .area__figura { position: absolute; left: 0; right: 0; bottom: 6%; width: 100%; height: auto; transition: transform 900ms var(--ease); }
-  .area:hover .area__figura { transform: scale(1.06) rotate(-3deg); }
-  .area__pie { font-family: var(--font-marca); font-weight: 700; font-size: var(--t-sm); }
-  .area__cuenta { font-size: var(--t-xs); color: #a6a6a6; margin-top: -4px; }
-  .area:focus-visible { outline-offset: 4px; border-radius: var(--radio-l); }
+  /* 4. TESTIMONIOS */
+  .testimonios { display: grid; gap: var(--s-4); }
+  .testimonio { display: grid; gap: var(--s-4); height: 100%; margin: 0; padding: var(--s-5); border-radius: var(--radio-l); background: #fafafa; box-shadow: 0 0 0 1px var(--linea); }
+  .testimonio blockquote { margin: 0; font-size: var(--t-lg); line-height: 1.45; }
+  .testimonio figcaption { display: flex; align-items: center; gap: var(--s-3); font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .testimonio figcaption strong { display: block; color: var(--negro); }
+  .testimonio figcaption small { display: block; }
+  .testimonio :global(.testimonio__foto) { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; }
 
-  /* 5–6. PROGRAMAS Y CURSOS */
-  .ruta-celda { width: min(24rem, 82vw); }
-  .curso-celda { width: min(18rem, 70vw); }
-  .portada { display: block; aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; background: #1a1a1a; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08); }
-  .portada :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale 900ms var(--ease); }
-  .portada__sin { display: flex; align-items: flex-end; height: 100%; padding: var(--s-4); background: radial-gradient(90% 120% at 100% 0%, color-mix(in srgb, var(--c) 70%, transparent), transparent 60%), #111; font-family: var(--font-marca); font-size: var(--t-xl); font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-  .ruta, .curso { display: flex; flex-direction: column; gap: var(--s-2); height: 100%; text-decoration: none; }
-  .ruta:hover .portada :global(img), .curso:hover .portada :global(img) { scale: 1.04; }
-  .ruta .portada, .curso .portada { margin-bottom: var(--s-2); }
-  .ruta__area { display: inline-flex; align-items: center; gap: 0.45rem; font-size: var(--t-xs); color: #a6a6a6; }
-  .ruta__area i { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4); }
-  .ruta__nombre { font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; }
-  .ruta__datos { display: flex; flex-wrap: wrap; gap: var(--s-2); }
-  .ruta__datos span { padding: 0.25rem 0.6rem; border-radius: 999px; background: rgba(255, 255, 255, 0.08); font-size: var(--t-xs); color: #e6e6e6; }
-  .ruta__ir { display: inline-flex; align-items: center; gap: var(--s-3); margin-top: auto; padding-top: var(--s-3); font-family: var(--font-marca); font-weight: 700; font-size: var(--t-sm); }
-  .circulo { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--amarillo); color: var(--negro); transition: transform var(--t-accion) var(--ease); }
-  .ruta:hover .circulo { transform: translateX(4px); }
-  .curso__area { font-size: var(--t-xs); color: #a6a6a6; }
-  /* Precio en la moneda del país (vacío hasta que se carguen los precios oficiales) */
-  .ruta :global(.precio:empty), .curso :global(.precio:empty) { display: none; }
-  .ruta :global(.precio--con), .curso :global(.precio--con) { font-family: var(--font-marca); font-size: var(--t-lg); }
-  .ruta :global(.precio s), .curso :global(.precio s) { font-size: var(--t-sm); color: #a6a6a6; font-weight: 400; }
-  .curso__nombre { font-family: var(--font-marca); font-size: var(--t-base); font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
-  .curso__ir { margin-top: auto; padding-top: var(--s-2); font-size: var(--t-sm); font-weight: 700; color: var(--amarillo); }
-  .ruta:focus-visible, .curso:focus-visible { outline-offset: 4px; border-radius: var(--radio-l); }
-  .pestanas { display: flex; gap: var(--s-2); overflow-x: auto; margin-bottom: var(--s-5); padding-bottom: 4px; scrollbar-width: none; }
-  .pestanas button { flex: none; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, 0.18); background: transparent; color: var(--blanco); font-weight: 600; font-size: var(--t-sm); cursor: pointer; transition: background-color var(--t-accion) var(--ease), border-color var(--t-accion) var(--ease); }
-  .pestanas button:hover { border-color: rgba(255, 255, 255, 0.5); }
-  .pestanas button[aria-pressed="true"] { background: var(--amarillo); border-color: var(--amarillo); color: var(--negro); }
-
-  /* 7. POR ESO TE GUARDAMOS UN LUGAR */
-  .lugar { position: relative; overflow: hidden; }
-  .lugar__titulo { text-align: center; }
-  .lugar__tarjetas { display: flex; justify-content: center; gap: var(--s-4); margin-top: var(--s-7); }
-  .lugar__tarjeta { display: grid; gap: var(--s-2); width: min(18rem, 30%); padding: var(--s-3) var(--s-3) var(--s-4); border-radius: var(--radio-l); color: var(--negro); }
-  .lugar__tarjeta figure { margin: 0; aspect-ratio: 4 / 3; border-radius: var(--radio); overflow: hidden; }
-  .lugar__tarjeta :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .lugar__tarjeta strong { font-family: var(--font-marca); font-size: var(--t-lg); letter-spacing: -0.02em; margin-top: var(--s-2); }
-  .lugar__tarjeta span { font-size: var(--t-sm); }
-  .lugar__tarjeta--1 { background: var(--amarillo); transform: rotate(-4deg) translateY(10px); }
-  .lugar__tarjeta--2 { background: var(--blanco); transform: translateY(-8px); }
-  .lugar__tarjeta--3 { background: #d8c362; transform: rotate(4deg) translateY(10px); }
-  .metas { position: relative; margin-top: var(--s-7); padding-block: var(--s-8) var(--s-6); text-align: center; }
-  .metas__lista { position: absolute; inset: 0; }
-  .meta { position: absolute; padding: 0.45rem 0.95rem; border-radius: 999px; font-size: var(--t-sm); font-weight: 700; color: var(--negro); white-space: nowrap; }
-  .meta--1 { left: 6%; top: 4%; background: var(--amarillo); transform: rotate(-4deg); }
-  .meta--2 { right: 8%; top: 0; background: var(--blanco); transform: rotate(3deg); }
-  .meta--3 { left: 30%; top: -6%; background: #d8c362; transform: rotate(2deg); }
-  .meta--4 { right: 2%; top: 48%; background: var(--amarillo); transform: rotate(-3deg); }
-  .meta--5 { left: 0; top: 56%; background: var(--blanco); transform: rotate(4deg); }
-  .meta--6 { left: 22%; bottom: -2%; background: #ffe180; transform: rotate(-2deg); }
-  .meta--7 { right: 18%; bottom: -4%; background: var(--blanco); transform: rotate(2deg); }
-  .metas__titulo { position: relative; max-width: 22ch; margin-inline: auto; font-family: var(--font-marca); font-size: clamp(1.6rem, 1rem + 2.2vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; }
-  .metas__sub { position: relative; margin-top: var(--s-3); color: #bfbfbf; font-size: var(--t-lg); }
-
-  /* 8. ELIGE CÓMO EMPEZAR */
-  .opciones { display: grid; grid-template-columns: repeat(2, minmax(0, 24rem)); justify-content: center; gap: var(--s-5); margin-top: var(--s-7); }
-  .opcion { display: grid; align-content: start; gap: var(--s-4); padding: var(--s-6); border-radius: var(--radio-l); background: #161616; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1); }
-  .opcion--destacada { background: var(--amarillo); color: var(--negro); box-shadow: none; }
-  .opcion__para { justify-self: start; padding: 0.25rem 0.7rem; border-radius: 999px; background: rgba(255, 255, 255, 0.1); font-size: var(--t-xs); font-weight: 700; }
-  .opcion--destacada .opcion__para { background: rgba(0, 0, 0, 0.1); }
-  .opcion h3 { font-size: var(--t-xl); }
-  .opcion ul { display: grid; gap: var(--s-2); margin-bottom: var(--s-3); }
-  .opcion li { display: flex; gap: var(--s-3); font-size: var(--t-sm); }
-  .opcion li::before { content: ""; width: 1.1rem; height: 1.1rem; flex: none; margin-top: 2px; border-radius: 50%; background: var(--amarillo) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5.5 10.5 3 3 6-7' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 80% no-repeat; }
-  .opcion--destacada li::before { background-color: var(--negro); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5.5 10.5 3 3 6-7' fill='none' stroke='%23ffc300' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
-  .opcion .btn { justify-self: start; }
-
-  /* 9. PREGUNTAS FRECUENTES */
-  .faq__rejilla { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: var(--s-7); align-items: start; }
-  .faq__rejilla .intro { margin-top: var(--s-4); }
-  .faq__lista { border-top: 1px solid rgba(255, 255, 255, 0.12); }
-  .faq__item { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
-  .faq__item summary { display: grid; grid-template-columns: 1fr auto; gap: var(--s-5); align-items: center; padding: var(--s-5) 0; cursor: pointer; list-style: none; }
+  /* 5. PREGUNTAS FRECUENTES */
+  .faq__rejilla { display: grid; gap: var(--s-4); }
+  .faq__lista { border-top: 1px solid var(--linea); }
+  .faq__item { border-bottom: 1px solid var(--linea); }
+  .faq__item summary { display: grid; grid-template-columns: 1fr auto; gap: var(--s-4); align-items: center; min-height: 44px; padding: var(--s-4) 0; cursor: pointer; list-style: none; }
   .faq__item summary::-webkit-details-marker { display: none; }
-  .faq__pregunta { font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 700; letter-spacing: -0.025em; line-height: 1.3; }
-  .faq__mas { position: relative; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: rgba(255, 255, 255, 0.1); transition: background-color var(--t-accion) var(--ease), transform var(--t-accion) var(--ease); }
-  .faq__mas::before, .faq__mas::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 2px; border-radius: 1px; background: var(--blanco); transform: translate(-50%, -50%); transition: transform var(--t-accion) var(--ease); }
+  .faq__pregunta { font-family: var(--font-marca); font-size: var(--t-base); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
+  .faq__mas { position: relative; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--bruma); transition: background-color var(--t-accion) var(--ease), transform var(--t-accion) var(--ease); }
+  .faq__mas::before, .faq__mas::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 2px; border-radius: 1px; background: var(--negro); transform: translate(-50%, -50%); transition: transform var(--t-accion) var(--ease); }
   .faq__mas::after { transform: translate(-50%, -50%) rotate(90deg); }
   .faq__item summary:hover .faq__mas, .faq__item[open] .faq__mas { background: var(--amarillo); }
-  .faq__item summary:hover .faq__mas::before, .faq__item summary:hover .faq__mas::after, .faq__item[open] .faq__mas::before, .faq__item[open] .faq__mas::after { background: var(--negro); }
   .faq__item[open] .faq__mas { transform: rotate(180deg); }
   .faq__item[open] .faq__mas::after { transform: translate(-50%, -50%) rotate(0deg); }
-  .faq__respuesta { padding: 0 var(--s-8) var(--s-5) 0; max-width: 62ch; color: #bfbfbf; }
+  .faq__respuesta { padding: 0 0 var(--s-5); max-width: 62ch; color: var(--gris-oscuro); }
   @supports (interpolate-size: allow-keywords) {
     .faq { interpolate-size: allow-keywords; }
     .faq__item::details-content { height: 0; overflow: clip; transition: height var(--t-entrada) var(--ease), content-visibility var(--t-entrada) allow-discrete; }
     .faq__item[open]::details-content { height: auto; }
   }
 
-  @media (max-width: 1100px) {
-    .haciendo { grid-template-columns: 1fr 1fr; }
-    .pantalla { grid-column: 1 / -1; grid-row: 1; }
+  /* 6. CONTACTO CON MAPA */
+  .contacto { display: grid; gap: var(--s-7); }
+  .contacto__texto .intro { margin-top: var(--s-3); }
+  .contacto__wa { margin-top: var(--s-5); }
+  .contacto__form { margin-top: var(--s-6); padding: var(--s-5); border-radius: var(--radio-l); background: var(--blanco); box-shadow: 0 0 0 1px var(--linea); }
+  .contacto__mapa { padding: var(--s-5); border-radius: var(--radio-l); background: var(--blanco); box-shadow: 0 0 0 1px var(--linea); }
+  .contacto__mapa-titulo { font-size: var(--t-xl); margin-bottom: var(--s-4); }
+
+  /* Tableta */
+  @media (min-width: 640px) {
+    .servicios, .razones, .testimonios { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero__cta { width: auto; }
+    .faq__pregunta { font-size: var(--t-lg); }
   }
-  @media (max-width: 900px) {
-    .flotante--2, .flotante--4 { display: none; }
-    .flotante--1 { left: -6rem; top: 2%; opacity: 0.5; }
-    .flotante--3 { right: -6rem; top: auto; bottom: 2%; opacity: 0.5; }
+  /* Escritorio */
+  @media (min-width: 1000px) {
+    .servicios { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .razones, .testimonios { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .faq__rejilla { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--s-8); align-items: start; }
+    .contacto { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; }
+    .contacto__mapa { position: sticky; top: calc(var(--header-h) + var(--s-4)); }
+    .hero__flotantes { display: block; position: absolute; inset: 0; pointer-events: none; }
+    .flotante { position: absolute; width: clamp(12rem, 8rem + 8vw, 19rem); aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12); }
+    .flotante :global(img) { width: 100%; height: 100%; object-fit: cover; }
+    .flotante--1 { left: -3rem; top: 10%; transform: rotate(-9deg); }
+    .flotante--2 { left: 3%; bottom: 8%; transform: rotate(6deg); width: clamp(10rem, 7rem + 6vw, 15rem); }
+    .flotante--3 { right: -3rem; top: 8%; transform: rotate(9deg); }
+    .flotante--4 { right: 4%; bottom: 10%; transform: rotate(-6deg); width: clamp(10rem, 7rem + 6vw, 15rem); }
   }
-  @media (max-width: 700px) {
-    .flotante--3 { display: none; }
-    .faq__rejilla { grid-template-columns: 1fr; gap: var(--s-5); }
-    .lugar__tarjetas { flex-direction: column; align-items: center; }
-    .lugar__tarjeta { width: min(20rem, 90%); }
-    .metas { padding-block: 0; }
-    .metas__lista { position: static; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-2); margin-bottom: var(--s-6); }
-    .meta { position: static; transform: none !important; }
-  }
-  @media (max-width: 700px) {
-    .haciendo { grid-template-columns: 1fr; }
-    .placa-color--b { margin-left: 0; }
-    .opciones { grid-template-columns: 1fr; }
-    .carrusel__flechas { display: none; }
-  }
-  @media (max-width: 560px) {
-    .acciones .btn { width: 100%; }
-    .historia { grid-template-columns: 1fr 7rem; }
-    .faq__respuesta { padding-right: 0; }
+  @media (min-width: 1000px) and (prefers-reduced-motion: no-preference) {
+    /* Dos idas y vueltas al cargar (menos de 5 s) y quietas */
+    .flotante { animation: flotar 2.4s ease-in-out 2 alternate; }
+    .flotante--2, .flotante--4 { animation-delay: 0.3s; }
+    @keyframes flotar { to { translate: 0 -14px; } }
   }
 </style>
-
-<script>
-  // Carruseles: las flechas desplazan una «página» y se desactivan en los extremos
-  document.querySelectorAll<HTMLElement>("[data-flechas]").forEach((grupo) => {
-    const pista = document.querySelector<HTMLElement>(`[data-carrusel="${grupo.dataset.flechas}"]`);
-    if (!pista) return;
-    const [ant, sig] = grupo.querySelectorAll<HTMLButtonElement>("button");
-    const actualizar = () => {
-      ant.disabled = pista.scrollLeft <= 4;
-      sig.disabled = pista.scrollLeft + pista.clientWidth >= pista.scrollWidth - 4;
-    };
-    grupo.querySelectorAll<HTMLButtonElement>("button").forEach((b) => b.addEventListener("click", () => {
-      pista.scrollBy({ left: Number(b.dataset.dir) * pista.clientWidth * 0.85, behavior: "smooth" });
-    }));
-    pista.addEventListener("scroll", actualizar, { passive: true });
-    new ResizeObserver(actualizar).observe(pista);
-    actualizar();
-  });
-
-  // Pestañas de cursos por área
-  const pestanas = document.querySelector<HTMLElement>("[data-pestanas]");
-  const celdas = document.querySelectorAll<HTMLElement>('[data-carrusel="cursos"] > li');
-  pestanas?.querySelectorAll<HTMLButtonElement>("button").forEach((b) => b.addEventListener("click", () => {
-    pestanas.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-    celdas.forEach((c) => { c.hidden = b.dataset.area !== "todas" && c.dataset.area !== b.dataset.area; });
-    const pista = document.querySelector<HTMLElement>('[data-carrusel="cursos"]');
-    pista?.scrollTo({ left: 0 });
-    pista?.dispatchEvent(new Event("scroll"));
-  }));
-</script>

@@ -5,6 +5,7 @@ import { oferta } from "../../data/oferta";
 import { enlaceWhatsapp } from "../../data/sitio";
 import { Picture } from "astro:assets";
 import Precio from "../../components/Precio.astro";
+import BannersCampana from "../../components/BannersCampana.astro";
 
 const items = oferta;
 ---
@@ -15,6 +16,9 @@ const items = oferta;
       <p class="intro">Los programas con temario completo tienen su propia página. Para el resto del catálogo, un asesor te comparte el temario, los horarios y la inversión vigente.</p>
     </div>
   </section>
+
+  <!-- Campañas vigentes (skill banner-design) antes del catálogo -->
+  <div class="contenedor campanas-catalogo sobre-oscuro"><BannersCampana /></div>
 
   <section class="seccion catalogo" aria-label="Catálogo">
     <div class="contenedor">
@@ -55,6 +59,9 @@ const items = oferta;
 </Base>
 
 <style>
+  /* Los controles del carrusel de campañas están pensados para fondo oscuro: aquí van sobre blanco */
+  .campanas-catalogo :global(.campanas__flecha) { background: var(--bruma); color: var(--negro); }
+  .campanas-catalogo :global(.campanas__punto::before) { background: var(--gris-claro); }
   .filtros { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-7); }
   .filtros button {
     display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 1rem;

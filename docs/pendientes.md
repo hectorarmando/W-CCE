@@ -36,7 +36,9 @@ Esta lista recoge lo que debe confirmar la institución antes de publicar. Nada 
 Cuando estén disponibles se agregan así:
 - redes sociales y correo: en `src/data/sitio.ts` y `src/components/Footer.astro`;
 - aula virtual: como ítem en `navegacion` (`src/data/sitio.ts`);
-- docentes, precios y fechas: en `src/data/programas.ts`.
+- docentes, precios y fechas: en `src/data/programas.ts`;
+- testimonios reales y autorizados: en `src/data/testimonios.ts`. La sección del inicio aparece sola cuando hay al menos uno;
+- dirección física: con ella se puede sumar un mapa de ubicación en el contacto del inicio. Hoy el mapa muestra los 7 países atendidos (`src/components/MapaPaises.astro`).
 
 ## Fotografía
 

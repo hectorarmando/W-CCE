@@ -17,6 +17,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.4.1",
     "clsx": "^2.1.1",
+    "motion": "^14.6.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "tailwind-merge": "^3.7.0",
@@ -24,8 +25,13 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.11",
+    "@types/d3-geo": "^3.1.1",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "typescript": "^5.8.3"
+    "@types/topojson-client": "^3.1.5",
+    "d3-geo": "^3.1.1",
+    "topojson-client": "^3.1.0",
+    "typescript": "^5.8.3",
+    "world-atlas": "^2.0.2"
   }
 }

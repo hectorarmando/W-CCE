@@ -197,10 +197,19 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   ok("buscador: sin resultados ofrece asesor", (await page.textContent("#buscar-cabecera-lista")).includes("asesor"));
   await page.keyboard.press("Escape");
   ok("buscador: Escape cierra", (await page.getAttribute("#buscar-cabecera", "aria-expanded")) === "false");
-  // Pestañas de cursos
-  await page.click('[data-pestanas] button[data-area="ingenieria"]');
-  const visiblesCursos = await page.$$eval('[data-carrusel="cursos"] > li', (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.area));
+  // Inicio: estructura aprobada (portada con un botón, servicios, razones, preguntas, contacto con mapa)
   ok("inicio: ninguna animación decorativa es infinita", (await page.evaluate(() => document.getAnimations().filter((a) => a.effect?.getTiming().iterations === Infinity).length)) === 0);
+  ok("inicio: la portada tiene un solo botón (WhatsApp)", (await page.locator(".hero .btn").count()) === 1 && (await page.getAttribute(".hero .btn", "href")).startsWith("https://wa.me/51902148893"));
+  ok("inicio: 4 servicios", (await page.locator(".servicios > li").count()) === 4);
+  ok("inicio: 6 razones", (await page.locator(".razones > li").count()) === 6);
+  ok("inicio: sin testimonios cargados no se muestra la sección", (await page.locator("#testimonios-titulo").count()) === 0);
+  ok("inicio: mapa con los 7 países atendidos", (await page.locator(".mapa__pais--activo").count()) === 7);
+  ok("inicio: formulario de contacto", (await page.locator("#contacto form[data-formulario]").count()) === 1);
+  await page.locator("#contacto").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1200);
+  ok("motion: los bloques aparecen al hacer scroll", (await page.evaluate(() => getComputedStyle(document.querySelector(".contacto__mapa")).opacity)) === "1");
+  // Campañas (ahora antes del catálogo)
+  await page.goto(BASE + "/programas");
   ok("campañas: 4 banners", (await page.locator("[data-campanas] .banner").count()) === 4);
   const actualAntes = await page.getAttribute('[data-ir][aria-current="true"]', "data-ir");
   await page.waitForTimeout(3000);
@@ -212,7 +221,6 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   await page.click('[data-campanas] .campanas__flecha[data-dir="1"]');
   await page.waitForTimeout(1200);
   ok("campañas: la flecha avanza", (await page.getAttribute('[data-ir][aria-current="true"]', "data-ir")) === "3");
-  ok("pestañas: filtran cursos por área", visiblesCursos.length > 0 && visiblesCursos.every((a) => a === "ingenieria"), visiblesCursos.length);
 
   // Precios por país: detección por zona horaria, selector, mensaje de WhatsApp y formato de moneda
   const ctxCo = await browser.newContext({ viewport: { width: 1440, height: 900 }, timezoneId: "America/Bogota", locale: "es-CO" });

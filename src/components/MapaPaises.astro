@@ -1,0 +1,56 @@
+---
+// Mapa de los países donde atiende la CE. Se dibuja al compilar (SVG estático, sin JavaScript en el navegador)
+// con datos de Natural Earth (paquete world-atlas, dominio público) y proyección de d3-geo.
+// Cuando haya una dirección física confirmada se puede sumar un mapa de ubicación (docs/pendientes.md).
+import { geoMercator, geoPath } from "d3-geo";
+import { feature } from "topojson-client";
+import type { Topology, GeometryCollection } from "topojson-specification";
+import mundo from "world-atlas/countries-110m.json";
+import { paises } from "../data/paises";
+
+// Código numérico ISO 3166-1 de cada país atendido
+const ISO: Record<string, string> = { PE: "604", EC: "218", CR: "188", CO: "170", MX: "484", PA: "591", AR: "032" };
+const atendidos = paises.filter((p) => ISO[p.codigo]);
+
+const topo = mundo as unknown as Topology<{ countries: GeometryCollection<{ name: string }> }>;
+const todos = feature(topo, topo.objects.countries).features;
+const marcados = todos.filter((f) => Object.values(ISO).includes(String(f.id)));
+
+// Encuadre: de México a la Patagonia
+const ancho = 520, alto = 760;
+const proyeccion = geoMercator().fitExtent([[10, 10], [ancho - 10, alto - 10]], { type: "FeatureCollection", features: marcados });
+const trazo = geoPath(proyeccion).digits(1);
+const [[x0, y0], [x1, y1]] = [[0, 0], [ancho, alto]];
+const visibles = todos.filter((f) => {
+  const [[a, b], [c, d]] = trazo.bounds(f);
+  return c > x0 && a < x1 && d > y0 && b < y1;
+});
+const nombrePorIso = Object.fromEntries(atendidos.map((p) => [ISO[p.codigo], p.nombre]));
+---
+<figure class="mapa">
+  <svg viewBox={`0 0 ${ancho} ${alto}`} role="img" aria-labelledby="mapa-titulo">
+    <title id="mapa-titulo">Mapa de América con los países donde atiende la Cámara de Comercio Exterior: {atendidos.map((p) => p.nombre).join(", ")}</title>
+    {visibles.map((f) => {
+      const iso = String(f.id);
+      const activo = iso in nombrePorIso;
+      return <path d={trazo(f) ?? ""} class={activo ? "mapa__pais mapa__pais--activo" : "mapa__pais"}>{activo && <title>{nombrePorIso[iso]}</title>}</path>;
+    })}
+  </svg>
+  <figcaption class="mapa__leyenda">
+    <ul role="list">
+      {atendidos.map((p) => <li><i aria-hidden="true"></i>{p.nombre} <span>{p.moneda}</span></li>)}
+    </ul>
+  </figcaption>
+</figure>
+
+<style>
+  .mapa { margin: 0; display: grid; gap: var(--s-4); }
+  .mapa svg { width: 100%; height: auto; max-height: 34rem; }
+  .mapa__pais { fill: #e6e6e6; stroke: var(--blanco); stroke-width: 0.6; }
+  .mapa__pais--activo { fill: var(--amarillo); stroke: var(--negro); stroke-width: 0.8; transition: fill var(--t-accion) var(--ease); }
+  .mapa__pais--activo:hover { fill: #ffd240; }
+  .mapa__leyenda ul { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .mapa__leyenda li { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.75rem; border-radius: 999px; background: var(--bruma); font-size: var(--t-sm); font-weight: 600; }
+  .mapa__leyenda i { width: 0.65rem; height: 0.65rem; border-radius: 50%; background: var(--amarillo); box-shadow: 0 0 0 1px var(--negro); }
+  .mapa__leyenda span { font-size: var(--t-xs); color: var(--gris-oscuro); font-weight: 500; }
+</style>
