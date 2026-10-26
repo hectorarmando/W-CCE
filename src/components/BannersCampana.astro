@@ -1,0 +1,156 @@
+---
+// Carrusel de banners de campaña (skill banner-design, adaptado a la marca CE).
+// Formato web «section banner» 3:1 en escritorio y 4:5 en celular. Sin rotación automática:
+// se navega con flechas, puntos, deslizando o con el teclado (pauta de accesibilidad para carruseles).
+import { Picture } from "astro:assets";
+import { campanas } from "../data/campanas";
+---
+<section class="campanas" aria-roledescription="carrusel" aria-label="Campañas de la Cámara de Comercio Exterior" data-campanas>
+  <ul role="list" class="campanas__pista" data-campanas-pista>
+    {campanas.map((c, i) => (
+      <li class={`banner banner--${c.estilo}`} id={`campana-${c.id}`} aria-roledescription="diapositiva" aria-label={`${i + 1} de ${campanas.length}: ${c.etiqueta}`}>
+        {c.imagen && (
+          <figure class="banner__imagen">
+            <Picture src={c.imagen} formats={["avif", "webp"]} widths={[640, 1000, 1400]} sizes="(max-width: 700px) 100vw, 60vw" alt={c.alt ?? ""} loading={i === 0 ? "eager" : "lazy"} />
+          </figure>
+        )}
+        {/* Arco de la «C» de la marca: el recurso distintivo de las piezas institucionales */}
+        <svg class="banner__arco" viewBox="0 0 400 400" aria-hidden="true"><path d="M 327.3 72.7 A 180 180 0 1 0 327.3 327.3" fill="none" stroke="currentColor" stroke-width="34" /></svg>
+        <div class="banner__texto">
+          <span class="banner__etiqueta">{c.etiqueta}</span>
+          <p class="banner__titulo">{c.titulo}</p>
+          <p class="banner__apoyo">{c.texto}</p>
+          <a class="banner__cta" href={c.cta.href} {...(c.cta.externo ? { target: "_blank", rel: "noopener" } : {})}>
+            {c.cta.texto}{c.cta.externo && <span class="sr-only"> (WhatsApp, se abre en una pestaña nueva)</span>}
+            <span class="banner__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
+          </a>
+        </div>
+      </li>
+    ))}
+  </ul>
+  <div class="campanas__controles">
+    <button type="button" class="campanas__flecha" data-dir="-1" aria-label="Campaña anterior"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M12 7H3M6.5 3 2.5 7l4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
+    <div class="campanas__puntos" role="group" aria-label="Elegir campaña">
+      {campanas.map((c, i) => (
+        <button type="button" class="campanas__punto" data-ir={i} aria-label={`Ir a la campaña ${i + 1}: ${c.etiqueta}`} aria-current={i === 0 ? "true" : undefined}></button>
+      ))}
+    </div>
+    <button type="button" class="campanas__flecha" data-dir="1" aria-label="Campaña siguiente"><svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
+  </div>
+</section>
+
+<style>
+  .campanas { position: relative; }
+  .campanas__pista { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 100%; gap: var(--s-4); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; border-radius: var(--radio-l); }
+  .campanas__pista::-webkit-scrollbar { display: none; }
+
+  /* Banner base: 3:1 (formato web «section banner»), texto en la zona segura izquierda */
+  .banner {
+    position: relative; display: grid; align-items: center; aspect-ratio: 3 / 1; min-height: 20rem; overflow: hidden;
+    border-radius: var(--radio-l); scroll-snap-align: start; isolation: isolate;
+  }
+  .banner__texto { position: relative; z-index: 2; display: grid; justify-items: start; gap: var(--s-3); max-width: min(34rem, 56%); padding: var(--s-6) var(--s-7); }
+  .banner__etiqueta { padding: 0.3rem 0.75rem; border-radius: 999px; font-size: var(--t-xs); font-weight: 700; }
+  .banner__titulo { font-family: var(--font-marca); font-size: clamp(1.6rem, 1rem + 2.2vw, 2.9rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; text-wrap: balance; }
+  .banner__apoyo { font-size: var(--t-base); max-width: 38ch; }
+  .banner__cta {
+    display: inline-flex; align-items: center; gap: var(--s-3); min-height: 3rem; margin-top: var(--s-2); padding: 0 0.45rem 0 1.4rem; border-radius: 999px;
+    font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700; text-decoration: none; transition: filter var(--t-accion) var(--ease);
+  }
+  .banner__flecha { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; transition: transform var(--t-accion) var(--ease); }
+  .banner__cta:hover .banner__flecha { transform: translateX(3px); }
+  .banner__imagen { position: absolute; inset: 0; z-index: 0; margin: 0; }
+  .banner__imagen :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .banner__arco { position: absolute; z-index: 1; pointer-events: none; }
+
+  /* 1. Foto a sangre: velo negro desde la izquierda y arco amarillo abrazando la escena */
+  .banner--foto { color: var(--blanco); background: var(--negro); }
+  .banner--foto::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.1) 75%); }
+  .banner--foto .banner__arco { right: -4%; top: 50%; width: 38%; translate: 0 -50%; color: var(--amarillo); }
+  .banner--foto .banner__etiqueta { background: var(--amarillo); color: var(--negro); }
+  .banner--foto .banner__apoyo { color: #e6e6e6; }
+  .banner--foto .banner__cta { background: var(--amarillo); color: var(--negro); }
+  .banner--foto .banner__flecha { background: var(--negro); color: var(--amarillo); }
+
+  /* 2. Tipografía grande sobre amarillo institucional */
+  .banner--tipografica { color: var(--negro); background: var(--amarillo); }
+  .banner--tipografica .banner__texto { max-width: min(44rem, 70%); }
+  .banner--tipografica .banner__titulo { font-size: clamp(1.9rem, 1rem + 3vw, 3.6rem); }
+  .banner--tipografica .banner__arco { right: -6%; bottom: -55%; width: 48%; color: var(--negro); opacity: 0.9; }
+  .banner--tipografica .banner__etiqueta { background: var(--negro); color: var(--amarillo); }
+  .banner--tipografica .banner__cta { background: var(--negro); color: var(--blanco); }
+  .banner--tipografica .banner__flecha { background: var(--amarillo); color: var(--negro); }
+
+  /* 3. Geométrico oscuro: foto recortada en círculo dentro del arco, como el isologo */
+  .banner--geometrica { color: var(--blanco); background: radial-gradient(40rem 20rem at 80% 50%, rgba(255, 195, 0, 0.18), transparent 70%), #0d0d0d; }
+  .banner--geometrica .banner__imagen { inset: 12% 6% 12% auto; width: auto; aspect-ratio: 1; border-radius: 50%; overflow: hidden; }
+  .banner--geometrica .banner__arco { right: calc(6% - 3%); top: 50%; height: 100%; width: auto; aspect-ratio: 1; translate: 0 -50%; color: var(--amarillo); }
+  .banner--geometrica::after { content: ""; position: absolute; right: 38%; top: 18%; width: 1.25rem; height: 1.25rem; background: var(--amarillo); border-radius: 4px; box-shadow: 2.5rem 9rem 0 -0.3rem #fff; }
+  .banner--geometrica .banner__etiqueta { background: rgba(255, 255, 255, 0.12); color: var(--amarillo); }
+  .banner--geometrica .banner__apoyo { color: #bfbfbf; }
+  .banner--geometrica .banner__cta { background: var(--blanco); color: var(--negro); }
+  .banner--geometrica .banner__flecha { background: var(--amarillo); color: var(--negro); }
+
+  /* 4. Degradado del curso (verde Excel de la paleta del manual) con la portada oficial a la derecha */
+  .banner--degradado { color: var(--blanco); background: linear-gradient(110deg, #0b2a1c 0%, #155c3c 45%, #2daf73 100%); }
+  .banner--degradado .banner__imagen { inset: 10% 4% 10% auto; width: 46%; border-radius: var(--radio-l); overflow: hidden; box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.7); rotate: 3deg; }
+  .banner--degradado .banner__arco { left: 40%; bottom: -40%; width: 30%; color: rgba(255, 255, 255, 0.12); }
+  .banner--degradado .banner__etiqueta { background: var(--blanco); color: #155c3c; }
+  .banner--degradado .banner__apoyo { color: #d5efe3; }
+  .banner--degradado .banner__cta { background: var(--amarillo); color: var(--negro); }
+  .banner--degradado .banner__flecha { background: var(--negro); color: var(--amarillo); }
+
+  .banner__cta:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+
+  /* Controles */
+  .campanas__controles { display: flex; justify-content: center; align-items: center; gap: var(--s-3); margin-top: var(--s-4); }
+  .campanas__flecha { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: var(--blanco); cursor: pointer; transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease); }
+  .campanas__flecha:hover { background: var(--amarillo); color: var(--negro); }
+  .campanas__puntos { display: flex; gap: 2px; }
+  .campanas__punto { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 0; background: none; cursor: pointer; }
+  .campanas__punto::before { content: ""; width: 0.6rem; height: 0.6rem; border-radius: 999px; background: rgba(255, 255, 255, 0.3); transition: width var(--t-accion) var(--ease), background-color var(--t-accion) var(--ease); }
+  .campanas__punto[aria-current="true"]::before { width: 1.6rem; background: var(--amarillo); }
+
+  /* Celular: formato vertical 4:5, la imagen arriba y el texto abajo */
+  @media (max-width: 700px) {
+    .banner { aspect-ratio: auto; min-height: 30rem; align-items: end; }
+    .banner__texto { max-width: none; padding: var(--s-5); }
+    .banner--tipografica .banner__texto { max-width: none; }
+    .banner--foto::before { background: linear-gradient(0deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.6) 55%, rgba(0, 0, 0, 0.1) 100%); }
+    .banner--foto .banner__arco { width: 70%; top: 8%; right: -25%; translate: 0 0; }
+    .banner { min-height: 32rem; }
+    .banner--geometrica .banner__imagen, .banner--degradado .banner__imagen { inset: 5% auto auto 50%; width: 52%; translate: -50% 0; }
+    .banner--geometrica .banner__imagen { aspect-ratio: 1; }
+    .banner--geometrica .banner__arco { top: 2%; right: 50%; height: auto; width: 62%; translate: 50% 0; }
+    .banner--geometrica::after { display: none; }
+    .banner--degradado .banner__imagen { aspect-ratio: 16 / 9; height: auto; }
+    .banner--tipografica .banner__arco { width: 80%; bottom: auto; top: -30%; right: -30%; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-campanas]").forEach((carrusel) => {
+    const pista = carrusel.querySelector<HTMLElement>("[data-campanas-pista]")!;
+    const banners = [...pista.children] as HTMLElement[];
+    const puntos = [...carrusel.querySelectorAll<HTMLButtonElement>("[data-ir]")];
+    let actual = 0;
+    const ir = (i: number) => {
+      const destino = (i + banners.length) % banners.length;
+      pista.scrollTo({ left: banners[destino].offsetLeft, behavior: "smooth" });
+    };
+    carrusel.querySelectorAll<HTMLButtonElement>("[data-dir]").forEach((b) => b.addEventListener("click", () => ir(actual + Number(b.dataset.dir))));
+    puntos.forEach((p) => p.addEventListener("click", () => ir(Number(p.dataset.ir))));
+    // El punto activo sigue al banner visible (también al deslizar con el dedo)
+    const io = new IntersectionObserver((entradas) => {
+      for (const e of entradas) if (e.isIntersecting) {
+        actual = banners.indexOf(e.target as HTMLElement);
+        puntos.forEach((p, k) => (k === actual ? p.setAttribute("aria-current", "true") : p.removeAttribute("aria-current")));
+      }
+    }, { root: pista, threshold: 0.6 });
+    banners.forEach((b) => io.observe(b));
+    pista.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); ir(actual + 1); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); ir(actual - 1); }
+    });
+  });
+</script>

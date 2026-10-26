@@ -201,6 +201,17 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   await page.click('[data-pestanas] button[data-area="ingenieria"]');
   const visiblesCursos = await page.$$eval('[data-carrusel="cursos"] > li', (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.area));
   ok("inicio: ninguna animación decorativa es infinita", (await page.evaluate(() => document.getAnimations().filter((a) => a.effect?.getTiming().iterations === Infinity).length)) === 0);
+  ok("campañas: 4 banners", (await page.locator("[data-campanas] .banner").count()) === 4);
+  const actualAntes = await page.getAttribute('[data-ir][aria-current="true"]', "data-ir");
+  await page.waitForTimeout(3000);
+  ok("campañas: sin rotación automática", (await page.getAttribute('[data-ir][aria-current="true"]', "data-ir")) === actualAntes);
+  await page.locator("[data-campanas]").scrollIntoViewIfNeeded();
+  await page.click('[data-ir="2"]');
+  await page.waitForTimeout(1200);
+  ok("campañas: los puntos llevan al banner", (await page.getAttribute('[data-ir][aria-current="true"]', "data-ir")) === "2");
+  await page.click('[data-campanas] .campanas__flecha[data-dir="1"]');
+  await page.waitForTimeout(1200);
+  ok("campañas: la flecha avanza", (await page.getAttribute('[data-ir][aria-current="true"]', "data-ir")) === "3");
   ok("pestañas: filtran cursos por área", visiblesCursos.length > 0 && visiblesCursos.every((a) => a === "ingenieria"), visiblesCursos.length);
 
   // Precios por país: detección por zona horaria, selector, mensaje de WhatsApp y formato de moneda

@@ -3,6 +3,7 @@ import Base from "../layouts/Base.astro";
 import Flecha from "../components/Flecha.astro";
 import Buscador from "../components/Buscador.astro";
 import Precio from "../components/Precio.astro";
+import BannersCampana from "../components/BannersCampana.astro";
 import { sitio, enlaceWhatsapp } from "../data/sitio";
 import { areas, programas, areaPorId } from "../data/programas";
 import { oferta } from "../data/oferta";
@@ -102,6 +103,9 @@ const preguntas = [
         <p class="hero__nota">Asesoría por WhatsApp <a href={enlaceWhatsapp("Hola, quiero que un asesor me ayude a elegir un programa.")} target="_blank" rel="noopener">{sitio.whatsapp.visible}</a></p>
       </div>
     </section>
+
+    <!-- CAMPAÑAS: banners de campañas oficiales, justo después de la portada -->
+    <div class="contenedor bloque-campanas"><BannersCampana /></div>
 
     <!-- 2. HISTORIAS: momentos reales de la comunidad (los testimonios llegarán cuando estén autorizados) -->
     <section class="seccion seccion--corta" aria-labelledby="historias-titulo">
@@ -329,6 +333,7 @@ const preguntas = [
   :global(body:has(.inicio)) { background: var(--negro); }
   .inicio { background: var(--negro); color: var(--blanco); overflow-x: clip; }
   .inicio :global(.intro) { color: #bfbfbf; }
+  .bloque-campanas { padding-top: var(--s-6); }
   .seccion--corta { padding-block: clamp(2.5rem, 1.5rem + 3vw, 4.5rem); }
   .seccion--panel { background: #0d0d0d; border-block: 1px solid rgba(255, 255, 255, 0.06); }
   .titulo-bloque { font-size: clamp(1.6rem, 1.1rem + 1.8vw, 2.6rem); letter-spacing: -0.035em; line-height: 1.1; }
