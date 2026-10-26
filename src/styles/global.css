@@ -126,7 +126,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .btn__flecha svg { transition: transform var(--t-accion) var(--ease); }
 .btn:hover .btn__flecha svg { transform: translateX(3px); }
-.btn:active { transform: translateY(1px); }
+.btn:active { transform: scale(0.97); } /* presión al estilo Apple (DESIGN.md) */
 .btn--negro { --fondo: var(--negro); --texto: var(--blanco); --fondo-flecha: var(--amarillo); --texto-flecha: var(--negro); }
 .btn--negro:hover { --fondo: #262626; }
 .btn--amarillo { --fondo: var(--amarillo); --texto: var(--negro); --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); }

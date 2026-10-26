@@ -1,7 +1,7 @@
 ---
 // Inicio — estructura aprobada (oct-2026): portada con un botón, servicios, por qué elegirnos, testimonios,
-// preguntas frecuentes y contacto con mapa. Estilo claro y minimalista (sugerencia de ui-ux-pro-max) con los
-// colores y tipografías del manual de la CE; animaciones con Motion (scripts/aparecer.ts). Celular primero.
+// preguntas frecuentes y contacto con mapa. Diagramación con la dirección «Apple» de DESIGN.md (bloques que
+// alternan claro y oscuro) con los colores y tipografías del manual de la CE; animaciones con Motion. Celular primero.
 import Base from "../layouts/Base.astro";
 import Precio from "../components/Precio.astro";
 import FormularioContacto from "../components/FormularioContacto.astro";
@@ -27,8 +27,8 @@ const jsonLd = {
 
 const mensajeAsesor = "Hola, quiero que un asesor me ayude a elegir un programa.";
 const porNombre = (n: string) => oferta.find((o) => o.nombre === n)!;
-// Portadas oficiales flotando en las esquinas de la portada (solo escritorio)
-const flotantes = ["Programa Completo de Excel", "Academia de Importadores", "Programa Profesional de Inteligencia Artificial Aplicada", "Power BI 8 en 1"].map(porNombre);
+// Escaparate de la portada: la del centro se ve siempre; las laterales, desde tableta
+const escaparate = ["Programa Completo de Excel", "Programa Profesional de Inteligencia Artificial Aplicada", "Academia de Importadores"].map(porNombre);
 const dato = (p: (typeof programas)[number], etiqueta: string) => p.datos.find((d) => d.etiqueta === etiqueta)?.valor;
 
 // Servicios: lo que ofrece la CE según el material oficial
@@ -67,15 +67,8 @@ const preguntas = [
 ];
 ---
 <Base titulo={sitio.nombre} descripcion={sitio.descripcion} jsonLd={jsonLd}>
-  <!-- 1. PORTADA: frase fuerte y un solo botón (WhatsApp) -->
-  <section class="hero sobre-oscuro" aria-labelledby="hero-titulo">
-    <div class="hero__flotantes" aria-hidden="true">
-      {flotantes.map((f, i) => (
-        <div class={`flotante flotante--${i + 1}`}>
-          <Picture src={f.imagen!} formats={["avif", "webp"]} widths={[320, 520]} sizes="20rem" loading="lazy" alt="" />
-        </div>
-      ))}
-    </div>
+  <!-- 1. PORTADA (bloque oscuro): frase fuerte, un solo botón y el escaparate de portadas -->
+  <section class="bloque bloque--oscuro hero sobre-oscuro" aria-labelledby="hero-titulo">
     <!-- «El abrazo»: el arco de la C se dibuja, se orienta hacia el cursor y gira al bajar (scripts/efectos.ts) -->
     <div class="abrazo" data-abrazo aria-hidden="true">
       <div class="abrazo__luz"></div>
@@ -87,47 +80,43 @@ const preguntas = [
       <p class="hero__marca">Educación continua</p>
       <!-- Lema oficial de la campaña «Educación continua» -->
       <h1 id="hero-titulo" class="hero__titulo">Aprende, certifícate y <span class="acento">avanza.</span></h1>
-      <p class="hero__sub">Programas en vivo de comercio exterior, datos e inteligencia artificial, con proyecto aplicado y certificado digital verificable. Te ayudamos a elegir por WhatsApp.</p>
-      <a class="btn btn--amarillo hero__cta" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">
-        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.5-.3Z"/></svg>
-        Escríbenos por WhatsApp
-        <span class="sr-only"> (se abre en una pestaña nueva)</span>
-      </a>
-      <a class="hero__secundario" href="/programas">o explora los programas</a>
+      <p class="hero__sub">Programas en vivo de comercio exterior, datos e inteligencia artificial, con proyecto aplicado y certificado digital verificable.</p>
+      <div class="hero__acciones">
+        <a class="btn btn--amarillo hero__cta" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.5-.3Z"/></svg>
+          Escríbenos por WhatsApp
+          <span class="sr-only"> (se abre en una pestaña nueva)</span>
+        </a>
+        <a class="mas" href="/programas">Ver programas<span class="mas__flecha" aria-hidden="true">›</span></a>
+      </div>
+    </div>
+    <!-- Escaparate: las portadas oficiales son «el producto»; la única sombra del sistema va aquí -->
+    <div class="escaparate" aria-hidden="true">
+      {escaparate.map((f, i) => (
+        <div class={`escaparate__pieza escaparate__pieza--${i + 1}`}>
+          <Picture src={f.imagen!} formats={["avif", "webp"]} widths={[360, 640, 960]} sizes="(max-width: 640px) 86vw, 38rem" loading={i === 1 ? "eager" : "lazy"} alt="" />
+        </div>
+      ))}
     </div>
   </section>
 
-  <!-- 2. SERVICIOS -->
-  <section class="seccion" aria-labelledby="servicios-titulo">
+  <!-- 2. SERVICIOS (bloque claro): cuatro mosaicos -->
+  <section class="bloque" aria-labelledby="servicios-titulo">
     <div class="contenedor">
-      <div class="encabezado" data-aparecer>
-        <h2 id="servicios-titulo" class="titulo-bloque">Lo que ofrecemos</h2>
-        <p class="intro">Formación práctica para profesionales, estudiantes y empresas.</p>
+      <div class="bloque__cabecera" data-aparecer>
+        <h2 id="servicios-titulo" class="bloque__titulo">Lo que ofrecemos</h2>
+        <p class="bloque__lema">Formación práctica para profesionales, estudiantes y empresas.</p>
       </div>
       <ul role="list" class="servicios" data-aparecer-grupo>
         {servicios.map((s) => (
           <li>
-            <a class="servicio" data-elevar href={s.href} {...(s.externo ? { target: "_blank", rel: "noopener" } : {})}>
-              <span class="servicio__imagen"><Picture src={s.imagen} formats={["avif", "webp"]} widths={[400, 640]} sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 25vw" alt={s.alt} /></span>
-              <span class="servicio__cuerpo">
-                <span class="servicio__titulo">{s.titulo}</span>
-                <span class="servicio__texto">{s.texto}</span>
-                <span class="servicio__cta">{s.cta}{s.externo && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}<span class="circulo" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></span>
+            <a class="mosaico" href={s.href} {...(s.externo ? { target: "_blank", rel: "noopener" } : {})}>
+              <span class="mosaico__texto">
+                <span class="mosaico__titulo">{s.titulo}</span>
+                <span class="mosaico__lema">{s.texto}</span>
+                <span class="mas">{s.cta}{s.externo && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}<span class="mas__flecha" aria-hidden="true">›</span></span>
               </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <h3 class="subtitulo" data-aparecer>Programas destacados</h3>
-      <ul role="list" class="destacados" data-aparecer-grupo>
-        {programas.map((p) => (
-          <li>
-            <a class="destacado" data-elevar href={`/programas/${p.slug}`}>
-              <span class="destacado__portada">{p.imagen ? <Picture src={p.imagen} formats={["avif", "webp"]} widths={[320, 520]} sizes="(max-width: 640px) 75vw, 17rem" alt="" /> : <span class="destacado__sin" aria-hidden="true">{p.nombre}</span>}</span>
-              <span class="destacado__nombre">{p.nombre}</span>
-              <span class="destacado__dato">{dato(p, "Duración") ?? dato(p, "Modalidad")}</span>
-              <Precio id={p.slug} class="destacado__precio" respaldo="" />
+              <span class="mosaico__imagen"><Picture src={s.imagen} formats={["avif", "webp"]} widths={[480, 800]} sizes="(max-width: 640px) 92vw, 44vw" alt={s.alt} /></span>
             </a>
           </li>
         ))}
@@ -135,12 +124,35 @@ const preguntas = [
     </div>
   </section>
 
-  <!-- 3. POR QUÉ ELEGIRNOS -->
-  <section class="seccion seccion--tarjeta" aria-labelledby="razones-titulo">
+  <!-- Programas destacados (bloque bruma): tarjetas de vitrina -->
+  <section class="bloque bloque--bruma" aria-labelledby="destacados-titulo">
     <div class="contenedor">
-      <div class="encabezado" data-aparecer>
-        <h2 id="razones-titulo" class="titulo-bloque">Por qué elegirnos</h2>
-        <p class="intro">Estudias en línea, pero no estudias solo.</p>
+      <div class="bloque__cabecera" data-aparecer>
+        <h2 id="destacados-titulo" class="bloque__titulo">Programas destacados</h2>
+        <a class="mas" href="/programas">Ver todo el catálogo<span class="mas__flecha" aria-hidden="true">›</span></a>
+      </div>
+      <ul role="list" class="destacados" data-aparecer-grupo>
+        {programas.map((p) => (
+          <li>
+            <a class="vitrina" href={`/programas/${p.slug}`}>
+              <span class="vitrina__portada">{p.imagen ? <Picture src={p.imagen} formats={["avif", "webp"]} widths={[320, 560]} sizes="(max-width: 640px) 75vw, 18rem" alt="" /> : <span class="vitrina__sin" aria-hidden="true">{p.nombre}</span>}</span>
+              <span class="vitrina__nombre">{p.nombre}</span>
+              <span class="vitrina__dato">{dato(p, "Duración") ?? dato(p, "Modalidad")}</span>
+              <Precio id={p.slug} class="vitrina__precio" respaldo="" />
+              <span class="mas mas--chico">Ver programa<span class="mas__flecha" aria-hidden="true">›</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. POR QUÉ ELEGIRNOS (bloque oscuro) -->
+  <section class="bloque bloque--oscuro sobre-oscuro" aria-labelledby="razones-titulo">
+    <div class="contenedor">
+      <div class="bloque__cabecera" data-aparecer>
+        <h2 id="razones-titulo" class="bloque__titulo">Por qué elegirnos</h2>
+        <p class="bloque__lema">Estudias en línea, pero no estudias solo.</p>
       </div>
       <ul role="list" class="razones" data-aparecer-grupo>
         {razones.map((r) => (
@@ -152,17 +164,17 @@ const preguntas = [
         ))}
       </ul>
       <div class="cta-medio" data-aparecer>
-        <a class="btn btn--negro" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">Hablar con un asesor <span class="sr-only">(WhatsApp, se abre en una pestaña nueva)</span><span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></a>
+        <a class="btn btn--amarillo" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">Hablar con un asesor <span class="sr-only">(WhatsApp, se abre en una pestaña nueva)</span><span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></a>
       </div>
     </div>
   </section>
 
   <!-- 4. TESTIMONIOS: solo se muestra cuando hay testimonios reales autorizados (src/data/testimonios.ts) -->
   {testimonios.length > 0 && (
-    <section class="seccion" aria-labelledby="testimonios-titulo">
+    <section class="bloque" aria-labelledby="testimonios-titulo">
       <div class="contenedor">
-        <div class="encabezado" data-aparecer>
-          <h2 id="testimonios-titulo" class="titulo-bloque">Lo que dicen nuestros estudiantes</h2>
+        <div class="bloque__cabecera" data-aparecer>
+          <h2 id="testimonios-titulo" class="bloque__titulo">Lo que dicen nuestros estudiantes</h2>
         </div>
         <ul role="list" class="testimonios" data-aparecer-grupo>
           {testimonios.map((t) => (
@@ -181,12 +193,12 @@ const preguntas = [
     </section>
   )}
 
-  <!-- 5. PREGUNTAS FRECUENTES -->
-  <section class="seccion faq" aria-labelledby="faq-titulo">
-    <div class="contenedor faq__rejilla">
-      <div class="encabezado" data-aparecer>
-        <h2 id="faq-titulo" class="titulo-bloque">Preguntas frecuentes</h2>
-        <p class="intro">¿Tu duda no está aquí? Escríbenos y te respondemos.</p>
+  <!-- 5. PREGUNTAS FRECUENTES (bloque claro, columna de lectura) -->
+  <section class="bloque faq" aria-labelledby="faq-titulo">
+    <div class="contenedor contenedor--lectura">
+      <div class="bloque__cabecera" data-aparecer>
+        <h2 id="faq-titulo" class="bloque__titulo">Preguntas frecuentes</h2>
+        <p class="bloque__lema">¿Tu duda no está aquí? Escríbenos y te respondemos.</p>
       </div>
       <div class="faq__lista" data-aparecer>
         {preguntas.map((q) => (
@@ -199,95 +211,117 @@ const preguntas = [
     </div>
   </section>
 
-  <!-- 6. CONTACTO CON MAPA -->
-  <section class="seccion seccion--tarjeta" id="contacto" aria-labelledby="contacto-titulo">
-    <div class="contenedor contacto">
-      <div class="contacto__texto" data-aparecer>
-        <h2 id="contacto-titulo" class="titulo-bloque">Hablemos de lo que quieres aprender</h2>
-        <p class="intro">Escríbenos por WhatsApp o déjanos tus datos y un asesor te contacta.</p>
-        <a class="btn btn--amarillo contacto__wa" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">WhatsApp {sitio.whatsapp.visible}<span class="sr-only"> (se abre en una pestaña nueva)</span><span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></a>
-        <div class="contacto__form">
-          <h3 class="sr-only">Formulario de contacto</h3>
+  <!-- 6. CONTACTO CON MAPA (bloque bruma) -->
+  <section class="bloque bloque--bruma" id="contacto" aria-labelledby="contacto-titulo">
+    <div class="contenedor">
+      <div class="bloque__cabecera" data-aparecer>
+        <h2 id="contacto-titulo" class="bloque__titulo">Hablemos de lo que quieres aprender</h2>
+        <p class="bloque__lema">Escríbenos por WhatsApp o déjanos tus datos y un asesor te contacta.</p>
+        <a class="btn btn--negro contacto__wa" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">WhatsApp {sitio.whatsapp.visible}<span class="sr-only"> (se abre en una pestaña nueva)</span><span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></a>
+      </div>
+      <div class="contacto">
+        <div class="tarjeta contacto__form" data-aparecer>
+          <h3 class="contacto__subtitulo">Déjanos tus datos</h3>
           <FormularioContacto modo="persona" />
         </div>
-      </div>
-      <div class="contacto__mapa" data-aparecer>
-        <h3 class="contacto__mapa-titulo">Atendemos en 7 países</h3>
-        <MapaPaises />
+        <div class="tarjeta contacto__mapa" data-aparecer>
+          <h3 class="contacto__subtitulo">Atendemos en 7 países</h3>
+          <MapaPaises />
+        </div>
       </div>
     </div>
   </section>
 </Base>
 
 <style>
-  /* Estilo claro y minimalista (ui-ux-pro-max: «Minimalism & Swiss») con la marca CE. Celular primero:
-     la base es el teléfono y las consultas min-width amplían hacia tableta y escritorio. */
-  .seccion--tarjeta { background: #fafafa; border-block: 1px solid var(--linea); }
-  .titulo-bloque { font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.9rem); letter-spacing: -0.04em; line-height: 1.05; }
-  .encabezado { display: grid; gap: var(--s-3); margin-bottom: var(--s-6); max-width: 40rem; }
-  .encabezado .intro { margin: 0; }
-  .circulo { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--negro); color: var(--amarillo); flex: none; }
+  /* Dirección «Apple» (DESIGN.md): bloques de ancho completo que alternan claro, bruma y negro; el cambio de color
+     es el separador. Titulares centrados, mucho aire, sin bordes ni sombras salvo la de las portadas. */
+  .bloque { padding-block: clamp(4rem, 2.6rem + 5vw, 7rem); background: var(--blanco); }
+  .bloque--bruma { background: var(--bruma); }
+  .bloque--oscuro { background: var(--negro); color: var(--blanco); }
+  .contenedor--lectura { max-width: 61.25rem; }
+  .bloque__cabecera { display: grid; justify-items: center; gap: var(--s-3); max-width: 46rem; margin: 0 auto var(--s-7); text-align: center; }
+  .bloque__titulo { font-size: clamp(2rem, 1.3rem + 3vw, 3.5rem); letter-spacing: -0.045em; line-height: 1.02; }
+  .bloque__lema { font-size: var(--t-lg); line-height: 1.45; color: var(--gris-oscuro); max-width: 40ch; }
+  .bloque--oscuro .bloque__lema { color: #d9d9d9; }
+
+  /* Enlace «más ›»: la acción secundaria, sin caja */
+  .mas { display: inline-flex; align-items: center; gap: 0.3em; min-height: 44px; font-family: var(--font-marca); font-weight: 700; font-size: var(--t-base); letter-spacing: -0.01em; text-decoration: none; }
+  /* Como en Apple, el enlace suelto no lleva subrayado; aparece en amarillo al pasar el cursor */
+  a.mas:hover, a:hover .mas { text-decoration: underline; text-decoration-color: var(--amarillo); text-decoration-thickness: 2px; text-underline-offset: 0.3em; }
+  .mas--chico { min-height: 0; margin-top: var(--s-1); font-size: var(--t-sm); }
+  .mas__flecha { display: inline-block; font-size: 1.25em; line-height: 1; transition: transform var(--t-accion) var(--ease); }
+  a:hover > .mas__flecha, a:hover .mas .mas__flecha { transform: translateX(3px); }
 
   /* 1. PORTADA */
-  .hero { position: relative; overflow: hidden; background: radial-gradient(40rem 22rem at 50% 0%, rgba(255, 195, 0, 0.16), transparent 70%), var(--negro); color: var(--blanco); padding-block: clamp(3.5rem, 2rem + 6vw, 7.5rem); }
+  .hero { position: relative; overflow: hidden; padding-bottom: 0; }
   .hero__centro { position: relative; z-index: 1; display: grid; justify-items: center; text-align: center; }
   .hero__marca { padding: 0.3rem 0.8rem; border-radius: 999px; background: rgba(255, 255, 255, 0.1); font-size: var(--t-xs); font-weight: 700; color: var(--amarillo); }
   .hero__titulo { margin-top: var(--s-5); font-size: clamp(2.6rem, 1.2rem + 6vw, 6.2rem); letter-spacing: -0.05em; line-height: 0.95; max-width: 11ch; }
   .acento { color: var(--amarillo); }
-  .hero__sub { margin-top: var(--s-5); font-size: var(--t-lg); line-height: 1.5; color: #d9d9d9; max-width: 48ch; }
-  .hero__cta { --alto: 3.5rem; width: 100%; max-width: 22rem; justify-content: center; gap: var(--s-3); margin-top: var(--s-6); font-size: var(--t-base); }
-  .hero__secundario { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--s-2); color: #d9d9d9; font-size: var(--t-sm); text-underline-offset: 4px; text-decoration-color: var(--amarillo); }
-  .hero__secundario:hover { color: var(--blanco); }
-  .hero__flotantes { display: none; }
-  .abrazo { --px: 0; --py: 0; --giro: 0deg; position: absolute; left: 50%; top: 50%; width: min(56rem, 120vw); aspect-ratio: 1; translate: -50% -50%; pointer-events: none; }
+  .hero__sub { margin-top: var(--s-5); font-size: var(--t-lg); line-height: 1.5; color: #d9d9d9; max-width: 44ch; }
+  .hero__acciones { display: grid; justify-items: center; gap: var(--s-2); width: 100%; margin-top: var(--s-6); }
+  .hero__cta { --alto: 3.5rem; width: 100%; max-width: 22rem; justify-content: center; gap: var(--s-3); font-size: var(--t-base); }
+  .hero .mas { color: var(--blanco); }
+
+  .escaparate { position: relative; z-index: 1; display: flex; justify-content: center; align-items: flex-end; gap: var(--s-4); width: min(100% - 2 * var(--gutter), 76rem); margin: var(--s-7) auto 0; }
+  .escaparate__pieza { flex: none; aspect-ratio: 16 / 9; border-radius: var(--radio-l) var(--radio-l) 0 0; overflow: hidden; box-shadow: 3px 5px 30px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.1); }
+  .escaparate__pieza :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .escaparate__pieza--1, .escaparate__pieza--3 { display: none; }
+  .escaparate__pieza--2 { width: 100%; max-width: 38rem; }
+
+  .abrazo { --px: 0; --py: 0; --giro: 0deg; position: absolute; left: 50%; top: 42%; width: min(56rem, 120vw); aspect-ratio: 1; translate: -50% -50%; pointer-events: none; }
   .abrazo__luz { position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 195, 0, 0.2), transparent 62%); filter: blur(30px); transform: translate(calc(var(--px) * 12%), calc(var(--py) * 12%)); transition: transform 600ms var(--ease); }
   .abrazo__giro { position: absolute; inset: 0; transform: translate(calc(var(--px) * 18px), calc(var(--py) * 18px)) rotate(var(--giro)); transition: transform 1s var(--ease); }
-  .abrazo__arco { width: 100%; height: 100%; overflow: visible; opacity: 0.45; }
+  .abrazo__arco { width: 100%; height: 100%; overflow: visible; opacity: 0.4; }
   @media (prefers-reduced-motion: no-preference) {
     .abrazo__arco path { stroke-dasharray: 100; stroke-dashoffset: 100; animation: trazar var(--t-momento) var(--ease) 0.2s forwards; }
     @keyframes trazar { to { stroke-dashoffset: 0; } }
     @supports (animation-timeline: scroll()) {
       .abrazo__arco { animation: dial linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
       @keyframes dial { to { transform: rotate(-40deg); } }
+      /* Las portadas suben un poco mientras la portada sale de la vista */
+      .escaparate { animation: subir linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
+      @keyframes subir { from { translate: 0 3rem; } }
     }
   }
 
-  /* 2. SERVICIOS */
+  /* 2. SERVICIOS: mosaicos */
   .servicios { display: grid; gap: var(--s-4); }
-  .servicio { display: grid; height: 100%; overflow: hidden; border-radius: var(--radio-l); background: var(--blanco); text-decoration: none; box-shadow: 0 0 0 1px var(--linea); transition: box-shadow var(--t-accion) var(--ease); }
-  .servicio:hover { box-shadow: 0 0 0 1px var(--linea), 0 18px 36px -18px rgba(0, 0, 0, 0.25); }
-  .servicio:focus-visible { outline-offset: 4px; }
-  .servicio__imagen { display: block; aspect-ratio: 16 / 9; background: var(--bruma); }
-  .servicio__imagen :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .servicio__cuerpo { display: grid; gap: var(--s-2); padding: var(--s-5); align-content: start; }
-  .servicio__titulo { font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 800; letter-spacing: -0.025em; }
-  .servicio__texto { color: var(--gris-oscuro); font-size: var(--t-sm); }
-  .servicio__cta { display: inline-flex; align-items: center; gap: var(--s-3); margin-top: var(--s-2); font-family: var(--font-marca); font-weight: 700; font-size: var(--t-sm); }
+  .mosaico { display: grid; grid-template-rows: auto 1fr; height: 100%; overflow: hidden; border-radius: var(--radio-l); background: var(--bruma); text-decoration: none; text-align: center; }
+  .mosaico:focus-visible { outline-offset: 4px; }
+  .mosaico__texto { display: grid; justify-items: center; gap: var(--s-2); padding: var(--s-7) var(--s-5) var(--s-5); }
+  .mosaico__titulo { font-family: var(--font-marca); font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; max-width: 16ch; text-wrap: balance; }
+  .mosaico__lema { max-width: 34ch; color: var(--gris-oscuro); }
+  .mosaico__imagen { align-self: end; display: block; margin: 0 var(--s-5); aspect-ratio: 16 / 9; border-radius: calc(var(--radio-l) - 8px) calc(var(--radio-l) - 8px) 0 0; overflow: hidden; }
+  .mosaico__imagen :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale var(--t-entrada) var(--ease); }
+  .mosaico:hover .mosaico__imagen :global(img) { scale: 1.03; }
 
-  .subtitulo { margin: var(--s-8) 0 var(--s-4); font-size: var(--t-xl); }
-  .destacados { display: grid; grid-auto-flow: column; grid-auto-columns: min(17rem, 75vw); gap: var(--s-4); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--s-3); scrollbar-width: thin; position: relative; }
+  /* Programas destacados: tarjetas de vitrina */
+  .destacados { display: grid; grid-auto-flow: column; grid-auto-columns: min(18rem, 78vw); gap: var(--s-4); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--s-3); scrollbar-width: thin; position: relative; }
   .destacados > li { scroll-snap-align: start; }
-  .destacado { display: grid; gap: var(--s-2); text-decoration: none; border-radius: var(--radio-l); }
-  .destacado__portada { display: block; aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; background: var(--negro); }
-  .destacado__portada :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .destacado__sin { display: flex; align-items: flex-end; height: 100%; padding: var(--s-4); color: var(--blanco); font-family: var(--font-marca); font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.03em; line-height: 1.05; background: radial-gradient(90% 120% at 100% 0%, rgba(45, 175, 115, 0.7), transparent 60%), var(--negro); }
-  .destacado__nombre { font-family: var(--font-marca); font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
-  .destacado__dato { font-size: var(--t-xs); color: var(--gris-oscuro); }
-  .destacado :global(.precio:empty) { display: none; }
-  .destacado :global(.precio--con) { font-family: var(--font-marca); }
+  .vitrina { display: grid; align-content: start; gap: var(--s-1); height: 100%; padding: var(--s-4) var(--s-4) var(--s-5); border-radius: var(--radio-l); background: var(--blanco); border: 1px solid rgba(0, 0, 0, 0.08); text-decoration: none; }
+  .vitrina__portada { display: block; margin-bottom: var(--s-3); aspect-ratio: 16 / 9; border-radius: calc(var(--radio-l) - 10px); overflow: hidden; background: var(--negro); }
+  .vitrina__portada :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale var(--t-entrada) var(--ease); }
+  .vitrina:hover .vitrina__portada :global(img) { scale: 1.03; }
+  .vitrina__sin { display: flex; align-items: flex-end; height: 100%; padding: var(--s-4); color: var(--blanco); font-family: var(--font-marca); font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.03em; line-height: 1.05; }
+  .vitrina__nombre { font-family: var(--font-marca); font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
+  .vitrina__dato { font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .vitrina :global(.precio:empty) { display: none; }
+  .vitrina :global(.precio--con) { font-family: var(--font-marca); }
 
-  /* 3. POR QUÉ ELEGIRNOS */
-  .razones { display: grid; gap: var(--s-4); }
-  .razon { display: grid; gap: var(--s-2); padding: var(--s-5); border-radius: var(--radio-l); background: var(--blanco); box-shadow: 0 0 0 1px var(--linea); }
-  .razon__icono { display: grid; place-items: center; width: 3rem; height: 3rem; margin-bottom: var(--s-2); border-radius: 50%; background: var(--amarillo); }
-  .razon__icono svg { width: 1.6rem; height: 1.6rem; fill: none; stroke: var(--negro); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  /* 3. POR QUÉ ELEGIRNOS: sin cajas, sobre negro */
+  .razones { display: grid; gap: var(--s-6) var(--s-5); }
+  .razon { display: grid; align-content: start; justify-items: center; gap: var(--s-2); text-align: center; }
+  .razon__icono { display: grid; place-items: center; width: 3.25rem; height: 3.25rem; margin-bottom: var(--s-2); border-radius: 50%; background: var(--amarillo); }
+  .razon__icono svg { width: 1.7rem; height: 1.7rem; fill: none; stroke: var(--negro); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .razon h3 { font-size: var(--t-lg); }
-  .razon p { color: var(--gris-oscuro); font-size: var(--t-sm); }
-  .cta-medio { display: flex; justify-content: center; margin-top: var(--s-7); }
+  .razon p { max-width: 32ch; color: #d9d9d9; }
+  .cta-medio { display: flex; justify-content: center; margin-top: var(--s-8); }
 
   /* 4. TESTIMONIOS */
   .testimonios { display: grid; gap: var(--s-4); }
-  .testimonio { display: grid; gap: var(--s-4); height: 100%; margin: 0; padding: var(--s-5); border-radius: var(--radio-l); background: #fafafa; box-shadow: 0 0 0 1px var(--linea); }
+  .testimonio { display: grid; gap: var(--s-4); height: 100%; margin: 0; padding: var(--s-6); border-radius: var(--radio-l); background: var(--bruma); }
   .testimonio blockquote { margin: 0; font-size: var(--t-lg); line-height: 1.45; }
   .testimonio figcaption { display: flex; align-items: center; gap: var(--s-3); font-size: var(--t-sm); color: var(--gris-oscuro); }
   .testimonio figcaption strong { display: block; color: var(--negro); }
@@ -295,10 +329,9 @@ const preguntas = [
   .testimonio :global(.testimonio__foto) { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; }
 
   /* 5. PREGUNTAS FRECUENTES */
-  .faq__rejilla { display: grid; gap: var(--s-4); }
   .faq__lista { border-top: 1px solid var(--linea); }
   .faq__item { border-bottom: 1px solid var(--linea); }
-  .faq__item summary { display: grid; grid-template-columns: 1fr auto; gap: var(--s-4); align-items: center; min-height: 44px; padding: var(--s-4) 0; cursor: pointer; list-style: none; }
+  .faq__item summary { display: grid; grid-template-columns: 1fr auto; gap: var(--s-4); align-items: center; min-height: 44px; padding: var(--s-5) 0; cursor: pointer; list-style: none; }
   .faq__item summary::-webkit-details-marker { display: none; }
   .faq__pregunta { font-family: var(--font-marca); font-size: var(--t-base); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
   .faq__mas { position: relative; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--bruma); transition: background-color var(--t-accion) var(--ease), transform var(--t-accion) var(--ease); }
@@ -315,38 +348,27 @@ const preguntas = [
   }
 
   /* 6. CONTACTO CON MAPA */
-  .contacto { display: grid; gap: var(--s-7); }
-  .contacto__texto .intro { margin-top: var(--s-3); }
-  .contacto__wa { margin-top: var(--s-5); }
-  .contacto__form { margin-top: var(--s-6); padding: var(--s-5); border-radius: var(--radio-l); background: var(--blanco); box-shadow: 0 0 0 1px var(--linea); }
-  .contacto__mapa { padding: var(--s-5); border-radius: var(--radio-l); background: var(--blanco); box-shadow: 0 0 0 1px var(--linea); }
-  .contacto__mapa-titulo { font-size: var(--t-xl); margin-bottom: var(--s-4); }
+  .contacto__wa { margin-top: var(--s-3); }
+  .contacto { display: grid; gap: var(--s-4); }
+  .tarjeta { padding: var(--s-5); border-radius: var(--radio-l); background: var(--blanco); border: 1px solid rgba(0, 0, 0, 0.08); }
+  .contacto__subtitulo { font-size: var(--t-xl); margin-bottom: var(--s-4); }
 
   /* Tableta */
   @media (min-width: 640px) {
-    .servicios, .razones, .testimonios { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .servicios, .testimonios { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .razones { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero__acciones { grid-auto-flow: column; align-items: center; gap: var(--s-5); width: auto; }
     .hero__cta { width: auto; }
     .faq__pregunta { font-size: var(--t-lg); }
+    .tarjeta { padding: var(--s-6); }
+    .escaparate__pieza--1, .escaparate__pieza--3 { display: block; width: 30%; max-width: 22rem; opacity: 0.85; }
+    .escaparate__pieza--2 { width: 46%; }
   }
   /* Escritorio */
   @media (min-width: 1000px) {
-    .servicios { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .razones, .testimonios { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .faq__rejilla { grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--s-8); align-items: start; }
+    .destacados { grid-auto-columns: minmax(14rem, 1fr); }
     .contacto { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; }
     .contacto__mapa { position: sticky; top: calc(var(--header-h) + var(--s-4)); }
-    .hero__flotantes { display: block; position: absolute; inset: 0; pointer-events: none; }
-    .flotante { position: absolute; width: clamp(12rem, 8rem + 8vw, 19rem); aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12); }
-    .flotante :global(img) { width: 100%; height: 100%; object-fit: cover; }
-    .flotante--1 { left: -3rem; top: 10%; transform: rotate(-9deg); }
-    .flotante--2 { left: 3%; bottom: 8%; transform: rotate(6deg); width: clamp(10rem, 7rem + 6vw, 15rem); }
-    .flotante--3 { right: -3rem; top: 8%; transform: rotate(9deg); }
-    .flotante--4 { right: 4%; bottom: 10%; transform: rotate(-6deg); width: clamp(10rem, 7rem + 6vw, 15rem); }
-  }
-  @media (min-width: 1000px) and (prefers-reduced-motion: no-preference) {
-    /* Dos idas y vueltas al cargar (menos de 5 s) y quietas */
-    .flotante { animation: flotar 2.4s ease-in-out 2 alternate; }
-    .flotante--2, .flotante--4 { animation-delay: 0.3s; }
-    @keyframes flotar { to { translate: 0 -14px; } }
   }
 </style>

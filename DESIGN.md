@@ -1,7 +1,7 @@
 ---
 version: alpha
-name: CE — Señal y abrazo
-description: Sistema visual de la web de la Cámara de Comercio Exterior (CE), dentro del Manual de Identidad de Marca. Los valores salen de src/styles/global.css; si cambian allí, se actualizan aquí.
+name: CE — Señal y abrazo (dirección Apple)
+description: Sistema visual de la web de la Cámara de Comercio Exterior (CE), dentro del Manual de Identidad de Marca, con la diagramación de apple.com como dirección (bloques de ancho completo que alternan claro y oscuro). Los valores salen de src/styles/global.css; si cambian allí, se actualizan aquí.
 colors:
   primary: "#000000"
   on-primary: "#FFFFFF"
@@ -119,6 +119,26 @@ components:
     textColor: "{colors.primary}"
     rounded: "{rounded.lg}"
     padding: 24px
+  tile-light:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.primary}"
+    typography: "{typography.h2}"
+    padding: 112px
+  tile-soft:
+    backgroundColor: "{colors.surface-soft}"
+    textColor: "{colors.primary}"
+    typography: "{typography.h2}"
+    padding: 112px
+  tile-dark:
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.h2}"
+    padding: 112px
+  mosaic:
+    backgroundColor: "{colors.surface-soft}"
+    textColor: "{colors.primary}"
+    rounded: "{rounded.lg}"
+    padding: 48px 24px 0
   card-soft:
     backgroundColor: "{colors.surface-card}"
     textColor: "{colors.primary}"
@@ -153,13 +173,17 @@ components:
 
 # CE — Señal y abrazo
 
+**Dirección elegida (oct-2026): Apple.** Se toma de apple.com la manera de distribuir el espacio y de armar los componentes, según el análisis «Apple-design-analysis» de la colección VoltAgent/awesome-design-md (licencia MIT). **No** se toman sus colores (azul), sus tipografías (SF Pro) ni nada de su marca: colores, letras, logo y pastillas son los de la CE. Hay un solo estilo por proyecto; no se mezcla con otro DESIGN.md.
+
 Este archivo traduce el Manual de Identidad de Marca de la CE (skill `brand-guidelines`) y los tokens de `src/styles/global.css` al formato DESIGN.md, para que cualquier agente diseñe con el mismo sistema. **Si algo de aquí choca con el manual de marca, manda el manual.** La dirección creativa completa está en `docs/direccion-creativa.md` y el movimiento, en `docs/sistema-movimiento.md`.
 
 ## Overview
 
 Educación continua con aire de institución seria y moderna: blanco y negro de alto contraste, con el amarillo de la CE como **señal**, es decir, como el color que indica dónde actuar. Mucho aire, titulares grandes y compactos en Montserrat y texto corrido sobrio en Inter Tight. El gesto propio de la marca es **el abrazo**: el arco de la «C» del isologo, que aparece dibujado en la portada y orienta la mirada. La interfaz no imita a otras marcas; se parece a una señalética clara, no a una plantilla.
 
-El inicio es claro y pensado primero para celular. Las páginas alternan secciones blancas, grises suaves (`surface-soft`) y una portada negra.
+Como en apple.com, cada página es una pila de **bloques de ancho completo** que alternan blanco, bruma (`surface-soft`) y negro. El cambio de color es el separador: no hay líneas ni sombras entre secciones. Cada bloque se abre con un **titular centrado**, un lema de una línea y, como máximo, dos acciones (una pastilla y un enlace «más ›»). El producto, es decir, las portadas oficiales de los cursos y las fotos, es lo que se luce; la interfaz se retira. Se diseña primero para celular.
+
+Ritmo del inicio: portada negra con escaparate de portadas → servicios en blanco (mosaicos) → programas destacados en bruma (vitrinas) → razones en negro → preguntas en blanco → contacto en bruma → pie negro con el arco.
 
 ## Colors
 
@@ -184,14 +208,20 @@ Prohibido: azules, morados o degradados de moda que no estén en el manual; text
 
 - **Celular primero:** el CSS base es el de 390 px; los cortes son `min-width: 640px` y `1000px`.
 - Contenedor de 86 rem como máximo, con márgenes laterales fluidos (16–40 px).
-- Secciones con un ritmo vertical de 64 a 120 px (`.seccion`).
+- Bloques con un relleno vertical de 64 a 112 px y sin espacio entre ellos (`.bloque`, `.bloque--bruma`, `.bloque--oscuro`).
+- Cabecera de bloque centrada (`.bloque__cabecera`), de 46 rem como máximo; las columnas de lectura (preguntas frecuentes) miden 980 px como máximo.
 - Escala de espaciado de 4 a 112 px (tokens `--s-1` a `--s-9`). No se inventan valores intermedios.
 - Una sola acción principal por vista; lo secundario va como enlace de texto o como botón oscuro.
 - Las filas horizontales de tarjetas usan `scroll-snap` y no deben provocar desplazamiento horizontal de la página.
 
 ## Elevation & Depth
 
-Casi plano. Las tarjetas se separan con un anillo de 1 px en `line`. Al pasar el cursor ganan una sombra suave y difusa (`0 18px 36px -18px rgba(0,0,0,.25)`) y suben 4 px con un resorte de Motion. Solo la portada oscura admite sombras profundas, en las portadas de cursos que flotan. Nada de neumorfismo ni de vidrio esmerilado.
+Plano, como en Apple. La profundidad sale del cambio de color entre bloques, no de sombras.
+- Los mosaicos no llevan borde: son bruma sobre blanco.
+- Las tarjetas blancas sobre bruma llevan un filete de 1 px `rgba(0,0,0,.08)`.
+- **Hay una sola sombra en todo el sistema**, `3px 5px 30px rgba(0,0,0,.22)`, y solo la llevan las portadas de cursos del escaparate (el «producto»). Nunca va en tarjetas, botones ni textos.
+- Al pasar el cursor, la imagen de un mosaico o vitrina se acerca un 3 %. Al presionar, los botones se encogen (`scale(0.97)`).
+- Nada de neumorfismo ni de vidrio esmerilado.
 
 ## Shapes
 
@@ -211,9 +241,13 @@ El arco del abrazo es la única forma orgánica, y sale del isologo.
   - bruma.
 
   El área táctil mínima es de 44 px.
+- **Enlace «más ›»:** la acción secundaria, sin caja ni subrayado. Va en Montserrat 700 con un « › » que avanza 3 px; al pasar el cursor aparece un subrayado amarillo. Ocupa 44 px de alto como mínimo.
+- **Portada (bloque oscuro):** rótulo «Educación continua», titular centrado, lema, un botón amarillo y un enlace «más ›». Debajo va el escaparate: tres portadas en escritorio y una en celular, con la sombra del sistema. El arco del abrazo va detrás.
+- **Mosaico de servicio:** fondo bruma y radio lg, con titular centrado, lema, enlace «más ›» y, abajo, la imagen apoyada en el borde inferior.
+- **Vitrina de programa:** tarjeta blanca con filete, portada 16:9, nombre, dato, precio por país y «Ver programa ›». En celular forman una fila con desplazamiento lateral; en escritorio caben las cinco.
+- **Razones (bloque oscuro):** sin cajas. Llevan ícono en círculo amarillo, título blanco y texto #D9D9D9, centrados.
 - **Placa:** rótulo amarillo en minúsculas de frase, que orienta pero no se pone sobre cada título.
-- **Tarjeta de servicio:** imagen 16:9 arriba, título en Montserrat 800 y texto en grafito. La llamada a la acción lleva un círculo con flecha.
-- **Tarjeta de razón:** ícono de trazo SVG (nunca emojis), título y texto, sobre blanco con anillo.
+- **Íconos:** de trazo SVG, nunca emojis.
 - **Preguntas frecuentes:** `<details>` nativos con un signo + que gira. Se abre una a la vez.
 - **Formulario:** etiquetas visibles, error junto al campo, campos de 50 px con borde gris claro de 1.5 px; al enfocar, el borde pasa a negro con un halo amarillo de 3 px (`accent-60`).
 - **Precio:** lo pinta `[data-precio]` según el país. Si no hay precio, invita a consultar por WhatsApp; nunca muestra una cifra inventada.
@@ -228,6 +262,9 @@ El arco del abrazo es la única forma orgánica, y sale del isologo.
 
 - **Sí:** usar solo los colores, tipografías, radios y espacios de este archivo; si falta algo, decidir en su espíritu y avisar qué se eligió.
 - **Sí:** una idea resaltada en amarillo por página, como máximo.
+- **Sí:** alternar bloques claro, bruma y oscuro antes de agregar adornos; cuando dudes, cambia el fondo del bloque.
+- **No:** usar el azul, las tipografías SF Pro ni los textos de Apple; de Apple solo se toma la diagramación.
+- **No:** poner sombras en tarjetas o botones; la única sombra es la de las portadas.
 - **Sí:** contraste AA (4.5:1) en todo texto; foco visible negro sobre claro y amarillo sobre oscuro.
 - **Sí:** usar el logo oficial de `public/brand/` tal cual.
 - **No:** redibujar, recolorear ni generar el logo de la CE.
