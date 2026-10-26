@@ -7,12 +7,12 @@
 @source "../components/ui";
 
 @theme inline {
-  --color-background: var(--card);
-  --color-foreground: var(--ink);
-  --color-muted: var(--bg2);
-  --color-muted-foreground: var(--mut);
-  --color-primary: var(--gold);
-  --color-primary-foreground: #0a0a0a;
+  --color-background: var(--tarjeta);
+  --color-foreground: var(--blanco);
+  --color-muted: var(--bruma);
+  --color-muted-foreground: var(--gris-oscuro);
+  --color-primary: var(--amarillo);
+  --color-primary-foreground: var(--negro);
   --font-sans: var(--font);
 }
 
@@ -32,7 +32,7 @@
   --dr-bg-1: #050505;
   --dr-bg-2: #141008;
   --dr-calm: #c89a31;
-  --dr-mid: #ffc300;
+  --dr-mid: #c9a24b;
   --dr-hot: #fff0bf;
   --dr-core: #ffffff;
   --dr-vignette: 0.62;

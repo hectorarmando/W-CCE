@@ -20,9 +20,9 @@ Este repositorio es la **única fuente de verdad** de la web. Todo cambio (dise�
 4. Commit en español, con mensaje descriptivo, y `git push origin main`. Así lo pidió el usuario: las actualizaciones van directo a `main` una vez verificadas.
 5. Si cambian páginas, regenera la vista previa (`python3 scripts/vista-previa.py`) y entrégala al usuario. El archivo no se versiona.
 
-## Estilo vigente
+## Paleta vigente
 
-Desde oct-2026 la web usa la estructura y el estilo del prototipo HTML del usuario: negro con dorado, Cormorant Garamond e Inter (`DESIGN.md`). Es una decisión expresa del usuario y manda sobre la paleta y las tipografías de `brand-guidelines` y de `ui-ux-pro-max`; el resto del manual sigue vigente (logo oficial sin redibujar, sigla «CE»).
+Desde oct-2026 la web usa la paleta negro y dorado del prototipo HTML del usuario (fondo #0A0A0A, dorado #C9A24B, marfil #F4EFE3). Es una decisión expresa del usuario y manda sobre los colores de `brand-guidelines`; todo lo demás de los skills sigue vigente: estructura, tipografías (Montserrat e Inter Tight), componentes, efectos, logo oficial y sigla «CE». Detalle en `DESIGN.md`.
 
 ## Reglas de contenido
 

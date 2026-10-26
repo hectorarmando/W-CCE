@@ -2,24 +2,24 @@
    Montserrat (tipografía de marca) para titulares y pastillas; Inter Tight en el rol de Helvetica para el texto. */
 @import "@fontsource-variable/inter-tight/wght.css";
 @import "@fontsource-variable/montserrat/wght.css";
-@import "@fontsource/cormorant-garamond/500.css";
-@import "@fontsource/cormorant-garamond/600.css";
-@import "@fontsource/cormorant-garamond/700.css";
-@import "@fontsource-variable/inter/wght.css";
 
 :root {
   /* Institucionales */
-  --amarillo: #ffc300;   /* Señal */
-  --negro: #000000;      /* Tinta */
-  --blanco: #ffffff;     /* Papel */
-  /* Secundarios del manual */
-  --amarillo-60: #ffe180;
-  --amarillo-30: #fff0bf;
-  --gris-oscuro: #404040; /* Grafito */
-  --gris: #808080;
-  --gris-claro: #bfbfbf;
-  --bruma: #f2f2f2;
-  --linea: #e6e6e6;
+  /* Paleta «negro y dorado» del prototipo HTML del usuario (oct-2026). Se conservan los nombres de los tokens
+     para que estructura, componentes y efectos sigan iguales: --amarillo es ahora el dorado de acento,
+     --negro el fondo casi negro y --blanco el marfil del texto. */
+  --amarillo: #c9a24b;   /* Dorado: acento y acción */
+  --negro: #0a0a0a;      /* Fondo */
+  --blanco: #f4efe3;     /* Marfil: texto sobre negro */
+  --amarillo-60: #e8cf8f; /* Dorado claro */
+  --amarillo-30: #2a2110; /* Dorado muy oscuro (avisos) */
+  --gris-oscuro: #a79f8c; /* Texto de apoyo */
+  --gris: #8a8272;
+  --gris-claro: #3d3526;  /* Bordes de campos */
+  --bruma: #121212;       /* Secciones alternas */
+  --linea: #2c2518;       /* Filetes */
+  --tarjeta: #161616;     /* Tarjetas y campos */
+  color-scheme: dark;
   /* Dorado del isologo: solo de referencia, no es color de interfaz */
   --dorado-oscuro: #ac581c;
   --dorado: #c89a31;
@@ -64,8 +64,8 @@ body {
   font-family: var(--font);
   font-size: var(--t-base);
   line-height: 1.55;
-  color: var(--negro);
-  background: var(--blanco);
+  color: var(--blanco);
+  background: var(--negro);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -78,7 +78,7 @@ ul[role="list"], ol[role="list"] { list-style: none; margin: 0; padding: 0; }
 button, input, select, textarea { font: inherit; color: inherit; }
 ::selection { background: var(--amarillo); color: var(--negro); }
 
-:focus-visible { outline: 3px solid var(--negro); outline-offset: 3px; border-radius: 4px; }
+:focus-visible { outline: 3px solid var(--amarillo-60); outline-offset: 3px; border-radius: 4px; }
 .sobre-oscuro :focus-visible { outline-color: var(--amarillo); }
 
 .contenedor { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
@@ -110,13 +110,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* Resaltado amarillo del manual: solo para una idea clave por página */
 .resalte {
-  background: linear-gradient(transparent 12%, var(--amarillo) 12%, var(--amarillo) 92%, transparent 92%);
+  background: linear-gradient(transparent 12%, var(--amarillo) 12%, var(--amarillo) 92%, transparent 92%); color: var(--negro);
   padding-inline: 0.12em; box-decoration-break: clone; -webkit-box-decoration-break: clone;
 }
 
 /* Pastilla del manual (6.1): negra con círculo amarillo y flecha. La flecha avanza al pasar el cursor. */
 .btn {
-  --alto: 3.25rem; --fondo: var(--bruma); --texto: var(--negro); --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); --borde: transparent;
+  --alto: 3.25rem; --fondo: var(--tarjeta); --texto: var(--blanco); --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); --borde: transparent;
   display: inline-flex; align-items: center; justify-content: space-between; gap: var(--s-4);
   min-height: var(--alto); padding: 0 1.5rem; border: 1.5px solid var(--borde); border-radius: 999px; cursor: pointer;
   background: var(--fondo); color: var(--texto); text-decoration: none;
@@ -131,13 +131,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .btn__flecha svg { transition: transform var(--t-accion) var(--ease); }
 .btn:hover .btn__flecha svg { transform: translateX(3px); }
 .btn:active { transform: translateY(1px); }
-.btn--negro { --fondo: var(--negro); --texto: var(--blanco); --fondo-flecha: var(--amarillo); --texto-flecha: var(--negro); }
+.btn--negro { --fondo: var(--tarjeta); --texto: var(--blanco); --borde: var(--amarillo); --fondo-flecha: var(--amarillo); --texto-flecha: var(--negro); }
 .btn--negro:hover { --fondo: #262626; }
 .btn--amarillo { --fondo: var(--amarillo); --texto: var(--negro); --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); }
-.btn--amarillo:hover { --fondo: #ffd240; }
-.btn--contorno { --fondo: transparent; --borde: var(--negro); }
-.btn--contorno:hover { --fondo: var(--negro); --texto: var(--blanco); --fondo-flecha: var(--amarillo); --texto-flecha: var(--negro); }
-.sobre-oscuro .btn--contorno { --borde: rgba(255, 255, 255, 0.5); --texto: var(--blanco); --fondo-flecha: var(--blanco); --texto-flecha: var(--negro); }
+.btn--amarillo:hover { --fondo: #e8cf8f; }
+.btn--contorno { --fondo: transparent; --borde: var(--amarillo); }
+.btn--contorno:hover { --fondo: var(--amarillo); --texto: var(--negro); --fondo-flecha: var(--amarillo); --texto-flecha: var(--negro); }
+.sobre-oscuro .btn--contorno { --borde: var(--amarillo); --texto: var(--blanco); --fondo-flecha: var(--blanco); --texto-flecha: var(--negro); }
 .sobre-oscuro .btn--contorno:hover { --fondo: var(--blanco); --texto: var(--negro); --borde: var(--blanco); --fondo-flecha: var(--amarillo); }
 .sobre-oscuro .btn--amarillo { --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); }
 .btn[aria-disabled="true"], .btn:disabled { opacity: 0.55; cursor: not-allowed; }
@@ -178,108 +178,3 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 /* Motion (scripts/aparecer.ts): estado inicial oculto solo mientras espera su entrada */
 .por-aparecer { opacity: 0; }
-
-/* ==========================================================================
-   TEMA «NEGRO Y DORADO» (oct-2026). Estructura y estilo tomados del prototipo HTML que entregó el usuario
-   («CCE · Educación continua…»): fondo negro, dorado como acento, títulos con serifa (Cormorant Garamond) y texto
-   en Inter. Decisión del usuario: el dorado pasa a ser color de interfaz (el manual lo reservaba para el logo).
-   Se mantienen la sigla «CE», el logo oficial y el WhatsApp oficial. Va al final para mandar sobre lo anterior.
-   ========================================================================== */
-
-:root {
-  --bg: #0a0a0a; --bg2: #121212; --card: #161616; --line: #2c2518;
-  --gold: #c9a24b; --gold2: #e8cf8f; --ink: #f4efe3; --mut: #a79f8c;
-  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --sans: "Inter Variable", Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  /* Los tokens anteriores se reorientan al tema para que los componentes existentes lo hereden */
-  --amarillo: var(--gold);
-  --amarillo-60: var(--gold2);
-  --font: var(--sans);
-  --font-marca: var(--serif);
-  --max: 70rem;
-  --gutter: 22px;
-  --header-h: 76px;
-  --radio: 0;
-  --radio-l: 0;
-  color-scheme: dark;
-  --gris-oscuro: var(--mut);
-  --linea: var(--line);
-  --gris-claro: #3d3526;
-  --bruma: var(--bg2);
-}
-body { background: var(--bg); color: var(--ink); font: 300 1rem/1.7 var(--sans); }
-h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; line-height: 1.1; letter-spacing: 0; }
-h3, h4 { font-weight: 600; letter-spacing: 0; }
-strong, b { font-weight: 600; }
-::selection { background: var(--gold); color: #0a0a0a; }
-:focus-visible, .sobre-oscuro :focus-visible { outline: 2px solid var(--gold2); outline-offset: 3px; border-radius: 0; }
-.saltar { background: var(--gold); color: #0a0a0a; border-radius: 0; }
-
-/* Utilidades del prototipo */
-.eyebrow { display: inline-block; font: 500 0.72rem/1.4 var(--sans); letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); }
-.regla { width: 56px; height: 1px; margin: 1.1rem 0; background: linear-gradient(90deg, var(--gold), transparent); }
-.dorado { background: linear-gradient(120deg, #a8802f, #f1d98f 45%, #c9a24b 70%, #8f6a22); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.seccion-d { padding-block: clamp(4rem, 3rem + 4vw, 5.6rem); }
-.seccion-d--alt { background: var(--bg2); border-block: 1px solid var(--line); }
-.h2-d { font-size: clamp(2rem, 1.4rem + 2.6vw, 3rem); margin: 0.5rem 0 1rem; }
-.mut { color: var(--mut); }
-.pendiente { display: inline-block; padding: 0.15rem 0.5rem; border: 1px dashed var(--gold); color: var(--gold2); font: 500 0.66rem/1.4 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; vertical-align: middle; }
-.mas-d { display: inline-flex; align-items: center; min-height: 44px; margin-top: 1.2rem; font: 500 0.78rem/1 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); text-decoration: none; }
-.mas-d span { border-bottom: 1px solid var(--gold); padding-bottom: 4px; }
-.mas-d:hover { color: var(--gold2); }
-
-/* Botones del prototipo: rectos, en mayúsculas espaciadas, borde dorado; «lleno» con degradado dorado */
-.boton, .btn {
-  --alto: 3rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem; min-height: var(--alto); padding: 0 1.9rem;
-  border: 1px solid var(--gold); border-radius: 0; background: transparent; color: var(--ink); cursor: pointer; text-decoration: none;
-  font: 500 0.78rem/1 var(--sans); letter-spacing: 0.16em; text-transform: uppercase;
-  transition: background-color 0.25s, color 0.25s, filter 0.25s;
-}
-.boton:hover, .btn:hover { background: var(--gold); color: #0a0a0a; }
-.boton--lleno, .btn--amarillo { background: linear-gradient(120deg, #b38a35, #e8cf8f, #b38a35); color: #0a0a0a; border-color: transparent; }
-.boton--lleno:hover, .btn--amarillo:hover { filter: brightness(1.08); background: linear-gradient(120deg, #b38a35, #e8cf8f, #b38a35); }
-.btn--negro, .btn--contorno, .sobre-oscuro .btn--contorno { --fondo: transparent; background: transparent; color: var(--ink); border-color: var(--gold); }
-.btn--negro:hover, .btn--contorno:hover, .sobre-oscuro .btn--contorno:hover { background: var(--gold); color: #0a0a0a; }
-.btn:has(.btn__flecha) { padding-right: 1.9rem; }
-.btn__flecha, .circulo { display: none; }
-.btn:active, .boton:active { transform: none; }
-.enlace { color: var(--gold2); text-decoration-color: var(--gold); }
-
-/* Encabezado de página del prototipo («phead») con migas */
-.phead { padding: clamp(3.5rem, 2.5rem + 4vw, 5rem) 0 clamp(2.5rem, 2rem + 2vw, 3.75rem); border-bottom: 1px solid var(--line); background: radial-gradient(60% 100% at 85% 0%, rgba(201, 162, 75, 0.2), transparent 65%); }
-.phead h1 { font-size: clamp(2.3rem, 1.4rem + 4vw, 4rem); margin: 0.9rem 0 1rem; max-width: 14em; }
-.phead p { max-width: 36em; color: var(--mut); font-size: 1.05rem; margin: 0; }
-.migas-d { margin-bottom: 1.4rem; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut); }
-.migas-d a { color: var(--gold); text-decoration: none; }
-.migas-d a:hover { text-decoration: underline; }
-
-/* Tarjeta del prototipo («card») */
-.tarjeta-d { position: relative; padding: 28px 24px; background: var(--card); border: 1px solid var(--line); transition: border-color 0.3s, transform 0.3s; }
-a.tarjeta-d { display: block; text-decoration: none; }
-.tarjeta-d:hover { border-color: var(--gold); transform: translateY(-3px); }
-.tarjeta-d h3 { font-size: 1.5rem; margin: 0.9rem 0 0.5rem; }
-.tarjeta-d p { margin: 0; color: var(--mut); font-size: 0.92rem; }
-.rejilla-d { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-top: 2.4rem; }
-.dos-d { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
-@media (max-width: 820px) { .dos-d { grid-template-columns: 1fr; gap: 34px; } }
-/* Marco del prototipo para video o foto institucional */
-.marco-d { position: relative; aspect-ratio: 4 / 5; display: grid; place-items: center; margin: 0; padding: 30px; border: 1px solid var(--gold); background: linear-gradient(160deg, #1a1710, #0d0d0d); text-align: center; color: var(--mut); font-size: 0.85rem; overflow: hidden; }
-.marco-d::before { content: ""; position: absolute; inset: 14px; z-index: 1; border: 1px solid var(--line); pointer-events: none; }
-.marco-d b { display: block; margin-bottom: 6px; font: 600 2rem var(--serif); color: var(--gold2); }
-.marco-d :is(img, picture) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-
-/* Preguntas del prototipo */
-.faq-d details { border-bottom: 1px solid var(--line); padding: 16px 0; }
-.faq-d summary { display: flex; justify-content: space-between; gap: 12px; min-height: 44px; align-items: center; cursor: pointer; list-style: none; font: 600 1.2rem var(--serif); }
-.faq-d summary::-webkit-details-marker { display: none; }
-.faq-d summary::after { content: "+"; color: var(--gold); font-family: var(--sans); }
-.faq-d details[open] summary::after { content: "\2212"; }
-.faq-d details p { margin: 0.7rem 0 0; color: var(--mut); font-size: 0.92rem; }
-
-/* Cuerpo de texto de las secciones anteriores sobre el fondo negro */
-.intro, .seccion--oscura .intro, .sobre-oscuro .intro { color: var(--mut); }
-.titulo-pagina, .titulo-seccion { font-family: var(--serif); font-weight: 600; letter-spacing: 0; line-height: 1.05; }
-.seccion--suave { background: var(--bg2); border-block: 1px solid var(--line); }
-.encabezado-pagina { border-bottom: 1px solid var(--line); background: radial-gradient(60% 100% at 85% 0%, rgba(201, 162, 75, 0.2), transparent 65%); }
-.titulo-pagina { font-size: clamp(2.3rem, 1.4rem + 4vw, 4rem); margin-top: 0.9rem; max-width: 14em; }
-.titulo-seccion { font-size: clamp(2rem, 1.4rem + 2.6vw, 3rem); }

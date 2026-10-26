@@ -33,7 +33,7 @@ export interface Area {
 }
 
 export const areas: Area[] = [
-  { id: "comercio", nombre: "Comercio exterior", color: "#ffc300", descripcion: "Importación, logística, costos y negociación internacional." },
+  { id: "comercio", nombre: "Comercio exterior", color: "#c9a24b", descripcion: "Importación, logística, costos y negociación internacional." },
   { id: "datos", nombre: "Datos y productividad", color: "#2daf73", descripcion: "Excel, Power BI, SQL, Python y ofimática para decidir con información." },
   { id: "ia", nombre: "Inteligencia artificial", color: "#072b4f", descripcion: "IA aplicada al trabajo, a las presentaciones y a la automatización, también para adultos mayores." },
   { id: "marketing", nombre: "Marketing y diseño", color: "#8100c2", descripcion: "Marketing digital, publicidad, diseño gráfico, experiencia de usuario y videojuegos en Roblox." },

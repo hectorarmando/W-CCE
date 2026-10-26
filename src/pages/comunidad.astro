@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import Flecha from "../components/Flecha.astro";
 import { WorksWheel, type WorksWheelItem } from "@/components/ui/works-wheel";
 import { galeria } from "../data/galeria";
 import { getImage } from "astro:assets";
@@ -17,9 +18,7 @@ const items: WorksWheelItem[] = await Promise.all(
 <Base titulo="Comunidad" descripcion="Talleres, charlas y campañas presenciales de la Cámara de Comercio Exterior: la comunidad detrás de los programas virtuales.">
   <section class="encabezado-pagina">
     <div class="contenedor">
-      <nav class="migas-d" aria-label="Ruta de navegación"><a href="/">Inicio</a> / Comunidad</nav>
-      <span class="eyebrow">Comunidad</span>
-      <h1 class="titulo-pagina">Conectamos talento, <span class="dorado">impulsamos desarrollo.</span></h1>
+      <h1 class="titulo-pagina">Conectamos talento, impulsamos desarrollo.</h1>
       <p class="intro">Además de los programas virtuales, llevamos la formación a espacios presenciales. Gira la rueda con el scroll, arrastrando o con las flechas del teclado.</p>
     </div>
   </section>
@@ -37,14 +36,14 @@ const items: WorksWheelItem[] = await Promise.all(
   <section class="seccion">
     <div class="contenedor cierre">
       <h2 class="titulo-seccion">¿Quieres ser parte?</h2>
-      <a class="boton boton--lleno" href="/programas">Ver programas</a>
+      <a class="btn btn--negro" href="/programas">Ver programas <Flecha /></a>
     </div>
   </section>
 </Base>
 
 <style>
   /* Altura menor que la pantalla: en móvil queda espacio arriba y abajo para seguir desplazando la página */
-  .rueda { height: clamp(26rem, 72svh, 52rem); overflow: hidden; background: var(--card); border: 1px solid var(--line); color: var(--ink); }
+  .rueda { height: clamp(26rem, 72svh, 52rem); border-radius: var(--radio-l); overflow: hidden; background: var(--tarjeta); box-shadow: 0 0 0 1px var(--linea); }
   /* En pantallas angostas el índice de la rueda queda demasiado pequeño para leerse: se navega arrastrando */
   @media (max-width: 640px) { .rueda { height: clamp(22rem, 58svh, 30rem); } .rueda :global(ol) { display: none; } }
   /* Índice: cada entrada con al menos 24 px de alto, para que se pueda tocar o hacer clic con precisión */

@@ -1,6 +1,4 @@
 ---
-// Catálogo con la estructura del prototipo HTML del usuario: encabezado con buscador y filtro por área,
-// y tarjetas con área, nombre, datos y acción. Los datos salen de src/data/oferta.ts (material oficial).
 import Base from "../../layouts/Base.astro";
 import { areas, areaPorId } from "../../data/programas";
 import { oferta } from "../../data/oferta";
@@ -8,101 +6,128 @@ import { enlaceWhatsapp } from "../../data/sitio";
 import { Picture } from "astro:assets";
 import Precio from "../../components/Precio.astro";
 
-const normalizar = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const items = oferta;
 ---
 <Base titulo="Programas y cursos" descripcion="Catálogo de programas y cursos de la Cámara de Comercio Exterior: comercio exterior, Excel, Power BI, inteligencia artificial, marketing, diseño, ingeniería e idiomas.">
-  <div class="phead">
+  <section class="encabezado-pagina">
     <div class="contenedor">
-      <nav class="migas-d" aria-label="Ruta de navegación"><a href="/">Inicio</a> / Programas</nav>
-      <span class="eyebrow">Programas</span>
-      <h1>Encuentra el programa que <span class="dorado">impulsa tu carrera</span></h1>
-      <p>Busca por tema o área. Los programas con temario completo tienen su ficha; para el resto, un asesor te comparte el temario, los horarios y la inversión vigente.</p>
-      <form class="buscar" role="search" data-buscar onsubmit="return false">
-        <label class="sr-only" for="q">Buscar un programa</label>
-        <input id="q" type="search" placeholder="Busca un programa (ej. datos, Excel, inglés)" autocomplete="off" />
-        <label class="sr-only" for="sa">Área</label>
-        <select id="sa">
-          <option value="">Todas las áreas</option>
-          {areas.map((a) => <option value={a.id}>{a.nombre}</option>)}
-        </select>
-      </form>
+      <h1 class="titulo-pagina">Programas y cursos</h1>
+      <p class="intro">Los programas con temario completo tienen su propia página. Para el resto del catálogo, un asesor te comparte el temario, los horarios y la inversión vigente.</p>
     </div>
-  </div>
+  </section>
 
-  <section class="seccion-d" aria-label="Catálogo">
+  <section class="seccion catalogo" aria-label="Catálogo">
     <div class="contenedor">
-      <p class="resultados" aria-live="polite" data-estado>{oferta.length} programas y cursos</p>
-      <ul role="list" class="catalogo" data-lista>
-        {oferta.map((it, n) => (
-          <li data-area={it.area} data-texto={normalizar(`${it.nombre} ${areaPorId[it.area].nombre} ${it.resumen}`)}>
-            <a class="cur" href={it.href} {...(it.externo ? { target: "_blank", rel: "noopener" } : {})}>
-              {it.imagen && (
-                <span class="cur__portada"><Picture src={it.imagen} formats={["avif", "webp"]} widths={[400, 640]} sizes="(max-width: 640px) 100vw, 360px" loading={n < 3 ? "eager" : "lazy"} alt="" /></span>
-              )}
-              <span class="cur__tg">{areaPorId[it.area].nombre}</span>
-              <span class="cur__nombre">{it.nombre}</span>
-              <span class="cur__fx"><span>{it.meta}</span>{it.programa && <span>Certificado</span>}</span>
-              <Precio id={it.id} class="cur__precio" respaldo="Inversión: consulta con un asesor" />
-              <span class="cur__go">{it.programa ? "Ver programa y temario" : "Consultar por WhatsApp"}{it.externo && <span class="sr-only"> (se abre en una pestaña nueva)</span>}</span>
+      <div class="filtros" role="group" aria-label="Filtrar por área" data-filtros>
+        <button type="button" aria-pressed="true" data-area="todas">Todas <span>{items.length}</span></button>
+        {areas.map((a) => (
+          <button type="button" aria-pressed="false" data-area={a.id} style={`--c:${a.color}`}>
+            <i aria-hidden="true"></i>{a.nombre} <span>{items.filter((i) => i.area === a.id).length}</span>
+          </button>
+        ))}
+      </div>
+      <p class="sr-only" aria-live="polite" data-estado></p>
+
+      <ul role="list" class="lista" data-lista>
+        {items.map((it, n) => (
+          <li data-area={it.area} style={`--c:${it.color}`}>
+            <a class="tarjeta" href={it.href} {...(it.externo ? { target: "_blank", rel: "noopener" } : {})}>
+              <span class="tarjeta__portada">
+                {it.imagen
+                  ? <Picture src={it.imagen} formats={["avif", "webp"]} widths={[400, 640, 960]} sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 420px" loading={n < 3 ? "eager" : "lazy"} alt="" />
+                  : <span class="tarjeta__sin" aria-hidden="true">{it.nombre}</span>}
+              </span>
+              <span class="tarjeta__cuerpo">
+                <span class="tarjeta__area"><i aria-hidden="true"></i>{areaPorId[it.area].nombre}</span>
+                <span class="tarjeta__nombre">{it.nombre}</span>
+                <span class="tarjeta__resumen">{it.resumen}</span>
+                <span class="tarjeta__meta">{it.programa ? it.meta : "Consulta temario y horarios"}</span>
+                <Precio id={it.id} class="tarjeta__precio" respaldo="Inversión: consulta con un asesor" />
+                <span class="tarjeta__accion">{it.accion}{it.externo && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}<span class="tarjeta__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span></span>
+              </span>
             </a>
           </li>
         ))}
       </ul>
-      <p class="vacio" hidden data-vacio>No encontramos programas con esa búsqueda. Prueba con otro término o <a class="enlace" href={enlaceWhatsapp("Hola, busco un curso que no encuentro en el catálogo.")} target="_blank" rel="noopener">habla con un asesor</a>.</p>
+      <p class="vacio" hidden data-vacio>No hay programas en esta área por ahora. <a class="enlace" href={enlaceWhatsapp("Hola, busco un curso que no encuentro en el catálogo.")} target="_blank" rel="noopener">Cuéntanos qué buscas</a>.</p>
     </div>
   </section>
 </Base>
 
 <style>
-  .buscar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 2rem; }
-  .buscar input, .buscar select { flex: 1; min-width: 200px; min-height: 48px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 0; background: var(--bg2); color: var(--ink); font: 300 0.95rem var(--sans); }
-  .buscar input::placeholder { color: var(--mut); }
-  .buscar input:focus, .buscar select:focus { outline: 1px solid var(--gold); }
-  .resultados { margin-bottom: 1rem; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut); }
-  .catalogo { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 20px; }
-  .catalogo li[hidden] { display: none; }
-  .cur { display: flex; flex-direction: column; gap: 10px; height: 100%; padding: 26px 24px; background: var(--card); border: 1px solid var(--line); text-decoration: none; transition: border-color 0.3s, transform 0.3s; }
-  .cur:hover { border-color: var(--gold); transform: translateY(-3px); }
-  .cur__portada { display: block; margin: -26px -24px 8px; aspect-ratio: 16 / 9; border-bottom: 1px solid var(--line); overflow: hidden; }
-  .cur__portada :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .cur__tg { font: 500 0.68rem var(--sans); letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); }
-  .cur__nombre { font: 600 1.45rem/1.15 var(--serif); }
-  .cur__fx { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.8rem; color: var(--mut); }
-  .cur :global(.cur__precio) { font-size: 0.85rem; color: var(--mut); }
-  .cur :global(.cur__precio.precio--con) { font: 600 1.4rem var(--serif); color: var(--gold2); }
-  .cur__go { margin-top: auto; padding-top: 6px; font: 500 0.74rem var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
-  .vacio { margin-top: 2rem; color: var(--mut); }
+  .filtros { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-7); }
+  .filtros button {
+    display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0 1rem;
+    border: 1.5px solid var(--gris-claro); border-radius: 999px; background: var(--tarjeta);
+    font-size: var(--t-sm); font-weight: 600; cursor: pointer; transition: all 150ms var(--ease);
+  }
+  .filtros button:hover { border-color: var(--amarillo); }
+  .filtros button[aria-pressed="true"] { background: var(--amarillo); border-color: var(--amarillo); color: var(--negro); }
+  .filtros i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--c); }
+  .filtros span { font-size: var(--t-xs); color: var(--gris-oscuro); font-weight: 700; }
+  .filtros button[aria-pressed="true"] span { color: var(--negro); }
+
+  /* Catálogo en tarjetas: la portada oficial arriba y los datos abajo; toda la tarjeta es un enlace */
+  .lista { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-6) var(--s-5); }
+  .lista li[hidden] { display: none; }
+  .tarjeta { display: flex; flex-direction: column; height: 100%; text-decoration: none; }
+  .tarjeta__portada { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; background: var(--negro); }
+  .tarjeta__portada :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale 900ms var(--ease); }
+  .tarjeta:hover .tarjeta__portada :global(img) { scale: 1.04; }
+  /* Sin portada todavía: bloque negro con el color del área y el nombre, en el lenguaje de las portadas */
+  .tarjeta__sin {
+    display: flex; align-items: flex-end; height: 100%; padding: var(--s-5);
+    background: radial-gradient(90% 120% at 100% 0%, color-mix(in srgb, var(--c) 70%, transparent), transparent 60%), var(--negro);
+    color: var(--blanco); font-family: var(--font-marca); font-size: clamp(1.4rem, 1rem + 1.2vw, 2rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+  }
+  .tarjeta__cuerpo { display: flex; flex-direction: column; gap: var(--s-2); flex: 1; padding: var(--s-4) var(--s-2) 0; }
+  .tarjeta__area { display: inline-flex; align-items: center; gap: 0.45rem; font-size: var(--t-xs); color: var(--gris-oscuro); }
+  .tarjeta__area i { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15); }
+  .tarjeta__nombre { font-family: var(--font-marca); font-size: var(--t-lg); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
+  .tarjeta__resumen { font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .tarjeta__meta { font-size: var(--t-xs); font-weight: 600; }
+  .tarjeta :global(.tarjeta__precio) { font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .tarjeta :global(.tarjeta__precio.precio--con) { color: var(--amarillo-60); font-size: var(--t-lg); }
+  .tarjeta :global(.tarjeta__precio s) { font-size: var(--t-sm); color: var(--gris-oscuro); font-weight: 400; }
+  .tarjeta__accion {
+    display: inline-flex; align-items: center; gap: var(--s-3); align-self: flex-start; margin-top: auto; padding-top: var(--s-3);
+    font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700;
+  }
+  .tarjeta__flecha { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--tarjeta); box-shadow: inset 0 0 0 1px var(--amarillo); color: var(--amarillo); transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease), transform var(--t-accion) var(--ease); }
+  .tarjeta:hover .tarjeta__flecha, .tarjeta:focus-visible .tarjeta__flecha { background: var(--amarillo); color: var(--negro); transform: translateX(4px); }
+  .tarjeta:focus-visible { outline-offset: 6px; border-radius: var(--radio-l); }
+  .vacio { padding: var(--s-7) 0; font-size: var(--t-lg); }
+
+  @media (max-width: 1100px) { .lista { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .lista { grid-template-columns: 1fr; gap: var(--s-7); } }
 </style>
 
 <script>
-  const q = document.querySelector<HTMLInputElement>("#q");
-  const sa = document.querySelector<HTMLSelectElement>("#sa");
+  const grupo = document.querySelector<HTMLElement>("[data-filtros]");
   const filas = document.querySelectorAll<HTMLElement>("[data-lista] > li");
   const vacio = document.querySelector<HTMLElement>("[data-vacio]");
   const estado = document.querySelector<HTMLElement>("[data-estado]");
-  const normalizar = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+  const botones = grupo ? [...grupo.querySelectorAll<HTMLButtonElement>("button")] : [];
+  const validas = new Set(botones.map((b) => b.dataset.area));
 
-  function filtrar(actualizarUrl = true) {
-    const texto = normalizar(q?.value ?? "");
-    const area = sa?.value ?? "";
+  function filtrar(area: string, actualizarUrl = true) {
+    if (!validas.has(area)) area = "todas";
+    botones.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.area === area)));
     let visibles = 0;
     filas.forEach((f) => {
-      const mostrar = (!area || f.dataset.area === area) && (!texto || (f.dataset.texto ?? "").includes(texto));
+      const mostrar = area === "todas" || f.dataset.area === area;
       f.hidden = !mostrar;
       if (mostrar) visibles++;
     });
     if (vacio) vacio.hidden = visibles > 0;
-    if (estado) estado.textContent = `${visibles} ${visibles === 1 ? "resultado" : "resultados"}`;
+    if (estado) estado.textContent = `${visibles} resultados`;
     if (actualizarUrl) {
       const url = new URL(location.href);
-      if (area) url.searchParams.set("area", area); else url.searchParams.delete("area");
-      try { history.replaceState(null, "", url); } catch { /* documentos sin URL propia */ }
+      if (area === "todas") url.searchParams.delete("area"); else url.searchParams.set("area", area);
+      try { history.replaceState(null, "", url); } catch { /* p. ej. documentos sin URL propia */ }
     }
   }
 
-  const inicial = new URLSearchParams(location.search).get("area");
-  if (sa && inicial && [...sa.options].some((o) => o.value === inicial)) sa.value = inicial;
-  q?.addEventListener("input", () => filtrar());
-  sa?.addEventListener("change", () => filtrar());
-  filtrar(false);
+  botones.forEach((b) => b.addEventListener("click", () => filtrar(b.dataset.area ?? "todas")));
+  filtrar(new URLSearchParams(location.search).get("area") ?? "todas", false);
 </script>

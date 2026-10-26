@@ -40,21 +40,6 @@ Cuando estén disponibles se agregan así:
 - testimonios reales y autorizados: en `src/data/testimonios.ts`. La sección del inicio aparece sola cuando hay al menos uno;
 - dirección física: con ella se puede sumar un mapa de ubicación en el contacto del inicio. Hoy el mapa muestra los 7 países atendidos (`src/components/MapaPaises.astro`).
 
-## Datos que muestra la web como «pendiente» (estructura del prototipo HTML, oct-2026)
-
-La web los enseña con la etiqueta «Dato por confirmar», «En preparación» o «Logo pendiente». Al recibirlos se cargan así:
-- **Número de estudiantes** (el prototipo decía «+80 mil»): `cifras` en `src/pages/index.astro`.
-- **Misión institucional** (no existe una vigente, ver `docs/contenido-oficial.md`): `src/pages/nosotros.astro`.
-- **Hitos de la historia:** año de fundación, primeros países fuera del Perú y **Premio Varayoc** (año y categoría): `hitos` en `src/pages/nosotros.astro`.
-- **Liderazgo:** nombres, cargos y fotos autorizadas: `lideres` en `src/pages/nosotros.astro`.
-- **Aliados** (convenios, académicos, empresas de egresados) y sus logos con permiso de uso: `aliados` en `src/pages/nosotros.astro`.
-- **Notas del blog:** texto, autor y tiempo de lectura de cada tema: `src/data/blog.ts`.
-- **Video institucional** de 60–90 s: marco del bloque «Nosotros» del inicio.
-- **Docentes** por programa: bloque «Docente» de cada ficha.
-- **Enlaces de servicio:** «Validar certificado», «Libro de reclamaciones» y «Políticas»: `src/components/Footer.astro`.
-- **Países:** el prototipo hablaba de «5 países con sede»; la web muestra los **7 países atendidos** oficiales y no habla de sedes hasta confirmarlas.
-- **«Certificación internacional»:** no se usa mientras la opinión legal siga pendiente; la web dice «certificado verificable».
-
 ## Fotografía
 
 **Fotos incorporadas** (entregadas por la CE, en `src/assets/fotos/`):

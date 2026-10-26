@@ -1,37 +1,82 @@
 ---
-// Pie del prototipo «negro y dorado»: una línea con la institución y los países, y los enlaces de servicio.
-// «Validar certificado», «Libro de reclamaciones» y «Políticas» no tienen dirección todavía (docs/pendientes.md).
-import { sitio, enlaceWhatsapp } from "../data/sitio";
-import { paises } from "../data/paises";
+import { sitio, navegacion, enlaceWhatsapp } from "../data/sitio";
+import { programas } from "../data/programas";
 const anio = new Date().getFullYear();
 ---
-<footer class="pie">
-  <div class="contenedor pie__fila">
-    <a class="pie__logo" href="/" aria-label="Cámara de Comercio Exterior, ir al inicio">
-      <img src="/brand/imagotipo-blanco.svg" alt="" width="168" height="110" loading="lazy" />
+<footer class="pie sobre-oscuro">
+  <!-- Llamada final, abrazada por el arco amarillo del manual que entra desde abajo -->
+  <div class="contenedor pie__llamada">
+    <svg class="pie__arco" viewBox="0 0 400 400" aria-hidden="true"><path d="M 327.3 72.7 A 180 180 0 1 0 327.3 327.3" fill="none" stroke="var(--amarillo)" stroke-width="40" /></svg>
+    <p class="pie__frase">Tu siguiente paso empieza con una conversación.</p>
+    <p class="pie__apoyo">Un asesor te ayuda a elegir el programa y te confirma horarios e inversión vigente.</p>
+    <a class="btn btn--amarillo" href={enlaceWhatsapp("Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.")} target="_blank" rel="noopener">
+      Escribir por WhatsApp
+      <span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
     </a>
-    <nav aria-label="Sitio" class="pie__nav">
-      <a href="/programas">Programas</a>
-      <a href="/empresas">Empresas</a>
-      <a href="/nosotros">Nosotros</a>
-      <a href="/comunidad">Comunidad</a>
-      <a href="/blog">Blog</a>
-      <a href="/contacto">Contacto</a>
-      <a href={enlaceWhatsapp("Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.")} target="_blank" rel="noopener">WhatsApp {sitio.whatsapp.visible}</a>
+  </div>
+
+  <div class="contenedor"><div class="pie__rejilla">
+    <div class="pie__marca">
+      <img src="/brand/imagotipo-blanco.svg" alt="Cámara de Comercio Exterior" width="184" height="120" loading="lazy" />
+    </div>
+
+    <nav aria-label="Sitio">
+      <p class="pie__titulo">Navegación</p>
+      <ul role="list">
+        <li><a href="/">Inicio</a></li>
+        {navegacion.map((n) => <li><a href={n.href}>{n.texto}</a></li>)}
+        <li><a href="/comunidad">Comunidad</a></li>
+      </ul>
     </nav>
-  </div>
-  <div class="contenedor pie__fila pie__legal">
-    <span>© {anio} {sitio.nombre} ({sitio.sigla}) · {paises.filter((p) => p.codigo !== "OT").map((p) => p.nombre).join(" · ")}</span>
-    <span class="pie__servicio">Validar certificado · Libro de reclamaciones · Políticas <span class="pendiente">Enlaces pendientes</span></span>
-  </div>
+
+    <nav aria-label="Programas destacados">
+      <p class="pie__titulo">Programas</p>
+      <ul role="list">
+        {programas.map((p) => <li><a href={`/programas/${p.slug}`}>{p.nombre}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <p class="pie__titulo">Atención</p>
+      <ul role="list">
+        <li>
+          <a href={enlaceWhatsapp("Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.")} target="_blank" rel="noopener">
+            WhatsApp {sitio.whatsapp.visible}
+          </a>
+        </li>
+        <li><a href="/contacto">Formulario de contacto</a></li>
+      </ul>
+    </div>
+  </div></div>
+
+  <div class="contenedor"><div class="pie__legal">
+    <p>© {anio} {sitio.nombre} ({sitio.sigla}). Todos los derechos reservados.</p>
+    <a class="pie__arriba" href="#contenido">Volver arriba</a>
+  </div></div>
 </footer>
 
 <style>
-  .pie { border-top: 1px solid var(--line); color: var(--mut); font-size: 0.82rem; }
-  .pie__fila { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; padding-block: 34px; }
-  .pie__logo img { width: 100px; height: auto; }
-  .pie__nav { display: flex; flex-wrap: wrap; gap: 4px 22px; }
-  .pie__nav a { display: inline-flex; align-items: center; min-height: 44px; color: var(--mut); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.74rem; }
-  .pie__nav a:hover { color: var(--gold2); }
-  .pie__legal { border-top: 1px solid var(--line); padding-block: 22px 34px; }
+  .pie { position: relative; overflow: hidden; border-radius: var(--radio-l) var(--radio-l) 0 0; background: var(--negro); color: var(--blanco); padding-top: clamp(5rem, 3rem + 6vw, 9rem); }
+  .pie__llamada { position: relative; display: grid; justify-items: start; gap: var(--s-5); padding-bottom: clamp(5rem, 3rem + 6vw, 8rem); }
+  .pie__frase { position: relative; max-width: 12ch; font-family: var(--font-marca); font-size: clamp(2.6rem, 1.4rem + 4.4vw, 6rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.95; }
+  .pie__apoyo { position: relative; max-width: 40ch; font-size: var(--t-lg); color: #d9d9d9; }
+  /* El arco abraza la llamada desde la derecha; es decorativo y queda detrás del texto */
+  .pie__arco { position: absolute; right: -3rem; top: 50%; width: min(30rem, 36vw); pointer-events: none; transform: translateY(-58%) rotate(180deg); }
+
+  .pie__rejilla { position: relative; display: grid; grid-template-columns: 1.2fr 1fr 1.4fr 1.1fr; gap: var(--s-7) var(--s-6); padding-block: var(--s-7); border-top: 1px solid rgba(255, 255, 255, 0.16); }
+  .pie__marca img { width: 152px; height: auto; }
+  .pie__titulo { font-size: var(--t-xs); color: #a6a6a6; margin-bottom: var(--s-4); }
+  .pie ul { display: grid; gap: var(--s-2); }
+  .pie ul a { text-decoration: none; font-size: var(--t-sm); color: #f2f2f2; text-underline-offset: 4px; }
+  .pie ul a:hover { text-decoration: underline; text-decoration-color: var(--amarillo); text-decoration-thickness: 2px; }
+  .pie__legal { display: flex; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; padding-block: var(--s-5) var(--s-6); border-top: 1px solid rgba(255, 255, 255, 0.16); font-size: var(--t-xs); color: #a6a6a6; }
+  .pie__arriba { display: inline-flex; align-items: center; min-height: 44px; color: #f2f2f2; text-underline-offset: 4px; text-decoration-color: var(--amarillo); }
+  @media (max-width: 900px) {
+    .pie__rejilla { grid-template-columns: 1fr 1fr; } .pie__marca { grid-column: 1 / -1; }
+    /* En pantallas angostas el arco se vuelve una «C» pequeña sobre la frase */
+    .pie__arco { position: static; width: 5.5rem; transform: none; }
+  }
+  @media (max-width: 520px) {
+    .pie__rejilla { grid-template-columns: 1fr; }
+  }
 </style>

@@ -6,9 +6,7 @@ import { sitio, enlaceWhatsapp } from "../data/sitio";
 <Base titulo="Contacto" descripcion="Escríbenos para recibir información de programas, horarios e inversión, o para capacitar a tu equipo. Atención por WhatsApp y formulario.">
   <section class="encabezado-pagina">
     <div class="contenedor">
-      <nav class="migas-d" aria-label="Ruta de navegación"><a href="/">Inicio</a> / Contacto</nav>
-      <span class="eyebrow">Matrícula y contacto</span>
-      <h1 class="titulo-pagina">Hablemos de lo que <span class="dorado">quieres aprender</span></h1>
+      <h1 class="titulo-pagina">Hablemos de lo que quieres aprender</h1>
       <p class="intro">Déjanos tus datos y un asesor te ayudará a elegir el programa, con horarios e inversión vigentes.</p>
     </div>
   </section>
@@ -35,12 +33,12 @@ import { sitio, enlaceWhatsapp } from "../data/sitio";
 <style>
   .contacto { padding-top: var(--s-5); }
   .contacto__rejilla { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--s-8); align-items: start; }
-  .canal { position: sticky; top: calc(var(--header-h) + 1.5rem); padding: var(--s-6); border: 1px solid var(--gold); background: var(--card); color: var(--ink); }
+  .canal { position: sticky; top: calc(var(--header-h) + 1.5rem); padding: var(--s-6); border-radius: 1rem; background: var(--tarjeta); border: 1px solid var(--amarillo); color: var(--blanco); }
   .canal__titulo { font-size: var(--t-xl); }
-  .canal p { margin-top: var(--s-3); color: var(--mut); }
-  .canal__numero { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--s-5); font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem); font-family: var(--serif); font-weight: 600; color: var(--gold2); text-decoration: none; }
+  .canal p { margin-top: var(--s-3); color: #d9d9d9; }
+  .canal__numero { display: inline-flex; align-items: center; min-height: 44px; margin-top: var(--s-5); font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.2rem); font-weight: 900; letter-spacing: -0.02em; color: var(--amarillo); text-decoration: none; }
   .canal__numero:hover { text-decoration: underline; text-underline-offset: 6px; }
-  .canal__nota a { color: var(--gold2); }
+  .canal__nota a { color: var(--blanco); }
   .canal :focus-visible { outline-color: var(--amarillo); }
   @media (max-width: 900px) { .contacto__rejilla { grid-template-columns: 1fr; } .canal { position: static; } }
 </style>

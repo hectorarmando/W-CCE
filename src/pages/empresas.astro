@@ -10,9 +10,7 @@ import LluviaDatos from "../components/LluviaDatos";
     <!-- Fondo: flujo de datos que se aparta alrededor del cursor (decorativo, aria-hidden) -->
     <LluviaDatos client:only="react" count={2400} obstacleRadius={70} />
     <div class="contenedor">
-      <nav class="migas-d" aria-label="Ruta de navegación"><a href="/">Inicio</a> / Empresas</nav>
-      <span class="eyebrow">Empresas</span>
-      <h1 class="titulo-pagina">Capacitación para <span class="dorado">tu equipo</span></h1>
+      <h1 class="titulo-pagina">Capacitación para tu equipo</h1>
       <p class="intro">Lleva los programas de la Cámara de Comercio Exterior a tus colaboradores, con condiciones corporativas para grupos.</p>
       <div class="acciones">
         <a class="btn btn--amarillo" href="#cotizar">Solicitar información</a>
@@ -56,7 +54,7 @@ import LluviaDatos from "../components/LluviaDatos";
 </Base>
 
 <style>
-  .empresas-hero { position: relative; overflow: hidden; isolation: isolate; background: var(--bg); color: var(--blanco); padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
+  .empresas-hero { position: relative; overflow: hidden; isolation: isolate; background: var(--negro); color: var(--blanco); padding-bottom: clamp(3rem, 2rem + 4vw, 6rem); }
   /* El texto va por encima del lienzo de la lluvia de datos */
   .empresas-hero > .contenedor { position: relative; z-index: 2; }
   /* Velo hacia la izquierda: las líneas pasan detrás del texto sin restarle contraste */
@@ -64,20 +62,20 @@ import LluviaDatos from "../components/LluviaDatos";
   /* Botón para pausar la lluvia de datos (movimiento continuo) */
   .empresas-hero :global(.lluvia-pausa) {
     position: absolute; right: var(--gutter); bottom: var(--s-4); z-index: 3; min-height: 44px; padding: 0 1rem; border-radius: 999px; cursor: pointer;
-    border: 1px solid var(--gold); border-radius: 0; background: rgba(0, 0, 0, 0.6); color: var(--ink); font-size: var(--t-xs); font-weight: 500;
+    border: 1.5px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.5); color: var(--blanco); font-size: var(--t-xs); font-weight: 600;
   }
   .empresas-hero :global(.lluvia-pausa:hover) { border-color: var(--amarillo); }
   @media (max-width: 700px) { .empresas-hero::after { background: rgba(0, 0, 0, 0.45); } }
   .empresas-hero .intro { color: #d9d9d9; }
   .acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
   .dos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: var(--s-8); align-items: start; }
-  .areas-lista { display: grid; gap: 0; margin-top: var(--s-6); border-top: 1px solid var(--gold); }
+  .areas-lista { display: grid; gap: 0; margin-top: var(--s-6); border-top: 1px solid var(--amarillo); }
   .areas-lista li { display: grid; grid-template-columns: 6px 1fr; gap: var(--s-4); padding: var(--s-4) 0; border-bottom: 1px solid var(--linea); color: var(--gris-oscuro); font-size: var(--t-sm); }
   .areas-lista span { background: var(--c); border-radius: 3px; }
-  .areas-lista strong { display: block; color: var(--ink); font: 600 1.25rem var(--serif); }
+  .areas-lista strong { display: block; color: var(--blanco); font-size: var(--t-base); }
   .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-6); margin-top: var(--s-7); }
   .pasos li { padding-top: var(--s-5); border-top: 1px solid var(--gris-claro); }
-  .n { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold); font: 600 1.2rem var(--serif); margin-bottom: var(--s-5); }
+  .n { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--tarjeta); box-shadow: inset 0 0 0 1px var(--amarillo); color: var(--amarillo); font-weight: 900; margin-bottom: var(--s-5); }
   .pasos h3 { font-size: var(--t-lg); }
   .pasos p { margin-top: var(--s-3); color: var(--gris-oscuro); font-size: var(--t-sm); }
   @media (max-width: 900px) { .dos, .pasos { grid-template-columns: 1fr; gap: var(--s-6); } }
