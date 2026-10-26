@@ -6,7 +6,7 @@ Esta lista recoge lo que debe confirmar la institución antes de publicar. Nada 
 
 | # | Tema | Situación actual en el sitio | Qué se necesita |
 |---|---|---|---|
-| 1 | **Dominio oficial** | Configurado `www.camaracomercioexterior.org`, que es el que usa el material público 2026. `.edu.pe` solo aparece en correos internos. | Confirmar el dominio. Si cambia, editar `site` en `astro.config.mjs`, `dominio` en `src/data/sitio.ts` y `public/robots.txt`. |
+| 1 | **Dominio oficial** | **Confirmado (oct-2026):** `www.camaracomercioexterior.org` es la web actual de la CE y esta versión la reemplazará. | Al publicar, mantener las direcciones de la web anterior con redirecciones 301 hacia las nuevas, para no perder posicionamiento. Falta la lista de URLs de la web actual. |
 | 2 | **Uso del nombre «Cámara»** | Se usa el nombre de marca del manual. Se evitó «sello oficial», «certificado oficial», «validez oficial» y «respaldo institucional». | Esperar la opinión legal solicitada (Drive: *Solicitud_Opinion_Legal_Programa_Asociados_CE*) y ajustar textos si corresponde. |
 | 3 | **Libro de Reclamaciones** | No existe enlace: no hay URL oficial y no se creó un enlace ficticio. | Es obligatorio en Perú para servicios al consumidor. Facilitar la URL o el proveedor. |
 | 4 | **Política de privacidad / Términos** | El formulario pide autorización conforme a la Ley N.° 29733, pero no enlaza a una política porque no existe. | Redactar la política (con legal) y agregar el enlace en el formulario y en el pie. |
