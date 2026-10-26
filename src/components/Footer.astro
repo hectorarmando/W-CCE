@@ -3,9 +3,9 @@ import { sitio, navegacion, enlaceWhatsapp } from "../data/sitio";
 import { programas } from "../data/programas";
 const anio = new Date().getFullYear();
 ---
-<footer class="pie">
-  <!-- Llamada final (bloque oscuro), abrazada por el arco amarillo del manual -->
-  <div class="pie__oscuro sobre-oscuro"><div class="contenedor pie__llamada">
+<footer class="pie sobre-oscuro">
+  <!-- Llamada final, abrazada por el arco amarillo del manual que entra desde abajo -->
+  <div class="contenedor pie__llamada">
     <svg class="pie__arco" viewBox="0 0 400 400" aria-hidden="true"><path d="M 327.3 72.7 A 180 180 0 1 0 327.3 327.3" fill="none" stroke="var(--amarillo)" stroke-width="40" /></svg>
     <p class="pie__frase">Tu siguiente paso empieza con una conversación.</p>
     <p class="pie__apoyo">Un asesor te ayuda a elegir el programa y te confirma horarios e inversión vigente.</p>
@@ -13,13 +13,11 @@ const anio = new Date().getFullYear();
       Escribir por WhatsApp
       <span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
     </a>
-  </div></div>
+  </div>
 
-  <!-- Índice del sitio en claro y con letra pequeña, como el pie de apple.com -->
-  <div class="pie__indice">
   <div class="contenedor"><div class="pie__rejilla">
     <div class="pie__marca">
-      <img src="/brand/imagotipo-negro.svg" alt="Cámara de Comercio Exterior" width="184" height="120" loading="lazy" />
+      <img src="/brand/imagotipo-blanco.svg" alt="Cámara de Comercio Exterior" width="184" height="120" loading="lazy" />
     </div>
 
     <nav aria-label="Sitio">
@@ -55,33 +53,30 @@ const anio = new Date().getFullYear();
     <p>© {anio} {sitio.nombre} ({sitio.sigla}). Todos los derechos reservados.</p>
     <a class="pie__arriba" href="#contenido">Volver arriba</a>
   </div></div>
-  </div>
 </footer>
 
 <style>
-  .pie__oscuro { position: relative; overflow: hidden; border-radius: var(--radio-l) var(--radio-l) 0 0; background: var(--negro); color: var(--blanco); padding-top: clamp(5rem, 3rem + 6vw, 9rem); }
+  .pie { position: relative; overflow: hidden; border-radius: var(--radio-l) var(--radio-l) 0 0; background: var(--negro); color: var(--blanco); padding-top: clamp(5rem, 3rem + 6vw, 9rem); }
   .pie__llamada { position: relative; display: grid; justify-items: start; gap: var(--s-5); padding-bottom: clamp(5rem, 3rem + 6vw, 8rem); }
   .pie__frase { position: relative; max-width: 12ch; font-family: var(--font-marca); font-size: clamp(2.6rem, 1.4rem + 4.4vw, 6rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.95; }
   .pie__apoyo { position: relative; max-width: 40ch; font-size: var(--t-lg); color: #d9d9d9; }
   /* El arco abraza la llamada desde la derecha; es decorativo y queda detrás del texto */
   .pie__arco { position: absolute; right: -3rem; top: 50%; width: min(30rem, 36vw); pointer-events: none; transform: translateY(-58%) rotate(180deg); }
 
-  /* Índice claro, denso y de letra pequeña (pie de apple.com) */
-  .pie__indice { background: var(--bruma); color: var(--gris-oscuro); font-size: var(--t-xs); }
-  .pie__rejilla { display: grid; grid-template-columns: 1.2fr 1fr 1.4fr 1.1fr; gap: var(--s-6); padding-block: var(--s-6); }
-  .pie__marca img { width: 112px; height: auto; }
-  .pie__titulo { font-weight: 700; color: var(--negro); margin-bottom: var(--s-2); }
-  .pie ul { display: grid; gap: 0; }
-  .pie ul a { display: inline-flex; align-items: center; min-height: 2rem; text-decoration: none; color: var(--gris-oscuro); text-underline-offset: 3px; }
-  .pie ul a:hover { color: var(--negro); text-decoration: underline; }
-  .pie__legal { display: flex; justify-content: space-between; align-items: center; gap: var(--s-4); flex-wrap: wrap; padding-block: var(--s-3) var(--s-5); border-top: 1px solid rgba(0, 0, 0, 0.12); font-size: 0.75rem; color: #595959; }
-  .pie__arriba { display: inline-flex; align-items: center; min-height: 44px; color: var(--gris-oscuro); text-underline-offset: 3px; }
+  .pie__rejilla { position: relative; display: grid; grid-template-columns: 1.2fr 1fr 1.4fr 1.1fr; gap: var(--s-7) var(--s-6); padding-block: var(--s-7); border-top: 1px solid rgba(255, 255, 255, 0.16); }
+  .pie__marca img { width: 152px; height: auto; }
+  .pie__titulo { font-size: var(--t-xs); color: #a6a6a6; margin-bottom: var(--s-4); }
+  .pie ul { display: grid; gap: var(--s-2); }
+  .pie ul a { text-decoration: none; font-size: var(--t-sm); color: #f2f2f2; text-underline-offset: 4px; }
+  .pie ul a:hover { text-decoration: underline; text-decoration-color: var(--amarillo); text-decoration-thickness: 2px; }
+  .pie__legal { display: flex; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; padding-block: var(--s-5) var(--s-6); border-top: 1px solid rgba(255, 255, 255, 0.16); font-size: var(--t-xs); color: #a6a6a6; }
+  .pie__arriba { display: inline-flex; align-items: center; min-height: 44px; color: #f2f2f2; text-underline-offset: 4px; text-decoration-color: var(--amarillo); }
   @media (max-width: 900px) {
     .pie__rejilla { grid-template-columns: 1fr 1fr; } .pie__marca { grid-column: 1 / -1; }
     /* En pantallas angostas el arco se vuelve una «C» pequeña sobre la frase */
     .pie__arco { position: static; width: 5.5rem; transform: none; }
   }
   @media (max-width: 520px) {
-    .pie__rejilla { grid-template-columns: 1fr; gap: var(--s-4); }
+    .pie__rejilla { grid-template-columns: 1fr; }
   }
 </style>

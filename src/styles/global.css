@@ -48,7 +48,7 @@
   --t-entrada: 500ms;
   --t-momento: 1400ms;
   --ease-salida: cubic-bezier(0.7, 0, 0.84, 0); /* solo para lo que se va (cambio de página) */
-  --header-h: 3.5rem; /* barra delgada al estilo apple.com */
+  --header-h: 5rem;
   --gris-boton: var(--bruma);
 }
 
@@ -126,7 +126,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .btn__flecha svg { transition: transform var(--t-accion) var(--ease); }
 .btn:hover .btn__flecha svg { transform: translateX(3px); }
-.btn:active { transform: scale(0.97); } /* presión al estilo Apple (DESIGN.md) */
+.btn:active { transform: translateY(1px); }
 .btn--negro { --fondo: var(--negro); --texto: var(--blanco); --fondo-flecha: var(--amarillo); --texto-flecha: var(--negro); }
 .btn--negro:hover { --fondo: #262626; }
 .btn--amarillo { --fondo: var(--amarillo); --texto: var(--negro); --fondo-flecha: var(--negro); --texto-flecha: var(--amarillo); }
@@ -153,8 +153,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .efectos [data-revelar="foto"].visible { clip-path: inset(0 round var(--radio-l)); }
 .efectos [data-revelar="foto"] img { transform: scale(1.1); transition: transform 1.4s var(--ease) var(--retraso, 0ms), scale 1.2s var(--ease); }
 .efectos [data-revelar="foto"].visible img { transform: none; }
-/* Motion (scripts/aparecer.ts): estado inicial oculto solo mientras espera su entrada */
-.por-aparecer { opacity: 0; }
 /* Cabecera que se oculta al bajar */
 .efectos .cabecera { transition: transform 350ms var(--ease), background-color var(--t-accion) var(--ease), box-shadow var(--t-accion) var(--ease); }
 .efectos .cabecera.oculta { transform: translateY(-110%); }
@@ -174,3 +172,5 @@ button, input, select, textarea { font: inherit; color: inherit; }
   @keyframes pagina-sale { to { opacity: 0; transform: translateY(-10px); } }
   @keyframes pagina-entra { from { opacity: 0; transform: translateY(18px); } }
 }
+/* Motion (scripts/aparecer.ts): estado inicial oculto solo mientras espera su entrada */
+.por-aparecer { opacity: 0; }

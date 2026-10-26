@@ -21,7 +21,7 @@ const mensaje = "Hola, quiero información sobre los programas de la Cámara de 
 <header class="cabecera sobre-oscuro" data-cabecera>
   <div class="contenedor cabecera__fila">
     <a class="cabecera__logo" href="/" aria-label="Cámara de Comercio Exterior, ir al inicio">
-      <img src="/brand/isologo-color.svg" alt="" width="40" height="40" />
+      <img src="/brand/imagotipo-blanco.svg" alt="" width="168" height="110" />
     </a>
 
     <nav class="nav" aria-label="Principal">
@@ -90,21 +90,21 @@ const mensaje = "Hola, quiero información sobre los programas de la Cámara de 
 </header>
 
 <style>
-  /* Cabecera delgada y translúcida, como la de apple.com: isologo, Explorar, buscador, enlaces cortos y CTA */
-  .cabecera { position: sticky; top: 0; z-index: 50; background: rgba(0, 0, 0, 0.82); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); color: var(--blanco); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-  .cabecera__fila { display: flex; align-items: center; gap: var(--s-3); min-height: var(--header-h); }
-  /* En la barra delgada va el isologo (el manual lo prevé para espacios pequeños), con aire alrededor */
-  .cabecera__logo { display: grid; place-items: center; flex: none; width: 44px; height: 44px; }
-  .cabecera__logo img { width: 34px; height: 34px; }
+  /* Cabecera oscura y fija, como en las plataformas de cursos: logo, Explorar, buscador, enlaces y CTA */
+  .cabecera { position: sticky; top: 0; z-index: 50; background: var(--negro); color: var(--blanco); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+  .cabecera__fila { display: flex; align-items: center; gap: var(--s-4); min-height: var(--header-h); }
+  /* Imagotipo ≥ 100×65 px (mínimo digital del manual) y con aire alrededor (área de protección) */
+  .cabecera__logo { display: block; flex: none; padding-block: 6px; }
+  .cabecera__logo img { width: 104px; height: auto; }
 
   .nav { flex: none; }
   .nav__item { position: relative; }
   .nav__explorar {
     display: inline-flex; align-items: center; gap: 0.55rem; min-height: 2.75rem; padding: 0 1rem; border: 0; border-radius: 999px; cursor: pointer;
-    background: transparent; color: #e6e6e6; font-family: var(--font-marca); font-size: var(--t-xs); font-weight: 600;
+    background: rgba(255, 255, 255, 0.08); color: var(--blanco); font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700;
     transition: background-color var(--t-accion) var(--ease);
   }
-  .nav__explorar:hover, .nav__explorar[aria-expanded="true"] { background: rgba(255, 255, 255, 0.1); color: var(--blanco); }
+  .nav__explorar:hover, .nav__explorar[aria-expanded="true"] { background: rgba(255, 255, 255, 0.16); }
 
   .explorar {
     position: absolute; top: calc(100% + 12px); left: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-6); width: min(42rem, 90vw);
@@ -124,17 +124,16 @@ const mensaje = "Hola, quiero información sobre los programas de la Cámara de 
   .explorar__areas small { font-size: var(--t-xs); color: #a6a6a6; }
   .explorar__todo { display: inline-block; margin-top: var(--s-4); font-size: var(--t-sm); }
 
-  .cabecera__buscar { flex: 1; max-width: 22rem; }
-  .cabecera__buscar :global(input) { font-size: var(--t-xs); background: rgba(255, 255, 255, 0.08); border-color: transparent; }
+  .cabecera__buscar { flex: 1; max-width: 30rem; }
   .nav__enlaces { display: flex; gap: 2px; margin-left: auto; }
   .nav__enlace {
     position: relative; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.75rem; border-radius: 999px; text-decoration: none;
-    font-family: var(--font-marca); font-size: var(--t-xs); font-weight: 600; color: #d9d9d9; transition: color var(--t-accion) var(--ease);
+    font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 600; color: #e6e6e6; transition: color var(--t-accion) var(--ease);
   }
   .nav__enlace:hover { color: var(--blanco); }
   .nav__enlace[aria-current="page"] { color: var(--blanco); }
   .nav__enlace[aria-current="page"]::after { content: ""; position: absolute; left: 0.75rem; right: 0.75rem; bottom: 0.4rem; height: 3px; border-radius: 2px; background: var(--amarillo); }
-  .cabecera__cta { --alto: 2.5rem; flex: none; padding-inline: 1.1rem; font-size: var(--t-xs); }
+  .cabecera__cta { --alto: 2.75rem; flex: none; padding-inline: 1.25rem; font-size: var(--t-xs); }
 
   .menu-movil__abrir { display: none; }
   .menu-movil { background: var(--negro); color: var(--blanco); max-height: calc(100dvh - var(--header-h)); overflow-y: auto; border-top: 1px solid rgba(255, 255, 255, 0.1); }
