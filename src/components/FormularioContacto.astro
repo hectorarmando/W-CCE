@@ -31,7 +31,7 @@ const id = `f-${modo}`;
     </div>
     <div class="campo">
       <label for={`${id}-pais`}>País</label>
-      <select id={`${id}-pais`} name="pais" required>
+      <select id={`${id}-pais`} name="pais" autocomplete="country-name" required>
         {paises.map((p) => <option value={p}>{p}</option>)}
       </select>
     </div>
@@ -116,7 +116,7 @@ const id = `f-${modo}`;
   .campo__ayuda { font-size: var(--t-xs); color: var(--gris-oscuro); }
   .campo__error { font-size: var(--t-xs); color: #b3261e; font-weight: 600; }
   .campo--check { grid-template-columns: auto 1fr; column-gap: var(--s-3); align-items: start; }
-  .campo--check input { width: 1.35rem; height: 1.35rem; margin-top: 2px; accent-color: var(--negro); }
+  .campo--check input { width: 1.5rem; height: 1.5rem; margin-top: 2px; accent-color: var(--negro); }
   .campo--check label { font-weight: 400; color: var(--gris-oscuro); }
   .campo--check .campo__error { grid-column: 2; }
   .trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

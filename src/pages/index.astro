@@ -353,7 +353,8 @@ const preguntas = [
   .hero__flotantes { position: absolute; inset: 0; pointer-events: none; }
   /* El abrazo (efecto de la versión anterior): arco + halo detrás del titular */
   .abrazo { --px: 0; --py: 0; --giro: 0deg; position: absolute; left: 50%; top: 50%; width: min(56rem, 96vw); aspect-ratio: 1; translate: -50% -50%; pointer-events: none; }
-  .abrazo__luz { position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle at calc(50% + var(--px) * 25%) calc(50% + var(--py) * 25%), rgba(255, 195, 0, 0.22), transparent 62%); filter: blur(30px); }
+  /* Halo: degradado fijo que se desplaza con transform (compositor), no un fondo que se repinta en cada movimiento */
+  .abrazo__luz { position: absolute; inset: 12%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 195, 0, 0.22), transparent 62%); filter: blur(30px); transform: translate(calc(var(--px) * 12%), calc(var(--py) * 12%)); transition: transform 600ms var(--ease); }
   .abrazo__giro { position: absolute; inset: 0; transform: translate(calc(var(--px) * 18px), calc(var(--py) * 18px)) rotate(var(--giro)); transition: transform 1s var(--ease); }
   .abrazo__arco { width: 100%; height: 100%; overflow: visible; opacity: 0.5; }
   @media (prefers-reduced-motion: no-preference) {
@@ -373,8 +374,9 @@ const preguntas = [
   .flotante--3 { right: -3rem; top: 7%; transform: rotate(9deg); }
   .flotante--4 { right: 4%; bottom: 10%; transform: rotate(-6deg); width: clamp(10rem, 7rem + 7vw, 17rem); }
   @media (prefers-reduced-motion: no-preference) {
-    .flotante { animation: flotar 7s ease-in-out infinite alternate; }
-    .flotante--2, .flotante--4 { animation-duration: 9s; animation-delay: -3s; }
+    /* Flotación breve al cargar: dos idas y vueltas (menos de 5 s) y quietas; nada decorativo se mueve sin fin */
+    .flotante { animation: flotar 2.4s ease-in-out 2 alternate; }
+    .flotante--2, .flotante--4 { animation-delay: 0.3s; }
     @keyframes flotar { to { translate: 0 -14px; } }
   }
 
@@ -386,10 +388,10 @@ const preguntas = [
   .carrusel > li[hidden] { display: none; }
   /* Entrada tipo panel de salidas (efecto de la versión anterior): cada tarjeta gira como una paleta */
   .carrusel { perspective: 1200px; }
-  :global(.efectos) .carrusel > li[data-revelar] { opacity: 0; transform: rotateX(-70deg); transform-origin: 50% 0; transition: transform 900ms var(--ease), opacity 500ms var(--ease); transition-delay: var(--retraso, 0ms); }
+  :global(.efectos) .carrusel > li[data-revelar] { opacity: 0; transform: rotateX(-70deg); transform-origin: 50% 0; transition: transform 600ms var(--ease), opacity 400ms var(--ease); transition-delay: var(--retraso, 0ms); }
   :global(.efectos) .carrusel > li[data-revelar]:global(.visible) { opacity: 1; transform: none; }
   .carrusel__flechas { display: flex; gap: var(--s-2); flex: none; }
-  .carrusel__flechas button { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.1); color: var(--blanco); cursor: pointer; transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease); }
+  .carrusel__flechas button { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; border: 0; background: rgba(255, 255, 255, 0.1); color: var(--blanco); cursor: pointer; transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease); }
   .carrusel__flechas button:hover { background: var(--amarillo); color: var(--negro); }
   .carrusel__flechas button:disabled { opacity: 0.3; cursor: default; background: rgba(255, 255, 255, 0.1); color: var(--blanco); }
 
@@ -467,7 +469,7 @@ const preguntas = [
   .curso__ir { margin-top: auto; padding-top: var(--s-2); font-size: var(--t-sm); font-weight: 700; color: var(--amarillo); }
   .ruta:focus-visible, .curso:focus-visible { outline-offset: 4px; border-radius: var(--radio-l); }
   .pestanas { display: flex; gap: var(--s-2); overflow-x: auto; margin-bottom: var(--s-5); padding-bottom: 4px; scrollbar-width: none; }
-  .pestanas button { flex: none; min-height: 2.5rem; padding: 0 1rem; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, 0.18); background: transparent; color: var(--blanco); font-weight: 600; font-size: var(--t-sm); cursor: pointer; transition: background-color var(--t-accion) var(--ease), border-color var(--t-accion) var(--ease); }
+  .pestanas button { flex: none; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, 0.18); background: transparent; color: var(--blanco); font-weight: 600; font-size: var(--t-sm); cursor: pointer; transition: background-color var(--t-accion) var(--ease), border-color var(--t-accion) var(--ease); }
   .pestanas button:hover { border-color: rgba(255, 255, 255, 0.5); }
   .pestanas button[aria-pressed="true"] { background: var(--amarillo); border-color: var(--amarillo); color: var(--negro); }
 
@@ -495,11 +497,6 @@ const preguntas = [
   .meta--7 { right: 18%; bottom: -4%; background: var(--blanco); transform: rotate(2deg); }
   .metas__titulo { position: relative; max-width: 22ch; margin-inline: auto; font-family: var(--font-marca); font-size: clamp(1.6rem, 1rem + 2.2vw, 2.8rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; }
   .metas__sub { position: relative; margin-top: var(--s-3); color: #bfbfbf; font-size: var(--t-lg); }
-  @media (prefers-reduced-motion: no-preference) {
-    .meta { animation: flotar-meta 6s ease-in-out infinite alternate; }
-    .meta:nth-child(even) { animation-duration: 8s; animation-delay: -2s; }
-    @keyframes flotar-meta { to { translate: 0 -8px; } }
-  }
 
   /* 8. ELIGE CÓMO EMPEZAR */
   .opciones { display: grid; grid-template-columns: repeat(2, minmax(0, 24rem)); justify-content: center; gap: var(--s-5); margin-top: var(--s-7); }

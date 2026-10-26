@@ -175,6 +175,12 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
   await page.waitForTimeout(600);
   ok("lluvia: se desmonta fuera de vista", (await page.locator(".empresas-hero canvas").count()) === 0);
+  await page.evaluate(() => scrollTo(0, 0));
+  await page.waitForTimeout(400);
+  await page.click(".lluvia-pausa");
+  await page.waitForTimeout(300);
+  ok("lluvia: el botón la pausa", (await page.locator(".empresas-hero canvas").count()) === 0 && (await page.getAttribute(".lluvia-pausa", "aria-pressed")) === "true");
+  await page.click(".lluvia-pausa");
 
   // Buscador de la cabecera: resultados al escribir, flechas y Enter llevan a la ficha
   page = await ctx.newPage();
@@ -194,6 +200,7 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   // Pestañas de cursos
   await page.click('[data-pestanas] button[data-area="ingenieria"]');
   const visiblesCursos = await page.$$eval('[data-carrusel="cursos"] > li', (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.area));
+  ok("inicio: ninguna animación decorativa es infinita", (await page.evaluate(() => document.getAnimations().filter((a) => a.effect?.getTiming().iterations === Infinity).length)) === 0);
   ok("pestañas: filtran cursos por área", visiblesCursos.length > 0 && visiblesCursos.every((a) => a === "ingenieria"), visiblesCursos.length);
 
   // Precios por país: detección por zona horaria, selector, mensaje de WhatsApp y formato de moneda

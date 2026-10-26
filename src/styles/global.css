@@ -45,7 +45,7 @@
   /* Movimiento: una curva, tres tiempos */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --t-accion: 240ms;
-  --t-entrada: 700ms;
+  --t-entrada: 500ms;
   --t-momento: 1400ms;
   --ease-salida: cubic-bezier(0.7, 0, 0.84, 0); /* solo para lo que se va (cambio de página) */
   --header-h: 5rem;

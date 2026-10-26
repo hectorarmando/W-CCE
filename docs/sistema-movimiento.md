@@ -21,7 +21,7 @@ El movimiento del sitio de la CE cuenta una sola historia: **la C acompaña a la
 | `--ease` | `cubic-bezier(.16, 1, .3, 1)` | La curva de todo lo que entra o responde: arranca decidida y se posa con suavidad |
 | `--ease-salida` | `cubic-bezier(.7, 0, .84, 0)` | Solo para lo que se va (página anterior) |
 | `--t-accion` | 240 ms | Hover, foco, colores, giro del «+» |
-| `--t-entrada` | 700 ms | Entradas: título de página, filas, mensajes |
+| `--t-entrada` | 500 ms | Entradas: título de página, filas, mensajes |
 | `--t-momento` | 1400 ms | El arco que se dibuja en la portada |
 | Escalonado | 40 ms por palabra, 80 ms por elemento hermano | Ritmo constante en todo el sitio |
 
@@ -112,3 +112,20 @@ Los navegadores sin soporte navegan de forma normal.
 - **Verificado:**
   - Lighthouse 99–100 en rendimiento;
   - CLS 0 en las páginas medidas (inicio, Programas, Empresas, Nosotros y Contacto).
+
+## Revisión con las skills `motion` y `ui-ux-pro-max` (oct-2026)
+
+Se revisó el sitio con las buenas prácticas del Motion AI Kit y las pautas de UX Pro Max. La auditoría MotionScore requiere Motion+ y no se ejecutó.
+
+**Cambios hechos:**
+
+- **Sin animaciones decorativas infinitas.** Las portadas flotantes de la portada hacen dos idas y vueltas al cargar (menos de 5 s) y se quedan quietas, y las «metas» ya no flotan. La lluvia de datos de Empresas tiene un botón «Pausar animación», y la elección se recuerda. Es lo que pide WCAG 2.2.2: poder pausar lo que se mueve solo más de 5 s.
+- **El halo de la portada se mueve con `transform`.** Antes se repintaba un degradado desenfocado en cada movimiento del cursor; ahora lo resuelve el compositor.
+- **Entradas más cortas:**
+  - `--t-entrada` baja de 700 a 500 ms;
+  - el giro de las tarjetas, de 900 a 600 ms;
+  - el desvanecido de las tarjetas, de 500 a 400 ms.
+- **Objetivos táctiles de 44 px:** flechas de carrusel, pestañas, «Volver arriba» y el número de WhatsApp de Contacto. La casilla del formulario pasa a 24 px.
+- **Formulario:** el campo País tiene `autocomplete="country-name"`.
+
+Las pruebas e2e verifican que el inicio no tenga animaciones infinitas y que la lluvia se pueda pausar.
