@@ -9,6 +9,7 @@ Este repositorio es la **única fuente de verdad** de la web. Todo cambio (dise�
    - `brand-guidelines`: reglas del Manual de Identidad de Marca. Son obligatorias en cualquier pieza.
    - `frontend-design`: proceso de diseño y revisión visual con capturas.
    - `web-artifacts-builder`: herramientas interactivas complejas (calculadoras, quizzes).
+   - `ui-ux-pro-max`: base de datos local de UX (accesibilidad, interacción, tipografía, color, pautas por stack, incluida Astro). Buscador: `python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<consulta>" --domain ux`. Sus sugerencias de estilo y paleta no reemplazan al manual de marca.
    - `motion` (Motion AI Kit): buenas prácticas de animación en CSS y JS, springs en CSS y revisión de rendimiento (agente `motion-reviewer`). Su servidor MCP gratuito está en `.mcp.json` (`https://mcp.motion.dev`); para usarlo, el entorno debe permitir ese dominio.
 3. Verifica antes de subir:
    - `npx astro check` y `npm run build`, sin errores;
