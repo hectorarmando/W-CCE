@@ -10,7 +10,7 @@ const BASE = process.argv[2] || "http://127.0.0.1:4321";
 const OUT = process.env.CAPTURAS || path.join(__dirname, "capturas");
 fs.mkdirSync(OUT, { recursive: true });
 const PAGINAS = ["/", "/programas", "/programas/academia-de-importadores", "/programas/inteligencia-artificial-aplicada",
-  "/programas/power-bi", "/programas/excel-completo", "/programas/analista-excel-ia", "/empresas", "/nosotros", "/comunidad", "/contacto"];
+  "/programas/power-bi", "/programas/excel-completo", "/programas/analista-excel-ia", "/empresas", "/nosotros", "/comunidad", "/contacto", "/blog"];
 const VISTAS = [{ n: "escritorio", w: 1440, h: 900 }, { n: "tablet", w: 820, h: 1180 }, { n: "movil", w: 375, h: 812 }];
 
 const resultados = [];
@@ -83,21 +83,39 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   // Interacciones
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   let page = await ctx.newPage();
+  // Inicio (estructura del prototipo HTML): cifras, áreas numeradas, notas del blog y llamada final
   await page.goto(BASE + "/");
-  await page.click("[data-desplegable]");
-  ok("desplegable Programas abre", await page.isVisible("#menu-programas"));
-  await page.keyboard.press("Escape");
-  ok("desplegable cierra con Escape", !(await page.isVisible("#menu-programas")));
+  ok("inicio: 4 cifras, la de estudiantes como pendiente", (await page.locator(".cifras > div").count()) === 4 && (await page.textContent(".cifras")).includes("Dato por confirmar"));
+  ok("inicio: 7 países atendidos (dato oficial)", (await page.textContent(".cifras")).includes("7"));
+  ok("inicio: 6 áreas numeradas", (await page.locator("#areas .area").count()) === 6);
+  ok("inicio: 3 notas del blog en preparación", (await page.locator(".notas .nota").count()) === 3);
+  ok("inicio: la sigla es CE y nunca CCE", !(await page.textContent("body")).includes("CCE"));
+  ok("inicio: ninguna animación decorativa es infinita", (await page.evaluate(() => document.getAnimations().filter((a) => a.effect?.getTiming().iterations === Infinity).length)) === 0);
 
+  // Catálogo: filtro por área (URL y selector) y buscador de texto
   await page.goto(BASE + "/programas?area=ia");
   const visiblesIA = await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).length);
   ok("filtro por URL (?area=ia)", visiblesIA === 3, visiblesIA);
-  await page.click('[data-filtros] button[data-area="datos"]');
+  await page.selectOption("#sa", "datos");
   const visiblesDatos = await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.area));
-  ok("filtro por botón (datos)", visiblesDatos.length > 0 && visiblesDatos.every((a) => a === "datos"), visiblesDatos.length);
+  ok("filtro por área (datos)", visiblesDatos.length > 0 && visiblesDatos.every((a) => a === "datos"), visiblesDatos.length);
   ok("filtro actualiza la URL", page.url().includes("area=datos"), page.url());
-  await page.click('[data-filtros] button[data-area="todas"]');
+  await page.selectOption("#sa", "");
   ok("filtro Todas restablece", (await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).length)) === 23);
+  await page.fill("#q", "power");
+  const porTexto = await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).map((x) => x.textContent));
+  ok("buscador: encuentra Power BI", porTexto.length >= 1 && porTexto.length < 23 && porTexto.some((t) => t.includes("Power BI 8 en 1")), porTexto.length);
+  await page.fill("#q", "ingles");
+  ok("buscador: ignora tildes (inglés)", (await page.$$eval("[data-lista] > li", (l) => l.filter((x) => !x.hidden).length)) >= 1);
+  await page.fill("#q", "xyzxyz");
+  ok("buscador: sin resultados ofrece asesor", await page.isVisible("[data-vacio]"));
+
+  // Blog: filtros por categoría
+  await page.goto(BASE + "/blog");
+  await page.click('[data-filtros] button[data-c="Negocios"]');
+  const visiblesBlog = await page.$$eval("[data-notas] > li", (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.c));
+  ok("blog: filtra por categoría", visiblesBlog.length === 2 && visiblesBlog.every((c) => c === "Negocios"), visiblesBlog.join(","));
+  ok("blog: notas sin texto marcadas «En preparación»", (await page.locator("[data-notas] .pendiente").count()) > 0);
 
   // Formulario: validación
   await page.goto(BASE + "/contacto?programa=power-bi");
@@ -182,38 +200,6 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   ok("lluvia: el botón la pausa", (await page.locator(".empresas-hero canvas").count()) === 0 && (await page.getAttribute(".lluvia-pausa", "aria-pressed")) === "true");
   await page.click(".lluvia-pausa");
 
-  // Buscador de la cabecera: resultados al escribir, flechas y Enter llevan a la ficha
-  page = await ctx.newPage();
-  await page.goto(BASE + "/");
-  await page.fill("#buscar-cabecera", "power");
-  const resultadosBusqueda = await page.$$eval("#buscar-cabecera-lista li", (l) => l.map((x) => x.textContent));
-  ok("buscador: encuentra Power BI", resultadosBusqueda.some((t) => t.includes("Power BI")), resultadosBusqueda.join(" | "));
-  ok("buscador: aria-expanded", (await page.getAttribute("#buscar-cabecera", "aria-expanded")) === "true");
-  await page.keyboard.press("ArrowDown");
-  await Promise.all([page.waitForURL(/power-bi/), page.keyboard.press("Enter")]);
-  ok("buscador: Enter abre la ficha", page.url().includes("/programas/power-bi"), page.url());
-  await page.goto(BASE + "/");
-  await page.fill("#buscar-cabecera", "xyzxyz");
-  ok("buscador: sin resultados ofrece asesor", (await page.textContent("#buscar-cabecera-lista")).includes("asesor"));
-  await page.keyboard.press("Escape");
-  ok("buscador: Escape cierra", (await page.getAttribute("#buscar-cabecera", "aria-expanded")) === "false");
-  // Pestañas de cursos
-  await page.click('[data-pestanas] button[data-area="ingenieria"]');
-  const visiblesCursos = await page.$$eval('[data-carrusel="cursos"] > li', (l) => l.filter((x) => !x.hidden).map((x) => x.dataset.area));
-  ok("inicio: ninguna animación decorativa es infinita", (await page.evaluate(() => document.getAnimations().filter((a) => a.effect?.getTiming().iterations === Infinity).length)) === 0);
-  ok("campañas: 4 banners", (await page.locator("[data-campanas] .banner").count()) === 4);
-  const actualAntes = await page.getAttribute('[data-ir][aria-current="true"]', "data-ir");
-  await page.waitForTimeout(3000);
-  ok("campañas: sin rotación automática", (await page.getAttribute('[data-ir][aria-current="true"]', "data-ir")) === actualAntes);
-  await page.locator("[data-campanas]").scrollIntoViewIfNeeded();
-  await page.click('[data-ir="2"]');
-  await page.waitForTimeout(1200);
-  ok("campañas: los puntos llevan al banner", (await page.getAttribute('[data-ir][aria-current="true"]', "data-ir")) === "2");
-  await page.click('[data-campanas] .campanas__flecha[data-dir="1"]');
-  await page.waitForTimeout(1200);
-  ok("campañas: la flecha avanza", (await page.getAttribute('[data-ir][aria-current="true"]', "data-ir")) === "3");
-  ok("pestañas: filtran cursos por área", visiblesCursos.length > 0 && visiblesCursos.every((a) => a === "ingenieria"), visiblesCursos.length);
-
   // Precios por país: detección por zona horaria, selector, mensaje de WhatsApp y formato de moneda
   const ctxCo = await browser.newContext({ viewport: { width: 1440, height: 900 }, timezoneId: "America/Bogota", locale: "es-CO" });
   page = await ctxCo.newPage();
@@ -229,7 +215,7 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   ok("país: WhatsApp indica el país", decodeURIComponent(wa).includes("Escribo desde México"), wa);
   await page.reload();
   ok("país: la elección se recuerda", (await page.getAttribute("html", "data-pais")) === "MX");
-  ok("país: sin precios cargados se mantiene el respaldo", (await page.goto(BASE + "/programas/power-bi"), (await page.textContent(".datos__inversion [data-precio]")).includes("asesor")));
+  ok("país: sin precios cargados se mantiene el respaldo", (await page.goto(BASE + "/programas/power-bi"), (await page.textContent(".inversion [data-precio]")).includes("asesor")));
   // Formato con precios de EJEMPLO inyectados solo en la prueba (no existen en el sitio)
   await page.route("**/programas/power-bi*", async (route) => {
     const r = await route.fetch();
@@ -237,11 +223,11 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
     await route.fulfill({ response: r, body: html });
   });
   await page.goto(BASE + "/programas/power-bi");
-  const precioMx = (await page.textContent(".datos__inversion [data-precio]")).trim();
+  const precioMx = (await page.textContent(".inversion [data-precio]")).trim();
   ok("precio: formato México ($ 1,999 MXN y tachado)", precioMx.startsWith("$ 1,999 MXN") && precioMx.includes("2,999"), precioMx);
   await page.evaluate(() => localStorage.setItem("ce-pais", "PE"));
   await page.reload();
-  ok("precio: formato Perú (S/ 449)", (await page.textContent(".datos__inversion [data-precio]")).trim() === "S/ 449");
+  ok("precio: formato Perú (S/ 449)", (await page.textContent(".inversion [data-precio]")).trim() === "S/ 449");
   await ctxCo.close();
 
   // Teclado: enlace para saltar al contenido

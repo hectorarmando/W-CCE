@@ -1,199 +1,96 @@
 ---
-import { enlaceWhatsapp } from "../data/sitio";
-import { programas, areas } from "../data/programas";
-import { oferta, indiceBusqueda } from "../data/oferta";
-import Buscador from "./Buscador.astro";
+// Cabecera del prototipo «negro y dorado»: logo, cuatro enlaces en mayúsculas espaciadas, selector de país
+// (precios por país) y botón «Matrícula». En pantallas angostas, menú desplegable.
 import SelectorPais from "./SelectorPais.astro";
 
-const actual = Astro.url.pathname.replace(/\.html$/, "");
-const activo = (href: string) => actual === href || actual.startsWith(href + "/");
-const cuenta = (id: string) => oferta.filter((o) => o.area === id).length;
+const actual = Astro.url.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
+const activo = (href: string) => (href === "/" ? actual === "/" : actual === href || actual.startsWith(href + "/"));
 const enlaces = [
+  { href: "/", texto: "Inicio" },
+  { href: "/programas", texto: "Programas" },
+  { href: "/nosotros", texto: "Nosotros" },
+  { href: "/blog", texto: "Blog" },
+];
+const extra = [
   { href: "/empresas", texto: "Empresas" },
   { href: "/comunidad", texto: "Comunidad" },
-  { href: "/nosotros", texto: "Nosotros" },
+  { href: "/contacto", texto: "Contacto" },
 ];
-const mensaje = "Hola, quiero información sobre los programas de la Cámara de Comercio Exterior.";
 ---
-<!-- Índice del buscador: una sola vez por página -->
-<script type="application/json" id="indice-busqueda" data-whatsapp={enlaceWhatsapp("Hola, busco un curso que no encuentro en la web.")} set:html={JSON.stringify(indiceBusqueda)} />
-
-<header class="cabecera sobre-oscuro" data-cabecera>
+<header class="cabecera" data-cabecera>
   <div class="contenedor cabecera__fila">
     <a class="cabecera__logo" href="/" aria-label="Cámara de Comercio Exterior, ir al inicio">
       <img src="/brand/imagotipo-blanco.svg" alt="" width="168" height="110" />
     </a>
 
     <nav class="nav" aria-label="Principal">
-      <div class="nav__item nav__item--menu">
-        <button class="nav__explorar" type="button" aria-expanded="false" aria-controls="menu-programas" data-desplegable>
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor" /><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor" /><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor" /><rect x="9" y="9" width="6" height="6" rx="3" fill="var(--amarillo)" /></svg>
-          Explorar
-        </button>
-        <!-- Menú «Explorar»: áreas (escuelas) a la izquierda y programas con temario a la derecha -->
-        <div class="explorar" id="menu-programas" hidden>
-          <div>
-            <p class="explorar__titulo">Áreas de formación</p>
-            <ul role="list" class="explorar__areas">
-              {areas.map((a) => (
-                <li><a href={`/programas?area=${a.id}`} style={`--c:${a.color}`}><i aria-hidden="true"></i><span>{a.nombre}</span><small>{cuenta(a.id)}</small></a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p class="explorar__titulo">Programas con temario completo</p>
-            <ul role="list" class="explorar__programas">
-              {programas.map((p) => (<li><a href={`/programas/${p.slug}`}>{p.nombre}</a></li>))}
-            </ul>
-            <a class="explorar__todo enlace" href="/programas">Ver los {oferta.length} programas y cursos</a>
-          </div>
-        </div>
-      </div>
+      <ul role="list">
+        {enlaces.map((n) => (
+          <li><a href={n.href} aria-current={activo(n.href) ? "page" : undefined}>{n.texto}</a></li>
+        ))}
+      </ul>
     </nav>
 
-    <div class="cabecera__buscar"><Buscador id="buscar-cabecera" /></div>
-
-    <ul role="list" class="nav__enlaces">
-      {enlaces.map((n) => (
-        <li><a class="nav__enlace" href={n.href} aria-current={activo(n.href) ? "page" : undefined}>{n.texto}</a></li>
-      ))}
-    </ul>
-
-    <a class="btn btn--amarillo cabecera__cta" href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener">Hablar con un asesor</a>
-
-    <SelectorPais />
-
-    <button class="menu-movil__abrir" type="button" aria-expanded="false" aria-controls="menu-movil" data-menu-movil>
-      <span class="sr-only">Abrir menú</span>
-      <span class="hamburguesa" aria-hidden="true"><span></span><span></span></span>
-    </button>
+    <div class="cabecera__acciones">
+      <SelectorPais />
+      <a class="boton cabecera__cta" href="/contacto">Matrícula</a>
+      <button class="menu-movil__abrir" type="button" aria-expanded="false" aria-controls="menu-movil" data-menu-movil>
+        <span class="sr-only">Abrir menú</span>
+        <span class="hamburguesa" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
   </div>
 
-  <div class="menu-movil" id="menu-movil" hidden>
-    <nav class="contenedor" aria-label="Principal (móvil)">
-      <Buscador id="buscar-movil" />
-      <ul role="list" class="menu-movil__lista">
-        <li><a href="/programas" aria-current={activo("/programas") ? "page" : undefined}>Programas y cursos</a></li>
-        {enlaces.map((n) => (<li><a href={n.href} aria-current={activo(n.href) ? "page" : undefined}>{n.texto}</a></li>))}
-        <li><a href="/contacto" aria-current={activo("/contacto") ? "page" : undefined}>Contacto</a></li>
-      </ul>
-      <p class="menu-movil__titulo">Áreas de formación</p>
-      <ul role="list" class="menu-movil__programas">
-        {areas.map((a) => (<li><a href={`/programas?area=${a.id}`}>{a.nombre}</a></li>))}
-      </ul>
-      <a class="btn btn--amarillo menu-movil__cta" href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener">
-        Hablar con un asesor por WhatsApp
-        <span class="btn__flecha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 7h9M7.5 3 11.5 7l-4 4" fill="none" stroke="currentColor" stroke-width="2"/></svg></span>
-      </a>
-    </nav>
-  </div>
+  <nav class="menu-movil" id="menu-movil" aria-label="Principal (móvil)" hidden>
+    {[...enlaces, ...extra].map((n) => (
+      <a href={n.href} aria-current={activo(n.href) ? "page" : undefined}>{n.texto}</a>
+    ))}
+    <a href="/contacto" class="menu-movil__cta">Matrícula</a>
+  </nav>
 </header>
 
 <style>
-  /* Cabecera oscura y fija, como en las plataformas de cursos: logo, Explorar, buscador, enlaces y CTA */
-  .cabecera { position: sticky; top: 0; z-index: 50; background: var(--negro); color: var(--blanco); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-  .cabecera__fila { display: flex; align-items: center; gap: var(--s-4); min-height: var(--header-h); }
-  /* Imagotipo ≥ 100×65 px (mínimo digital del manual) y con aire alrededor (área de protección) */
-  .cabecera__logo { display: block; flex: none; padding-block: 6px; }
-  .cabecera__logo img { width: 104px; height: auto; }
+  .cabecera { position: sticky; top: 0; z-index: 50; background: rgba(10, 10, 10, 0.88); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .cabecera__fila { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: var(--header-h); }
+  /* Imagotipo oficial a 100 px de ancho: el mínimo digital del manual */
+  .cabecera__logo { display: block; flex: none; }
+  .cabecera__logo img { width: 100px; height: auto; }
 
-  .nav { flex: none; }
-  .nav__item { position: relative; }
-  .nav__explorar {
-    display: inline-flex; align-items: center; gap: 0.55rem; min-height: 2.75rem; padding: 0 1rem; border: 0; border-radius: 999px; cursor: pointer;
-    background: rgba(255, 255, 255, 0.08); color: var(--blanco); font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700;
-    transition: background-color var(--t-accion) var(--ease);
-  }
-  .nav__explorar:hover, .nav__explorar[aria-expanded="true"] { background: rgba(255, 255, 255, 0.16); }
+  .nav ul { display: flex; gap: 26px; }
+  .nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut); text-decoration: none; transition: color 0.2s; }
+  .nav a:hover { color: var(--gold2); }
+  .nav a[aria-current="page"] { color: var(--gold2); box-shadow: inset 0 -1px 0 var(--gold); }
 
-  .explorar {
-    position: absolute; top: calc(100% + 12px); left: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-6); width: min(42rem, 90vw);
-    padding: var(--s-5); border-radius: var(--radio-l); background: #111; color: var(--blanco);
-    box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
-  }
-  .explorar[hidden] { display: none; }
-  .explorar__titulo { font-size: var(--t-xs); color: #a6a6a6; margin-bottom: var(--s-3); }
-  .explorar ul { display: grid; gap: 2px; }
-  .explorar__areas a, .explorar__programas a {
-    display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.75rem; margin-inline: -0.75rem; border-radius: var(--radio);
-    text-decoration: none; font-size: var(--t-sm); font-weight: 600; line-height: 1.3; transition: background-color var(--t-accion) var(--ease);
-  }
-  .explorar__areas a:hover, .explorar__programas a:hover { background: rgba(255, 255, 255, 0.08); }
-  .explorar__areas i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4); flex: none; }
-  .explorar__areas span { flex: 1; }
-  .explorar__areas small { font-size: var(--t-xs); color: #a6a6a6; }
-  .explorar__todo { display: inline-block; margin-top: var(--s-4); font-size: var(--t-sm); }
+  .cabecera__acciones { display: flex; align-items: center; gap: 12px; }
+  .cabecera__acciones :global(.pais-boton) { border-radius: 0; background: transparent; border: 1px solid var(--line); font-family: var(--sans); font-weight: 500; }
+  .cabecera__cta { --alto: 2.75rem; padding-inline: 1.4rem; }
 
-  .cabecera__buscar { flex: 1; max-width: 30rem; }
-  .nav__enlaces { display: flex; gap: 2px; margin-left: auto; }
-  .nav__enlace {
-    position: relative; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.75rem; border-radius: 999px; text-decoration: none;
-    font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 600; color: #e6e6e6; transition: color var(--t-accion) var(--ease);
-  }
-  .nav__enlace:hover { color: var(--blanco); }
-  .nav__enlace[aria-current="page"] { color: var(--blanco); }
-  .nav__enlace[aria-current="page"]::after { content: ""; position: absolute; left: 0.75rem; right: 0.75rem; bottom: 0.4rem; height: 3px; border-radius: 2px; background: var(--amarillo); }
-  .cabecera__cta { --alto: 2.75rem; flex: none; padding-inline: 1.25rem; font-size: var(--t-xs); }
+  .menu-movil__abrir { display: none; place-items: center; width: 44px; height: 44px; background: none; border: 1px solid var(--line); color: var(--gold); cursor: pointer; }
+  .hamburguesa { display: grid; gap: 5px; width: 18px; }
+  .hamburguesa span { height: 1px; background: var(--gold); }
+  .menu-movil { border-top: 1px solid var(--line); background: var(--bg2); max-height: calc(100dvh - var(--header-h)); overflow-y: auto; }
+  .menu-movil a { display: block; padding: 15px 22px; border-bottom: 1px solid var(--line); font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mut); text-decoration: none; }
+  .menu-movil a[aria-current="page"], .menu-movil__cta { color: var(--gold2) !important; }
 
-  .menu-movil__abrir { display: none; }
-  .menu-movil { background: var(--negro); color: var(--blanco); max-height: calc(100dvh - var(--header-h)); overflow-y: auto; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-  .menu-movil nav { display: grid; gap: var(--s-4); padding-block: var(--s-5) var(--s-7); }
-  .menu-movil__lista a { display: block; padding: 0.5rem 0; font-family: var(--font-marca); font-size: 1.85rem; font-weight: 800; letter-spacing: -0.04em; text-decoration: none; }
-  .menu-movil__lista a[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--amarillo); text-decoration-thickness: 5px; text-underline-offset: 6px; }
-  .menu-movil__titulo { margin-top: var(--s-4); font-size: var(--t-xs); color: #a6a6a6; }
-  .menu-movil__programas a { display: block; padding: 0.5rem 0; font-weight: 600; text-decoration: none; }
-  .menu-movil__cta { width: 100%; }
-
-  @media (max-width: 1240px) { .nav__enlaces { display: none; } .cabecera__buscar { margin-left: auto; } }
-  @media (max-width: 1000px) {
-    .nav, .cabecera__buscar, .cabecera__cta { display: none; }
-    .cabecera__logo { margin-right: auto; }
-    .menu-movil__abrir {
-      display: grid; place-items: center; width: 48px; height: 48px; margin-right: -4px;
-      background: rgba(255, 255, 255, 0.1); border: 0; cursor: pointer; border-radius: 50%;
-    }
-    .hamburguesa { display: grid; gap: 6px; width: 20px; }
-    .hamburguesa span { height: 2px; background: var(--blanco); border-radius: 2px; transition: transform var(--t-accion) var(--ease); }
-    [aria-expanded="true"] .hamburguesa span:first-child { transform: translateY(4px) rotate(45deg); }
-    [aria-expanded="true"] .hamburguesa span:last-child { transform: translateY(-4px) rotate(-45deg); }
+  @media (max-width: 900px) {
+    .nav, .cabecera__cta { display: none; }
+    .menu-movil__abrir { display: grid; }
   }
-  @media (min-width: 1001px) { .menu-movil { display: none !important; } }
+  @media (min-width: 901px) { .menu-movil { display: none !important; } }
 </style>
 
 <script>
-  const botonDesplegable = document.querySelector<HTMLButtonElement>("[data-desplegable]");
-  const desplegable = document.getElementById("menu-programas");
-  const botonMovil = document.querySelector<HTMLButtonElement>("[data-menu-movil]");
-  const menuMovil = document.getElementById("menu-movil");
-
-  const alternar = (boton: HTMLButtonElement, panel: HTMLElement, abrir?: boolean) => {
-    const abierto = abrir ?? boton.getAttribute("aria-expanded") !== "true";
-    boton.setAttribute("aria-expanded", String(abierto));
-    panel.hidden = !abierto;
-    return abierto;
-  };
-
-  if (botonDesplegable && desplegable) {
-    botonDesplegable.addEventListener("click", () => alternar(botonDesplegable, desplegable));
-    document.addEventListener("click", (e) => {
-      if (!desplegable.hidden && !botonDesplegable.parentElement?.contains(e.target as Node)) alternar(botonDesplegable, desplegable, false);
-    });
-    botonDesplegable.parentElement?.addEventListener("focusout", (e) => {
-      if (!botonDesplegable.parentElement?.contains(e.relatedTarget as Node)) alternar(botonDesplegable, desplegable, false);
+  const boton = document.querySelector<HTMLButtonElement>("[data-menu-movil]");
+  const menu = document.getElementById("menu-movil");
+  if (boton && menu) {
+    const alternar = (abrir: boolean) => {
+      boton.setAttribute("aria-expanded", String(abrir));
+      menu.hidden = !abrir;
+      boton.querySelector(".sr-only")!.textContent = abrir ? "Cerrar menú" : "Abrir menú";
+    };
+    boton.addEventListener("click", () => alternar(menu.hidden));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !menu.hidden) { alternar(false); boton.focus(); }
     });
   }
-
-  if (botonMovil && menuMovil) {
-    botonMovil.addEventListener("click", () => {
-      const abierto = alternar(botonMovil, menuMovil);
-      botonMovil.querySelector(".sr-only")!.textContent = abierto ? "Cerrar menú" : "Abrir menú";
-      document.body.style.overflow = abierto ? "hidden" : "";
-    });
-  }
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape") return;
-    if (botonDesplegable && desplegable && !desplegable.hidden) { alternar(botonDesplegable, desplegable, false); botonDesplegable.focus(); }
-    if (botonMovil && menuMovil && !menuMovil.hidden) { botonMovil.click(); botonMovil.focus(); }
-  });
 </script>

@@ -13,7 +13,7 @@ PAGINAS = {
     "/programas/inteligencia-artificial-aplicada": "programas/inteligencia-artificial-aplicada.html",
     "/programas/power-bi": "programas/power-bi.html", "/programas/excel-completo": "programas/excel-completo.html",
     "/programas/analista-excel-ia": "programas/analista-excel-ia.html",
-    "/empresas": "empresas.html", "/nosotros": "nosotros.html", "/comunidad": "comunidad.html",
+    "/empresas": "empresas.html", "/nosotros": "nosotros.html", "/comunidad": "comunidad.html", "/blog": "blog.html",
     "/contacto": "contacto.html", "/404": "404.html",
 }
 recursos = {}
@@ -98,7 +98,7 @@ plantilla = r"""<!doctype html>
 <script>
 const PAGINAS = __PAGINAS__;
 const RECURSOS = __RECURSOS__;
-const NOMBRES = {"/":"Inicio","/programas":"Programas y cursos","/programas/academia-de-importadores":"Ficha · Academia de Importadores","/programas/inteligencia-artificial-aplicada":"Ficha · IA Aplicada","/programas/power-bi":"Ficha · Power BI","/programas/excel-completo":"Ficha · Excel","/programas/analista-excel-ia":"Ficha · Analista Excel + IA","/empresas":"Empresas","/nosotros":"Nosotros","/comunidad":"Comunidad","/contacto":"Contacto","/404":"Página 404"};
+const NOMBRES = {"/":"Inicio","/programas":"Programas y cursos","/programas/academia-de-importadores":"Ficha · Academia de Importadores","/programas/inteligencia-artificial-aplicada":"Ficha · IA Aplicada","/programas/power-bi":"Ficha · Power BI","/programas/excel-completo":"Ficha · Excel","/programas/analista-excel-ia":"Ficha · Analista Excel + IA","/empresas":"Empresas","/nosotros":"Nosotros","/comunidad":"Comunidad","/blog":"Blog","/contacto":"Contacto","/404":"Página 404"};
 const urls = {};
 for (const [ruta, r] of Object.entries(RECURSOS)) {
   // Las fuentes van como data: (un blob de otro origen no pasa la política CORS de @font-face)

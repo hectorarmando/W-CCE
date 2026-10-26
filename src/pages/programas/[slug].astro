@@ -1,8 +1,10 @@
 ---
+// Ficha de programa con la estructura del prototipo HTML del usuario: encabezado con migas, contenido en bloques
+// y columna lateral fija con la ficha, la inversión y las acciones. Datos: src/data/programas.ts (material oficial).
 import Base from "../../layouts/Base.astro";
-import Flecha from "../../components/Flecha.astro";
 import { programas, areaPorId, type Programa } from "../../data/programas";
 import { sitio, enlaceWhatsapp } from "../../data/sitio";
+import { preguntas } from "../../data/preguntas";
 import { Picture, getImage } from "astro:assets";
 import Precio from "../../components/Precio.astro";
 
@@ -12,9 +14,9 @@ export function getStaticPaths() {
 
 const { programa } = Astro.props as { programa: Programa };
 const area = areaPorId[programa.area];
-const color = programa.color ?? area.color;
 const otros = programas.filter((p) => p.slug !== programa.slug).slice(0, 3);
 const mensaje = `Hola, quiero información del ${programa.nombre}: horarios, inversión y próxima fecha de inicio.`;
+const mensajeSilabo = `Hola, quiero recibir el sílabo del ${programa.nombre}.`;
 
 // La portada oficial también sirve de imagen para redes (1200×630)
 const og = programa.imagen ? (await getImage({ src: programa.imagen, width: 1200, height: 630, fit: "cover", format: "jpg" })).src : undefined;
@@ -30,86 +32,100 @@ const jsonLd = {
 };
 ---
 <Base titulo={programa.nombre} descripcion={programa.resumen} jsonLd={jsonLd} imagenOg={og}>
-  <section class="ficha" style={`--c:${color}`}>
+  <div class="phead">
     <div class="contenedor">
-      <nav aria-label="Ruta de navegación" class="migas">
-        <a href="/programas">Programas</a> <span aria-hidden="true">/</span> <span>{area.nombre}</span>
-      </nav>
-      <div class="ficha__rejilla">
-        <div>
-          <span class="ficha__marca" aria-hidden="true"></span>
-          <h1 class="titulo-pagina">{programa.nombre}</h1>
-          <p class="intro">{programa.resumen}</p>
-          <div class="acciones">
-            <a class="btn btn--negro" href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener">Consultar horarios e inversión <Flecha /></a>
-            <a class="btn btn--contorno" href={`/contacto?programa=${programa.slug}`}>Dejar mis datos</a>
+      <nav class="migas-d" aria-label="Ruta de navegación"><a href="/">Inicio</a> / <a href="/programas">Programas</a> / <a href={`/programas?area=${area.id}`}>{area.nombre}</a></nav>
+      <span class="eyebrow">{area.nombre} · Programa</span>
+      <h1>{programa.nombre}</h1>
+      <p>{programa.resumen}</p>
+    </div>
+  </div>
+
+  <section class="seccion-d">
+    <div class="contenedor ficha">
+      <div>
+        {programa.imagen && (
+          <figure class="ficha__portada">
+            <Picture src={programa.imagen} formats={["avif", "webp"]} widths={[640, 960, 1400]} sizes="(max-width: 900px) 100vw, 44rem" loading="eager" fetchpriority="high" alt={`Portada del curso ${programa.nombre} de la Cámara de Comercio Exterior`} />
+          </figure>
+        )}
+
+        <div class="bloque">
+          <h2>¿Qué incluye?</h2>
+          <ul role="list" class="lista-d">{programa.incluye.map((x) => <li>{x}</li>)}</ul>
+        </div>
+
+        {programa.publico && (
+          <div class="bloque">
+            <h2>¿A quién va dirigido?</h2>
+            <p class="mut">{programa.publico}</p>
+          </div>
+        )}
+
+        <div class="bloque faq-d">
+          <h2>{programa.temarioTitulo}</h2>
+          {programa.temario.map((t, i) => (
+            <details open={i === 0}>
+              <summary>{String(i + 1).padStart(2, "0")} · {t.titulo}</summary>
+              <p>{t.detalle ?? "El asesor te comparte el detalle de este módulo con el sílabo."}</p>
+            </details>
+          ))}
+        </div>
+
+        <div class="bloque">
+          <h2>Docente</h2>
+          <div class="docente">
+            <div class="avatar" aria-hidden="true">N</div>
+            <div><b>Nombre por confirmar</b><p class="mut">Perfil, trayectoria y experiencia del docente. <span class="pendiente">Pendiente</span></p></div>
           </div>
         </div>
-        <dl class="datos">
-          {programa.datos.map((d) => (<div><dt>{d.etiqueta}</dt><dd>{d.valor}</dd></div>))}
-          <div class="datos__inversion"><dt>Inversión</dt><dd><Precio id={programa.slug} /></dd></div>
-        </dl>
-      </div>
-      {programa.imagen && (
-        <figure class="ficha__portada">
-          <Picture src={programa.imagen} formats={["avif", "webp"]} widths={[640, 960, 1400, 1920]} sizes="(max-width: 1376px) 100vw, 1296px" loading="eager" fetchpriority="high" alt={`Portada del curso ${programa.nombre} de la Cámara de Comercio Exterior`} />
-        </figure>
-      )}
-    </div>
-  </section>
 
-  <section class="seccion" aria-labelledby="temario">
-    <div class="contenedor dos">
-      <h2 id="temario" class="titulo-seccion">{programa.temarioTitulo}</h2>
-      <ol role="list" class="temario">
-        {programa.temario.map((t, i) => (
-          <li>
-            <span class="temario__n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-            <span class="temario__t">{t.titulo}</span>
-            {t.detalle && <span class="temario__d">{t.detalle}</span>}
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
+        <div class="bloque">
+          <h2>Certificación</h2>
+          <p class="mut">{programa.certificacion}</p>
+        </div>
 
-  <section class="seccion seccion--suave" aria-labelledby="incluye">
-    <div class="contenedor dos">
-      <div>
-        <h2 id="incluye" class="titulo-seccion">Qué incluye</h2>
-        {programa.publico && (<><h3 class="sub">Para quién es</h3><p class="texto">{programa.publico}</p></>)}
-      </div>
-      <div>
-        <ul role="list" class="incluye">
-          {programa.incluye.map((x) => <li>{x}</li>)}
-        </ul>
-        <div class="certificado">
-          <h3 class="sub">Certificación</h3>
-          <p class="texto">{programa.certificacion}</p>
+        <div class="bloque">
+          <h2>Inversión y facilidades</h2>
+          <p class="mut">La inversión y las opciones de pago dependen del grupo y de las promociones vigentes. Un asesor te ayuda a elegir la que mejor se adapte a ti.</p>
+        </div>
+
+        <div class="bloque faq-d">
+          <h2>Preguntas frecuentes</h2>
+          {preguntas.map((q) => (
+            <details>
+              <summary>{q.p}</summary>
+              <p>{q.r}</p>
+            </details>
+          ))}
         </div>
       </div>
+
+      <aside class="lateral" aria-label="Ficha del programa">
+        <span class="eyebrow">Ficha del programa</span>
+        <dl>
+          {programa.datos.map((d) => (<><dt>{d.etiqueta}</dt><dd>{d.valor}</dd></>))}
+          <dt>Certificado</dt><dd>Verificable con QR</dd>
+        </dl>
+        <div class="inversion">
+          <small>Inversión referencial</small>
+          <Precio id={programa.slug} class="inversion__precio" respaldo="Consulta con un asesor" />
+        </div>
+        <a class="boton boton--lleno" href={enlaceWhatsapp(mensajeSilabo)} target="_blank" rel="noopener">Solicitar sílabo<span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span></a>
+        <a class="boton" href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener">Hablar con un asesor<span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span></a>
+        <a class="lateral__datos" href={`/contacto?programa=${programa.slug}`}>Prefiero dejar mis datos</a>
+      </aside>
     </div>
   </section>
 
-  <section class="seccion" aria-labelledby="siguiente">
-    <div class="contenedor cta">
-      <h2 id="siguiente" class="titulo-seccion">Reserva tu lugar en el próximo grupo</h2>
-      <p class="intro">Un asesor te confirma la fecha de inicio, los horarios disponibles, la inversión vigente y los medios de pago.</p>
-      <div class="acciones">
-        <a class="btn btn--negro" href={enlaceWhatsapp(mensaje)} target="_blank" rel="noopener">Escribir por WhatsApp <Flecha /></a>
-        <a class="btn btn--contorno" href={`/contacto?programa=${programa.slug}`}>Prefiero que me contacten</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion otros" aria-labelledby="otros">
+  <section class="seccion-d seccion-d--alt" aria-labelledby="otros">
     <div class="contenedor">
-      <h2 id="otros" class="sub-grande">Otros programas</h2>
-      <ul role="list" class="otros__lista">
+      <span class="eyebrow">Sigue explorando</span>
+      <h2 id="otros" class="h2-d">Otros programas</h2>
+      <div class="regla"></div>
+      <ul role="list" class="rejilla-d">
         {otros.map((p) => (
-          <li style={`--c:${p.color ?? areaPorId[p.area].color}`}>
-            <a href={`/programas/${p.slug}`}><span aria-hidden="true"></span>{p.nombre}</a>
-          </li>
+          <li><a class="tarjeta-d" href={`/programas/${p.slug}`}><span class="eyebrow">{areaPorId[p.area].nombre}</span><h3>{p.nombre}</h3><p>{p.resumen}</p></a></li>
         ))}
       </ul>
     </div>
@@ -117,53 +133,34 @@ const jsonLd = {
 </Base>
 
 <style>
-  .ficha { padding-block: var(--s-6) clamp(3rem, 2rem + 4vw, 6rem); border-bottom: 1px solid var(--linea); }
-  /* Portada oficial del curso: ancho completo, esquinas suaves (ya trae el título y el logo integrados) */
-  .ficha__portada { margin: var(--s-7) 0 0; aspect-ratio: 16 / 9; border-radius: var(--radio-l); overflow: hidden; background: var(--negro); }
+  .ficha { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 50px; align-items: start; }
+  .ficha__portada { margin: 0 0 46px; border: 1px solid var(--line); aspect-ratio: 16 / 9; overflow: hidden; }
   .ficha__portada :global(img) { width: 100%; height: 100%; object-fit: cover; }
-  .migas { font-size: var(--t-sm); color: var(--gris-oscuro); margin-bottom: var(--s-7); }
-  .migas a { color: var(--negro); font-weight: 600; }
-  .ficha__rejilla { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--s-8); align-items: end; }
-  .ficha__marca { display: block; width: 4rem; height: 8px; border-radius: 4px; background: var(--c); margin-bottom: var(--s-5); box-shadow: 0 0 0 1px rgba(0,0,0,.06); }
-  .ficha .intro { margin-top: var(--s-5); }
-  .acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
-  .datos { margin: 0; display: grid; gap: 0; border-top: 2px solid var(--negro); }
-  .datos div { padding: var(--s-4) 0; border-bottom: 1px solid var(--linea); }
-  .datos dt { font-size: var(--t-xs); color: var(--gris-oscuro); }
-  .datos dd { margin: 2px 0 0; font-weight: 700; }
-  .datos__inversion :global(.precio--con strong) { font-family: var(--font-marca); font-size: var(--t-xl); letter-spacing: -0.03em; }
-  .datos__inversion :global(.precio s) { margin-left: 0.4rem; font-weight: 400; color: var(--gris-oscuro); }
+  .bloque { margin-bottom: 46px; }
+  .bloque h2 { font-size: 1.8rem; margin-bottom: 0.6rem; }
+  .lista-d { display: grid; gap: 10px; margin-top: 1rem; }
+  .lista-d li { position: relative; padding-left: 22px; color: var(--mut); }
+  .lista-d li::before { content: ""; position: absolute; left: 0; top: 0.8em; width: 10px; height: 1px; background: var(--gold); }
+  .docente { display: grid; grid-template-columns: 140px 1fr; gap: 22px; align-items: center; }
+  .docente b { font: 600 1.3rem var(--serif); }
+  .docente p { margin-top: 0.3rem; font-size: 0.9rem; }
+  .avatar { display: grid; place-items: center; aspect-ratio: 1; border: 1px solid var(--line); background: linear-gradient(160deg, #1a1710, #0d0d0d); font: 600 2rem var(--serif); color: var(--gold); }
 
-  .dos { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: var(--s-8); align-items: start; }
-  .temario { border-top: 1px solid var(--negro); }
-  .temario li { display: grid; grid-template-columns: 3rem 1fr auto; gap: var(--s-4); align-items: baseline; padding: var(--s-4) 0; border-bottom: 1px solid var(--linea); }
-  .temario__n { font-weight: 800; color: var(--gris-oscuro); font-variant-numeric: tabular-nums; }
-  .temario__t { font-weight: 700; font-size: var(--t-lg); line-height: 1.3; letter-spacing: -0.01em; }
-  .temario__d { font-size: var(--t-sm); color: var(--gris-oscuro); white-space: nowrap; }
-
-  .sub { font-size: var(--t-base); font-weight: 800; margin-top: var(--s-6); }
-  .texto { margin-top: var(--s-2); color: var(--gris-oscuro); max-width: 52ch; }
-  .incluye { display: grid; gap: var(--s-3); }
-  .incluye li { position: relative; padding-left: 2rem; font-weight: 600; }
-  .incluye li::before { content: "✓"; position: absolute; left: 0; top: 0.15em; width: 1.3rem; height: 1.3rem; display: grid; place-items: center; border-radius: 50%; background: var(--amarillo); font-size: 0.75rem; font-weight: 900; line-height: 1; }
-  .certificado { margin-top: var(--s-6); padding: var(--s-5); border-radius: var(--radio); background: var(--blanco); border: 1px solid var(--linea); }
-  .certificado .sub { margin-top: 0; }
-
-  .cta .intro { margin-top: var(--s-4); }
-  .sub-grande { font-size: var(--t-xl); }
-  .otros { padding-top: 0; }
-  .otros__lista { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-4); margin-top: var(--s-5); }
-  .otros__lista a { display: flex; gap: var(--s-3); align-items: center; padding: var(--s-5); border: 1px solid var(--linea); border-radius: var(--radio); text-decoration: none; font-weight: 700; line-height: 1.3; height: 100%; transition: border-color 150ms var(--ease); }
-  .otros__lista a:hover { border-color: var(--negro); }
-  .otros__lista span { flex: none; width: 6px; align-self: stretch; border-radius: 3px; background: var(--c); }
+  .lateral { position: sticky; top: calc(var(--header-h) + 8px); display: grid; gap: 10px; padding: 26px; background: var(--card); border: 1px solid var(--gold); }
+  .lateral dl { display: grid; grid-template-columns: auto 1fr; gap: 9px 16px; margin: 14px 0 8px; font-size: 0.88rem; }
+  .lateral dt { color: var(--mut); }
+  .lateral dd { margin: 0; text-align: right; }
+  .inversion { padding-top: 16px; border-top: 1px solid var(--line); margin-bottom: 6px; }
+  .inversion small { display: block; font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mut); }
+  .inversion :global(.inversion__precio) { font: 600 1.2rem var(--serif); color: var(--gold2); }
+  .inversion :global(.inversion__precio.precio--con) { font-size: 1.9rem; }
+  .lateral .boton { width: 100%; }
+  .lateral__datos { display: inline-flex; justify-content: center; align-items: center; min-height: 44px; font-size: 0.8rem; color: var(--mut); text-underline-offset: 4px; }
+  .lateral__datos:hover { color: var(--gold2); }
 
   @media (max-width: 900px) {
-    .ficha__rejilla, .dos { grid-template-columns: 1fr; gap: var(--s-6); }
-    .otros__lista { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 560px) {
-    .temario li { grid-template-columns: 2.25rem 1fr; }
-    .temario__d { grid-column: 2; white-space: normal; }
-    .acciones .btn { width: 100%; }
+    .ficha { grid-template-columns: 1fr; }
+    .lateral { position: static; order: -1; }
+    .docente { grid-template-columns: 96px 1fr; }
   }
 </style>

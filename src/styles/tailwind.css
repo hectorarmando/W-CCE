@@ -7,12 +7,12 @@
 @source "../components/ui";
 
 @theme inline {
-  --color-background: var(--blanco);
-  --color-foreground: var(--negro);
-  --color-muted: var(--bruma);
-  --color-muted-foreground: var(--gris-oscuro);
-  --color-primary: var(--amarillo);
-  --color-primary-foreground: var(--negro);
+  --color-background: var(--card);
+  --color-foreground: var(--ink);
+  --color-muted: var(--bg2);
+  --color-muted-foreground: var(--mut);
+  --color-primary: var(--gold);
+  --color-primary-foreground: #0a0a0a;
   --font-sans: var(--font);
 }
 

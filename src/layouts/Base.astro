@@ -3,9 +3,9 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { sitio, enlaceWhatsapp } from "../data/sitio";
-// Montserrat (alfabeto latino, incluye tildes y ñ) precargada: evita el salto de diseño al cambiar de fuente
-import fuenteLatina from "@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url";
-import fuenteTexto from "@fontsource-variable/inter-tight/files/inter-tight-latin-wght-normal.woff2?url";
+// Cormorant Garamond e Inter (alfabeto latino, incluye tildes y ñ) precargadas: evita el salto de diseño al cambiar de fuente
+import fuenteLatina from "@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-normal.woff2?url";
+import fuenteTexto from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 
 interface Props {
   titulo: string;
@@ -28,7 +28,7 @@ const og = new URL(imagenOg, Astro.site);
     <meta name="description" content={descripcion} />
     <link rel="canonical" href={canonical} />
     {noIndex && <meta name="robots" content="noindex" />}
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#0a0a0a" />
     <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={fuenteLatina} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -54,8 +54,8 @@ const og = new URL(imagenOg, Astro.site);
       .senal-fija {
         position: fixed; right: max(var(--gutter), env(safe-area-inset-right)); bottom: max(1.25rem, env(safe-area-inset-bottom)); z-index: 45;
         display: inline-flex; align-items: center; gap: 0.6rem; min-height: 3.25rem; padding: 0 1.25rem 0 1rem; border-radius: 999px;
-        background: var(--negro); color: var(--blanco); text-decoration: none;
-        font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700; letter-spacing: -0.01em;
+        background: #0a0a0a; color: var(--ink); text-decoration: none; border-radius: 0; border: 1px solid var(--gold);
+        font: 500 0.74rem/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase;
         box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 18px 40px -18px rgba(0, 0, 0, 0.55);
         transition: transform var(--t-entrada) var(--ease), opacity var(--t-entrada) var(--ease), visibility 0s;
       }

@@ -20,6 +20,10 @@ Este repositorio es la **única fuente de verdad** de la web. Todo cambio (dise�
 4. Commit en español, con mensaje descriptivo, y `git push origin main`. Así lo pidió el usuario: las actualizaciones van directo a `main` una vez verificadas.
 5. Si cambian páginas, regenera la vista previa (`python3 scripts/vista-previa.py`) y entrégala al usuario. El archivo no se versiona.
 
+## Estilo vigente
+
+Desde oct-2026 la web usa la estructura y el estilo del prototipo HTML del usuario: negro con dorado, Cormorant Garamond e Inter (`DESIGN.md`). Es una decisión expresa del usuario y manda sobre la paleta y las tipografías de `brand-guidelines` y de `ui-ux-pro-max`; el resto del manual sigue vigente (logo oficial sin redibujar, sigla «CE»).
+
 ## Reglas de contenido
 
 - **Datos institucionales:** no se inventan precios, fechas, cifras, testimonios, docentes, alianzas ni enlaces. Las fuentes están en `docs/contenido-oficial.md` y lo que falta, en `docs/pendientes.md`. Actualiza ese archivo cuando se resuelva algo.

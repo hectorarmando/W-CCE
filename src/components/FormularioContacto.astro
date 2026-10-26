@@ -103,28 +103,28 @@ const id = `f-${modo}`;
   .form__rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5) var(--s-5); }
   .campo { display: grid; gap: 6px; align-content: start; }
   .campo--ancho { grid-column: 1 / -1; }
-  .campo label { font-weight: 700; font-size: var(--t-sm); }
+  .campo label { font-weight: 500; font-size: 0.8rem; letter-spacing: 0.06em; color: var(--ink); }
   .opcional { font-weight: 400; color: var(--gris-oscuro); }
   .campo input:not([type="checkbox"]), .campo select, .campo textarea {
-    width: 100%; min-height: 3.1rem; padding: 0.75rem 0.9rem; border: 1.5px solid var(--gris-claro); border-radius: var(--radio);
-    background: var(--blanco); font-size: 1rem; transition: border-color var(--t-accion) var(--ease), box-shadow var(--t-accion) var(--ease);
+    width: 100%; min-height: 3.1rem; padding: 0.75rem 0.9rem; border: 1px solid var(--line); border-radius: 0;
+    background: var(--bg2); color: var(--ink); font-size: 1rem; font-weight: 300; transition: border-color var(--t-accion) var(--ease), box-shadow var(--t-accion) var(--ease);
   }
   .campo textarea { resize: vertical; min-height: 7rem; }
-  .campo input:hover, .campo select:hover, .campo textarea:hover { border-color: var(--gris); }
-  .campo input:focus, .campo select:focus, .campo textarea:focus { outline: none; border-color: var(--negro); box-shadow: 0 0 0 3px var(--amarillo-60); }
-  .campo [aria-invalid="true"] { border-color: #b3261e !important; }
+  .campo input:hover, .campo select:hover, .campo textarea:hover { border-color: #5a4c2c; }
+  .campo input:focus, .campo select:focus, .campo textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+  .campo [aria-invalid="true"] { border-color: #ff8a80 !important; }
   .campo__ayuda { font-size: var(--t-xs); color: var(--gris-oscuro); }
-  .campo__error { font-size: var(--t-xs); color: #b3261e; font-weight: 600; }
+  .campo__error { font-size: var(--t-xs); color: #ff8a80; font-weight: 600; }
   .campo--check { grid-template-columns: auto 1fr; column-gap: var(--s-3); align-items: start; }
-  .campo--check input { width: 1.5rem; height: 1.5rem; margin-top: 2px; accent-color: var(--negro); }
+  .campo--check input { width: 1.5rem; height: 1.5rem; margin-top: 2px; accent-color: var(--gold); }
   .campo--check label { font-weight: 400; color: var(--gris-oscuro); }
   .campo--check .campo__error { grid-column: 2; }
   .trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .form__pie { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: center; margin-top: var(--s-6); }
   .form__nota { font-size: var(--t-xs); color: var(--gris-oscuro); max-width: 36ch; }
   .form__estado { margin-top: var(--s-5); padding: var(--s-5); border-radius: var(--radio); font-weight: 600; }
-  .form__estado[data-tipo="ok"] { background: var(--amarillo-30); border: 1px solid var(--amarillo); }
-  .form__estado[data-tipo="error"] { background: #fdecea; border: 1px solid #f5c2bd; color: #6b1a14; }
+  .form__estado[data-tipo="ok"] { background: rgba(201, 162, 75, 0.12); border: 1px solid var(--gold); color: var(--ink); }
+  .form__estado[data-tipo="error"] { background: rgba(255, 138, 128, 0.1); border: 1px solid #ff8a80; color: var(--ink); }
   .form__estado a { font-weight: 800; }
   [data-enviar][aria-busy="true"] { cursor: progress; opacity: 0.75; }
   /* Micro-interacciones: mientras se envía, el círculo late; el mensaje de estado entra subiendo */
