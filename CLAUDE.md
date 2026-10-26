@@ -9,6 +9,7 @@ Este repositorio es la **única fuente de verdad** de la web. Todo cambio (dise�
    - `brand-guidelines`: reglas del Manual de Identidad de Marca. Son obligatorias en cualquier pieza.
    - `frontend-design`: proceso de diseño y revisión visual con capturas.
    - `web-artifacts-builder`: herramientas interactivas complejas (calculadoras, quizzes).
+   - `motion` (Motion AI Kit): buenas prácticas de animación en CSS y JS, springs en CSS y revisión de rendimiento (agente `motion-reviewer`). Su servidor MCP gratuito está en `.mcp.json` (`https://mcp.motion.dev`); para usarlo, el entorno debe permitir ese dominio.
 3. Verifica antes de subir:
    - `npx astro check` y `npm run build`, sin errores;
    - `npm run preview` y luego `node tests/e2e.cjs`: todas las verificaciones deben pasar;
