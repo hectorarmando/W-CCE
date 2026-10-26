@@ -10,6 +10,7 @@ Este repositorio es la **única fuente de verdad** de la web. Todo cambio (dise�
    - `frontend-design`: proceso de diseño y revisión visual con capturas.
    - `web-artifacts-builder`: herramientas interactivas complejas (calculadoras, quizzes).
    - `ui-ux-pro-max`: base de datos local de UX (accesibilidad, interacción, tipografía, color, pautas por stack, incluida Astro). Buscador: `python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<consulta>" --domain ux`. Sus sugerencias de estilo y paleta no reemplazan al manual de marca.
+   - Del mismo paquete de UI/UX Pro Max (`.claude/skills/*/ORIGEN.md`): `banner-design` (banners y piezas para redes), `slides` (presentaciones HTML), `design-system` (tokens y componentes), `brand`, `design` y `ui-styling`. **Prioridad:** `brand-guidelines` y estas reglas mandan sobre ellas. No se usan para generar ni redibujar el logo de la CE. Las que llaman servicios de IA externos (`design`: logos e íconos) necesitan claves de API que nunca se versionan.
    - `motion` (Motion AI Kit): buenas prácticas de animación en CSS y JS, springs en CSS y revisión de rendimiento (agente `motion-reviewer`). Su servidor MCP gratuito está en `.mcp.json` (`https://mcp.motion.dev`); para usarlo, el entorno debe permitir ese dominio.
 3. Verifica antes de subir:
    - `npx astro check` y `npm run build`, sin errores;
