@@ -30,14 +30,27 @@ const porNombre = (n: string) => oferta.find((o) => o.nombre === n)!;
 // Escaparate de la portada: la del centro se ve siempre; las laterales, desde tableta
 const escaparate = ["Programa Completo de Excel", "Programa Profesional de Inteligencia Artificial Aplicada", "Academia de Importadores"].map(porNombre);
 const dato = (p: (typeof programas)[number], etiqueta: string) => p.datos.find((d) => d.etiqueta === etiqueta)?.valor;
+const prog = (slug: string) => programas.find((p) => p.slug === slug)!;
+// Lema corto: la primera idea del resumen oficial (hasta los dos puntos)
+const lema = (r: string) => r.split(":")[0].replace(/\.$/, "") + ".";
+const consulta = (nombre: string) => enlaceWhatsapp(`Hola, quiero información sobre ${nombre}.`);
 
-// Servicios: lo que ofrece la CE según el material oficial
-const servicios = [
-  { titulo: "Programas con temario completo", texto: `${programas.length} rutas de varias semanas con clases en vivo y un proyecto final.`, cta: "Ver programas", href: "/programas", imagen: porNombre("Academia de Importadores").imagen!, alt: "" },
-  { titulo: "Cursos por área", texto: `${cursos.length} cursos de datos, IA, marketing, diseño, ingeniería, gestión e idiomas.`, cta: "Ver cursos", href: "/programas", imagen: porNombre("Python").imagen!, alt: "" },
-  { titulo: "Capacitación para empresas", texto: "Programas del catálogo para grupos de colaboradores, con precio corporativo.", cta: "Pedir presupuesto", href: "/empresas", imagen: fotoAuditorio, alt: "Auditorio lleno en un evento de la Cámara de Comercio Exterior" },
-  { titulo: "Workshops presenciales", texto: "Charlas y talleres presenciales, como los de IA generativa y de importación.", cta: "Consultar fechas", href: enlaceWhatsapp("Hola, quiero información sobre los próximos workshops presenciales."), externo: true, imagen: fotoCharla, alt: "Ponente en un workshop de IA generativa" },
-];
+// Bloques de producto a todo el ancho, como los de apple.com: nombre, lema, dos acciones y la portada grande
+const productos = [
+  { p: prog("inteligencia-artificial-aplicada"), titulo: "Inteligencia Artificial Aplicada", tono: "bruma", lema: "Convierte ideas y tareas en soluciones con ChatGPT, Gemini y Claude." },
+  { p: prog("academia-de-importadores"), titulo: "Academia de Importadores", tono: "oscuro" },
+].map((b) => ({ ...b, lema: b.lema ?? lema(b.p.resumen), dato: dato(b.p, "Duración") }));
+
+// Servicios en mosaicos de dos columnas (rejilla de apple.com), alternando claro y oscuro
+const pbi = prog("power-bi"), excel = prog("excel-completo"), analista = prog("analista-excel-ia");
+const mosaicos = [
+  { tono: "oscuro", eyebrow: `Programa · ${dato(pbi, "Duración")}`, titulo: pbi.nombre, lema: lema(pbi.resumen), imagen: pbi.imagen, tipo: "portada", principal: { texto: "Más información", href: `/programas/${pbi.slug}` }, secundaria: { texto: "Consultar", href: consulta(pbi.nombre), externo: true } },
+  { tono: "bruma", eyebrow: "Programa", titulo: "Excel completo", lema: lema(excel.resumen), imagen: excel.imagen, tipo: "portada", principal: { texto: "Más información", href: `/programas/${excel.slug}` }, secundaria: { texto: "Consultar", href: consulta(excel.nombre), externo: true } },
+  { tono: "bruma", eyebrow: `${cursos.length} cursos`, titulo: "Cursos por área", lema: "Datos, IA, marketing, diseño, ingeniería, gestión e idiomas.", imagen: porNombre("Python").imagen, tipo: "portada", principal: { texto: "Ver cursos", href: "/programas" }, secundaria: { texto: "Consultar", href: consulta("los cursos por área"), externo: true } },
+  { tono: "oscuro", eyebrow: `Programa · ${dato(analista, "Duración")}`, titulo: "Analista de Excel Intelligence + IA", lema: "Excel desde cero hasta el análisis con Copilot.", imagen: analista.imagen, tipo: "portada", principal: { texto: "Más información", href: `/programas/${analista.slug}` }, secundaria: { texto: "Consultar", href: consulta(analista.nombre), externo: true } },
+  { tono: "bruma", eyebrow: "Empresas", titulo: "Capacitación para tu equipo", lema: "Programas del catálogo para grupos de colaboradores, con precio corporativo.", imagen: fotoAuditorio, alt: "Auditorio lleno en un evento de la Cámara de Comercio Exterior", tipo: "foto", principal: { texto: "Pedir presupuesto", href: "/empresas" }, secundaria: { texto: "Escríbenos", href: enlaceWhatsapp("Hola, quiero capacitación para mi equipo."), externo: true } },
+  { tono: "oscuro", eyebrow: "Presencial", titulo: "Workshops", lema: "Charlas y talleres presenciales, como los de IA generativa y de importación.", imagen: fotoCharla, alt: "Ponente en un workshop de IA generativa", tipo: "foto", principal: { texto: "Consultar fechas", href: enlaceWhatsapp("Hola, quiero información sobre los próximos workshops presenciales."), externo: true } },
+] as const;
 
 // Por qué elegirnos: solo hechos del material oficial (brochures y sílabos 2026)
 const razones = [
@@ -80,14 +93,14 @@ const preguntas = [
       <p class="hero__marca">Educación continua</p>
       <!-- Lema oficial de la campaña «Educación continua» -->
       <h1 id="hero-titulo" class="hero__titulo">Aprende, certifícate y <span class="acento">avanza.</span></h1>
-      <p class="hero__sub">Programas en vivo de comercio exterior, datos e inteligencia artificial, con proyecto aplicado y certificado digital verificable.</p>
-      <div class="hero__acciones">
+      <p class="hero__sub">Programas en vivo de comercio exterior, datos e inteligencia artificial, con certificado digital verificable.</p>
+      <div class="acciones">
         <a class="btn btn--amarillo hero__cta" href={enlaceWhatsapp(mensajeAsesor)} target="_blank" rel="noopener">
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2l-.5-.3Z"/></svg>
           Escríbenos por WhatsApp
           <span class="sr-only"> (se abre en una pestaña nueva)</span>
         </a>
-        <a class="mas" href="/programas">Ver programas<span class="mas__flecha" aria-hidden="true">›</span></a>
+        <a class="pastilla pastilla--borde" href="/programas">Ver programas</a>
       </div>
     </div>
     <!-- Escaparate: las portadas oficiales son «el producto»; la única sombra del sistema va aquí -->
@@ -100,51 +113,52 @@ const preguntas = [
     </div>
   </section>
 
-  <!-- 2. SERVICIOS (bloque claro): cuatro mosaicos -->
-  <section class="bloque" aria-labelledby="servicios-titulo">
-    <div class="contenedor">
-      <div class="bloque__cabecera" data-aparecer>
-        <h2 id="servicios-titulo" class="bloque__titulo">Lo que ofrecemos</h2>
-        <p class="bloque__lema">Formación práctica para profesionales, estudiantes y empresas.</p>
+  <!-- 2. SERVICIOS. Primero, bloques de producto a todo el ancho (como apple.com) -->
+  <h2 class="sr-only" id="servicios-titulo">Lo que ofrecemos</h2>
+  {productos.map((b) => (
+    <section class={`producto producto--${b.tono} ${b.tono === "oscuro" ? "sobre-oscuro" : ""}`} aria-label={b.titulo}>
+      <div class="producto__texto" data-aparecer>
+        <p class="eyebrow">Programa{b.dato && ` · ${b.dato}`}</p>
+        <h3 class="producto__nombre">{b.titulo}</h3>
+        <p class="producto__lema">{b.lema}</p>
+        <div class="acciones">
+          <a class="pastilla pastilla--llena" href={`/programas/${b.p.slug}`}>Más información<span class="sr-only"> sobre {b.titulo}</span></a>
+          <a class="pastilla pastilla--borde" href={consulta(b.p.nombre)} target="_blank" rel="noopener">Consultar<span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span></a>
+        </div>
+        <Precio id={b.p.slug} class="producto__precio" respaldo="" />
       </div>
-      <ul role="list" class="servicios" data-aparecer-grupo>
-        {servicios.map((s) => (
-          <li>
-            <a class="mosaico" href={s.href} {...(s.externo ? { target: "_blank", rel: "noopener" } : {})}>
-              <span class="mosaico__texto">
-                <span class="mosaico__titulo">{s.titulo}</span>
-                <span class="mosaico__lema">{s.texto}</span>
-                <span class="mas">{s.cta}{s.externo && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}<span class="mas__flecha" aria-hidden="true">›</span></span>
-              </span>
-              <span class="mosaico__imagen"><Picture src={s.imagen} formats={["avif", "webp"]} widths={[480, 800]} sizes="(max-width: 640px) 92vw, 44vw" alt={s.alt} /></span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+      {b.p.imagen && (
+        <div class="producto__imagen" data-aparecer>
+          <Picture src={b.p.imagen} formats={["avif", "webp"]} widths={[480, 800, 1200]} sizes="(max-width: 640px) 90vw, 56rem" alt="" />
+        </div>
+      )}
+    </section>
+  ))}
 
-  <!-- Programas destacados (bloque bruma): tarjetas de vitrina -->
-  <section class="bloque bloque--bruma" aria-labelledby="destacados-titulo">
-    <div class="contenedor">
-      <div class="bloque__cabecera" data-aparecer>
-        <h2 id="destacados-titulo" class="bloque__titulo">Programas destacados</h2>
-        <a class="mas" href="/programas">Ver todo el catálogo<span class="mas__flecha" aria-hidden="true">›</span></a>
-      </div>
-      <ul role="list" class="destacados" data-aparecer-grupo>
-        {programas.map((p) => (
-          <li>
-            <a class="vitrina" href={`/programas/${p.slug}`}>
-              <span class="vitrina__portada">{p.imagen ? <Picture src={p.imagen} formats={["avif", "webp"]} widths={[320, 560]} sizes="(max-width: 640px) 75vw, 18rem" alt="" /> : <span class="vitrina__sin" aria-hidden="true">{p.nombre}</span>}</span>
-              <span class="vitrina__nombre">{p.nombre}</span>
-              <span class="vitrina__dato">{dato(p, "Duración") ?? dato(p, "Modalidad")}</span>
-              <Precio id={p.slug} class="vitrina__precio" respaldo="" />
-              <span class="mas mas--chico">Ver programa<span class="mas__flecha" aria-hidden="true">›</span></span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
+  <!-- Después, la rejilla de mosaicos de dos columnas -->
+  <section class="rejilla" aria-label="Más programas y servicios">
+    <ul role="list" class="mosaicos">
+      {mosaicos.map((m) => (
+        <li class={`mosaico mosaico--${m.tono} mosaico--${m.tipo} ${m.tono === "oscuro" ? "sobre-oscuro" : ""}`}>
+          <div class="mosaico__texto">
+            <p class="eyebrow">{m.eyebrow}</p>
+            <h3 class="mosaico__nombre">{m.titulo}</h3>
+            <p class="mosaico__lema">{m.lema}</p>
+            <div class="acciones">
+              <a class="pastilla pastilla--llena" href={m.principal.href} {...("externo" in m.principal ? { target: "_blank", rel: "noopener" } : {})}>{m.principal.texto}{m.principal.texto === "Más información" && <span class="sr-only"> sobre {m.titulo}</span>}{"externo" in m.principal && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}</a>
+              {"secundaria" in m && <a class="pastilla pastilla--borde" href={m.secundaria.href} {...("externo" in m.secundaria ? { target: "_blank", rel: "noopener" } : {})}>{m.secundaria.texto}{"externo" in m.secundaria && <span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span>}</a>}
+            </div>
+          </div>
+          {m.imagen ? (
+            <div class="mosaico__imagen">
+              <Picture src={m.imagen} formats={["avif", "webp"]} widths={[480, 800]} sizes="(max-width: 760px) 92vw, 46vw" alt={"alt" in m ? m.alt : ""} />
+            </div>
+          ) : (
+            <p class="mosaico__tipografia" aria-hidden="true">Excel<br />+ IA</p>
+          )}
+        </li>
+      ))}
+    </ul>
   </section>
 
   <!-- 3. POR QUÉ ELEGIRNOS (bloque oscuro) -->
@@ -234,8 +248,9 @@ const preguntas = [
 </Base>
 
 <style>
-  /* Dirección «Apple» (DESIGN.md): bloques de ancho completo que alternan claro, bruma y negro; el cambio de color
-     es el separador. Titulares centrados, mucho aire, sin bordes ni sombras salvo la de las portadas. */
+  /* Dirección «Apple» (DESIGN.md), con la marca de la CE. Como apple.com: cabecera delgada, bloques de producto a todo
+     el ancho que alternan claro y oscuro, una rejilla de mosaicos de dos columnas y, en cada bloque, nombre, lema y dos
+     pastillas. Un solo color de acción (amarillo) y una sola sombra (la de las portadas). */
   .bloque { padding-block: clamp(4rem, 2.6rem + 5vw, 7rem); background: var(--blanco); }
   .bloque--bruma { background: var(--bruma); }
   .bloque--oscuro { background: var(--negro); color: var(--blanco); }
@@ -245,24 +260,32 @@ const preguntas = [
   .bloque__lema { font-size: var(--t-lg); line-height: 1.45; color: var(--gris-oscuro); max-width: 40ch; }
   .bloque--oscuro .bloque__lema { color: #d9d9d9; }
 
-  /* Enlace «más ›»: la acción secundaria, sin caja */
-  .mas { display: inline-flex; align-items: center; gap: 0.3em; min-height: 44px; font-family: var(--font-marca); font-weight: 700; font-size: var(--t-base); letter-spacing: -0.01em; text-decoration: none; }
-  /* Como en Apple, el enlace suelto no lleva subrayado; aparece en amarillo al pasar el cursor */
-  a.mas:hover, a:hover .mas { text-decoration: underline; text-decoration-color: var(--amarillo); text-decoration-thickness: 2px; text-underline-offset: 0.3em; }
-  .mas--chico { min-height: 0; margin-top: var(--s-1); font-size: var(--t-sm); }
-  .mas__flecha { display: inline-block; font-size: 1.25em; line-height: 1; transition: transform var(--t-accion) var(--ease); }
-  a:hover > .mas__flecha, a:hover .mas .mas__flecha { transform: translateX(3px); }
+  /* Pastillas de apple.com: chicas, una llena (acción) y otra con borde */
+  .acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); }
+  .pastilla {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 1.35rem; border: 1.5px solid transparent; border-radius: 999px;
+    font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap;
+    transition: background-color var(--t-accion) var(--ease), color var(--t-accion) var(--ease), border-color var(--t-accion) var(--ease);
+  }
+  .pastilla:active { transform: scale(0.97); }
+  .pastilla--llena { background: var(--amarillo); color: var(--negro); }
+  .pastilla--llena:hover { background: #ffd240; }
+  .pastilla--borde { border-color: var(--negro); color: var(--negro); }
+  .pastilla--borde:hover { background: var(--negro); color: var(--blanco); }
+  .sobre-oscuro .pastilla--borde { border-color: var(--blanco); color: var(--blanco); }
+  .sobre-oscuro .pastilla--borde:hover { background: var(--blanco); color: var(--negro); }
+  .eyebrow { font-family: var(--font-marca); font-size: var(--t-sm); font-weight: 700; color: var(--gris-oscuro); }
+  .sobre-oscuro .eyebrow { color: var(--amarillo); }
 
   /* 1. PORTADA */
-  .hero { position: relative; overflow: hidden; padding-bottom: 0; }
+  .hero { position: relative; overflow: hidden; padding-bottom: 0; padding-top: clamp(3rem, 2rem + 4vw, 5.5rem); }
   .hero__centro { position: relative; z-index: 1; display: grid; justify-items: center; text-align: center; }
   .hero__marca { padding: 0.3rem 0.8rem; border-radius: 999px; background: rgba(255, 255, 255, 0.1); font-size: var(--t-xs); font-weight: 700; color: var(--amarillo); }
-  .hero__titulo { margin-top: var(--s-5); font-size: clamp(2.6rem, 1.2rem + 6vw, 6.2rem); letter-spacing: -0.05em; line-height: 0.95; max-width: 11ch; }
+  .hero__titulo { margin-top: var(--s-4); font-size: clamp(2.6rem, 1.4rem + 4.8vw, 5.25rem); letter-spacing: -0.05em; line-height: 0.98; max-width: 12ch; }
   .acento { color: var(--amarillo); }
-  .hero__sub { margin-top: var(--s-5); font-size: var(--t-lg); line-height: 1.5; color: #d9d9d9; max-width: 44ch; }
-  .hero__acciones { display: grid; justify-items: center; gap: var(--s-2); width: 100%; margin-top: var(--s-6); }
-  .hero__cta { --alto: 3.5rem; width: 100%; max-width: 22rem; justify-content: center; gap: var(--s-3); font-size: var(--t-base); }
-  .hero .mas { color: var(--blanco); }
+  .hero__sub { margin-top: var(--s-4); font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem); line-height: 1.35; color: #d9d9d9; max-width: 34ch; }
+  .hero .acciones { margin-top: var(--s-5); }
+  .hero__cta { --alto: 2.75rem; gap: var(--s-2); padding-inline: 1.35rem; }
 
   .escaparate { position: relative; z-index: 1; display: flex; justify-content: center; align-items: flex-end; gap: var(--s-4); width: min(100% - 2 * var(--gutter), 76rem); margin: var(--s-7) auto 0; }
   .escaparate__pieza { flex: none; aspect-ratio: 16 / 9; border-radius: var(--radio-l) var(--radio-l) 0 0; overflow: hidden; box-shadow: 3px 5px 30px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.1); }
@@ -280,35 +303,40 @@ const preguntas = [
     @supports (animation-timeline: scroll()) {
       .abrazo__arco { animation: dial linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
       @keyframes dial { to { transform: rotate(-40deg); } }
-      /* Las portadas suben un poco mientras la portada sale de la vista */
-      .escaparate { animation: subir linear both; animation-timeline: view(); animation-range: entry 0% cover 50%; }
-      @keyframes subir { from { translate: 0 3rem; } }
+      /* Las portadas suben un poco al entrar en la vista, como los productos de apple.com */
+      .escaparate, .producto__imagen, .mosaico__imagen { animation: subir linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+      @keyframes subir { from { translate: 0 2.5rem; } }
     }
   }
 
-  /* 2. SERVICIOS: mosaicos */
-  .servicios { display: grid; gap: var(--s-4); }
-  .mosaico { display: grid; grid-template-rows: auto 1fr; height: 100%; overflow: hidden; border-radius: var(--radio-l); background: var(--bruma); text-decoration: none; text-align: center; }
-  .mosaico:focus-visible { outline-offset: 4px; }
-  .mosaico__texto { display: grid; justify-items: center; gap: var(--s-2); padding: var(--s-7) var(--s-5) var(--s-5); }
-  .mosaico__titulo { font-family: var(--font-marca); font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; max-width: 16ch; text-wrap: balance; }
-  .mosaico__lema { max-width: 34ch; color: var(--gris-oscuro); }
-  .mosaico__imagen { align-self: end; display: block; margin: 0 var(--s-5); aspect-ratio: 16 / 9; border-radius: calc(var(--radio-l) - 8px) calc(var(--radio-l) - 8px) 0 0; overflow: hidden; }
-  .mosaico__imagen :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale var(--t-entrada) var(--ease); }
-  .mosaico:hover .mosaico__imagen :global(img) { scale: 1.03; }
+  /* 2a. Bloques de producto a todo el ancho */
+  .producto { display: grid; justify-items: center; gap: var(--s-6); padding: clamp(3rem, 2rem + 3vw, 4.5rem) var(--gutter) 0; overflow: hidden; text-align: center; background: var(--bruma); }
+  .producto--oscuro { background: var(--negro); color: var(--blanco); }
+  .producto__texto { display: grid; justify-items: center; gap: var(--s-2); }
+  .producto__nombre { font-size: clamp(2.2rem, 1.4rem + 3.4vw, 4rem); letter-spacing: -0.045em; line-height: 1; max-width: 14ch; }
+  .producto__lema { font-size: clamp(1.15rem, 1rem + 0.7vw, 1.6rem); line-height: 1.3; max-width: 30ch; color: var(--gris-oscuro); }
+  .producto--oscuro .producto__lema { color: #d9d9d9; }
+  .producto .acciones { margin-top: var(--s-3); }
+  .producto__precio { font-size: var(--t-sm); color: inherit; }
+  .producto :global(.precio:empty) { display: none; }
+  .producto__imagen { width: min(100%, 56rem); aspect-ratio: 16 / 9; border-radius: var(--radio-l) var(--radio-l) 0 0; overflow: hidden; box-shadow: 3px 5px 30px rgba(0, 0, 0, 0.22); }
+  .producto__imagen :global(img) { width: 100%; height: 100%; object-fit: cover; }
 
-  /* Programas destacados: tarjetas de vitrina */
-  .destacados { display: grid; grid-auto-flow: column; grid-auto-columns: min(18rem, 78vw); gap: var(--s-4); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--s-3); scrollbar-width: thin; position: relative; }
-  .destacados > li { scroll-snap-align: start; }
-  .vitrina { display: grid; align-content: start; gap: var(--s-1); height: 100%; padding: var(--s-4) var(--s-4) var(--s-5); border-radius: var(--radio-l); background: var(--blanco); border: 1px solid rgba(0, 0, 0, 0.08); text-decoration: none; }
-  .vitrina__portada { display: block; margin-bottom: var(--s-3); aspect-ratio: 16 / 9; border-radius: calc(var(--radio-l) - 10px); overflow: hidden; background: var(--negro); }
-  .vitrina__portada :global(img) { width: 100%; height: 100%; object-fit: cover; transition: scale var(--t-entrada) var(--ease); }
-  .vitrina:hover .vitrina__portada :global(img) { scale: 1.03; }
-  .vitrina__sin { display: flex; align-items: flex-end; height: 100%; padding: var(--s-4); color: var(--blanco); font-family: var(--font-marca); font-weight: 800; font-size: var(--t-lg); letter-spacing: -0.03em; line-height: 1.05; }
-  .vitrina__nombre { font-family: var(--font-marca); font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
-  .vitrina__dato { font-size: var(--t-sm); color: var(--gris-oscuro); }
-  .vitrina :global(.precio:empty) { display: none; }
-  .vitrina :global(.precio--con) { font-family: var(--font-marca); }
+  /* 2b. Rejilla de mosaicos (dos columnas desde tableta), con 12 px de separación como en apple.com */
+  .rejilla { padding: 12px; background: var(--blanco); }
+  .mosaicos { display: grid; gap: 12px; }
+  .mosaico { position: relative; display: grid; grid-template-rows: auto 1fr; justify-items: center; overflow: hidden; padding: var(--s-7) var(--s-5) 0; text-align: center; background: var(--bruma); }
+  .mosaico--oscuro { background: var(--negro); color: var(--blanco); }
+  .mosaico__texto { display: grid; justify-items: center; gap: var(--s-2); }
+  .mosaico__nombre { font-size: clamp(1.9rem, 1.3rem + 2vw, 2.75rem); letter-spacing: -0.045em; line-height: 1.02; max-width: 14ch; }
+  .mosaico__lema { max-width: 32ch; font-size: var(--t-lg); line-height: 1.35; color: var(--gris-oscuro); }
+  .mosaico--oscuro .mosaico__lema { color: #d9d9d9; }
+  .mosaico .acciones { margin-top: var(--s-3); }
+  .mosaico__imagen { align-self: end; width: min(100%, 30rem); margin-top: var(--s-6); aspect-ratio: 16 / 9; border-radius: var(--radio-l) var(--radio-l) 0 0; overflow: hidden; }
+  .mosaico--portada .mosaico__imagen { box-shadow: 3px 5px 30px rgba(0, 0, 0, 0.22); }
+  .mosaico--foto .mosaico__imagen { width: calc(100% + 2 * var(--s-5)); max-width: none; margin-inline: calc(-1 * var(--s-5)); border-radius: 0; aspect-ratio: 16 / 10; }
+  .mosaico__imagen :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .mosaico__tipografia { align-self: center; margin-top: var(--s-6); font-family: var(--font-marca); font-weight: 900; font-size: clamp(4rem, 3rem + 4vw, 7rem); letter-spacing: -0.06em; line-height: 0.9; color: var(--amarillo); }
 
   /* 3. POR QUÉ ELEGIRNOS: sin cajas, sobre negro */
   .razones { display: grid; gap: var(--s-6) var(--s-5); }
@@ -355,20 +383,22 @@ const preguntas = [
 
   /* Tableta */
   @media (min-width: 640px) {
-    .servicios, .testimonios { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .testimonios { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .razones { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .hero__acciones { grid-auto-flow: column; align-items: center; gap: var(--s-5); width: auto; }
-    .hero__cta { width: auto; }
     .faq__pregunta { font-size: var(--t-lg); }
     .tarjeta { padding: var(--s-6); }
     .escaparate__pieza--1, .escaparate__pieza--3 { display: block; width: 30%; max-width: 22rem; opacity: 0.85; }
     .escaparate__pieza--2 { width: 46%; }
   }
+  @media (min-width: 760px) {
+    .mosaicos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mosaico { min-height: 36rem; }
+  }
   /* Escritorio */
   @media (min-width: 1000px) {
     .razones, .testimonios { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .destacados { grid-auto-columns: minmax(14rem, 1fr); }
     .contacto { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; }
     .contacto__mapa { position: sticky; top: calc(var(--header-h) + var(--s-4)); }
+    .mosaico { min-height: 40rem; }
   }
 </style>

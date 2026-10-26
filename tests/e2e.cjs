@@ -200,7 +200,10 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   // Inicio: estructura aprobada (portada con un botón, servicios, razones, preguntas, contacto con mapa)
   ok("inicio: ninguna animación decorativa es infinita", (await page.evaluate(() => document.getAnimations().filter((a) => a.effect?.getTiming().iterations === Infinity).length)) === 0);
   ok("inicio: la portada tiene un solo botón (WhatsApp)", (await page.locator(".hero .btn").count()) === 1 && (await page.getAttribute(".hero .btn", "href")).startsWith("https://wa.me/51902148893"));
-  ok("inicio: 4 servicios", (await page.locator(".servicios > li").count()) === 4);
+  ok("inicio: 2 bloques de producto a todo el ancho (estilo apple.com)", (await page.locator("section.producto").count()) === 2);
+  ok("inicio: 6 mosaicos en la rejilla", (await page.locator(".mosaicos > li").count()) === 6);
+  ok("inicio: cada bloque de producto tiene dos pastillas", (await page.locator("section.producto .acciones").evaluateAll((els) => els.every((e) => e.querySelectorAll(".pastilla").length === 2))));
+  ok("inicio: cabecera delgada (56 px)", Math.round((await page.locator(".cabecera").boundingBox()).height) <= 58);
   ok("inicio: 6 razones", (await page.locator(".razones > li").count()) === 6);
   ok("inicio: sin testimonios cargados no se muestra la sección", (await page.locator("#testimonios-titulo").count()) === 0);
   ok("inicio: mapa con los 7 países atendidos", (await page.locator(".mapa__pais--activo").count()) === 7);

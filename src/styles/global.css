@@ -48,7 +48,7 @@
   --t-entrada: 500ms;
   --t-momento: 1400ms;
   --ease-salida: cubic-bezier(0.7, 0, 0.84, 0); /* solo para lo que se va (cambio de página) */
-  --header-h: 5rem;
+  --header-h: 3.5rem; /* barra delgada al estilo apple.com */
   --gris-boton: var(--bruma);
 }
 

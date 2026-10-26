@@ -183,7 +183,7 @@ Educación continua con aire de institución seria y moderna: blanco y negro de 
 
 Como en apple.com, cada página es una pila de **bloques de ancho completo** que alternan blanco, bruma (`surface-soft`) y negro. El cambio de color es el separador: no hay líneas ni sombras entre secciones. Cada bloque se abre con un **titular centrado**, un lema de una línea y, como máximo, dos acciones (una pastilla y un enlace «más ›»). El producto, es decir, las portadas oficiales de los cursos y las fotos, es lo que se luce; la interfaz se retira. Se diseña primero para celular.
 
-Ritmo del inicio: portada negra con escaparate de portadas → servicios en blanco (mosaicos) → programas destacados en bruma (vitrinas) → razones en negro → preguntas en blanco → contacto en bruma → pie negro con el arco.
+Ritmo del inicio, calcado de apple.com: cabecera delgada y translúcida (56 px, con el isologo) → portada negra con escaparate de portadas → dos **bloques de producto** a todo el ancho (IA en bruma, Importadores en negro), cada uno con eyebrow, nombre, lema, dos pastillas («Más información» y «Consultar») y la portada grande → **rejilla de seis mosaicos** de dos columnas con 12 px de separación, alternando bruma y negro → razones en negro → preguntas en blanco → contacto en bruma → llamada final en negro con el arco → **índice del pie en claro**, con letra pequeña y columnas densas.
 
 ## Colors
 
@@ -241,6 +241,9 @@ El arco del abrazo es la única forma orgánica, y sale del isologo.
   - bruma.
 
   El área táctil mínima es de 44 px.
+- **Pastillas de apple.com:** chicas (44 px), en pares: una llena en amarillo (acción) y otra con borde negro (o blanco sobre negro). Se usan en bloques de producto y mosaicos; la pastilla grande con flecha del manual queda para la acción principal de la portada y de la llamada final.
+- **Bloque de producto:** fondo bruma o negro, a todo el ancho; texto centrado arriba y la portada grande abajo, apoyada en el borde y con la sombra del sistema.
+- **Mosaico:** media rejilla (una columna en celular), con el mismo esquema que el bloque de producto pero más chico. Las fotos ocupan todo el ancho del mosaico, sin sombra.
 - **Enlace «más ›»:** la acción secundaria, sin caja ni subrayado. Va en Montserrat 700 con un « › » que avanza 3 px; al pasar el cursor aparece un subrayado amarillo. Ocupa 44 px de alto como mínimo.
 - **Portada (bloque oscuro):** rótulo «Educación continua», titular centrado, lema, un botón amarillo y un enlace «más ›». Debajo va el escaparate: tres portadas en escritorio y una en celular, con la sombra del sistema. El arco del abrazo va detrás.
 - **Mosaico de servicio:** fondo bruma y radio lg, con titular centrado, lema, enlace «más ›» y, abajo, la imagen apoyada en el borde inferior.
