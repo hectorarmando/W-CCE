@@ -4,6 +4,7 @@ import Flecha from "../components/Flecha.astro";
 import Buscador from "../components/Buscador.astro";
 import Precio from "../components/Precio.astro";
 import BannersCampana from "../components/BannersCampana.astro";
+import MapaPaises from "../components/MapaPaises.astro";
 import { sitio, enlaceWhatsapp } from "../data/sitio";
 import { areas, programas, areaPorId } from "../data/programas";
 import { oferta } from "../data/oferta";
@@ -101,6 +102,23 @@ const preguntas = [
         <!-- En pantallas angostas la cabecera no muestra el buscador: aparece aquí -->
         <div class="hero__buscar"><Buscador id="buscar-portada" variante="portada" /></div>
         <p class="hero__nota">Asesoría por WhatsApp <a href={enlaceWhatsapp("Hola, quiero que un asesor me ayude a elegir un programa.")} target="_blank" rel="noopener">{sitio.whatsapp.visible}</a></p>
+      </div>
+    </section>
+
+    <!-- PRESENCIA: mapa de América con los países atendidos. Se elige el país tocando el mapa o con la ubicación -->
+    <section class="seccion seccion--corta presencia" aria-labelledby="presencia-titulo">
+      <div class="contenedor presencia__rejilla">
+        <div class="presencia__texto">
+          <h2 id="presencia-titulo" class="titulo-bloque">Nuestra presencia en América</h2>
+          <p class="presencia__intro">Atendemos a estudiantes y empresas de 7 países. Toca tu país en el mapa o usa tu ubicación: verás los precios en tu moneda y el asesor sabrá desde dónde escribes.</p>
+          <button type="button" class="btn btn--amarillo presencia__ubicar" data-ubicacion>
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor" /><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="2" /><path d="M12 1.5v3.5M12 19v3.5M1.5 12h3.5M19 12h3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+            Usar mi ubicación
+          </button>
+          <p class="presencia__estado" data-ubicacion-estado aria-live="polite"></p>
+          <p class="presencia__actual">País elegido: <strong data-pais-nombre>—</strong></p>
+        </div>
+        <MapaPaises />
       </div>
     </section>
 
@@ -567,6 +585,14 @@ const preguntas = [
     .historia { grid-template-columns: 1fr 7rem; }
     .faq__respuesta { padding-right: 0; }
   }
+  /* PRESENCIA: mapa de América */
+  .presencia__rejilla { display: grid; gap: var(--s-6); align-items: center; }
+  .presencia__intro { margin-top: var(--s-4); max-width: 46ch; color: var(--gris-oscuro); font-size: var(--t-lg); }
+  .presencia__ubicar { margin-top: var(--s-6); gap: var(--s-3); }
+  .presencia__estado { min-height: 1.5em; margin-top: var(--s-3); font-size: var(--t-sm); color: var(--amarillo-60); }
+  .presencia__actual { margin-top: var(--s-2); font-size: var(--t-sm); color: var(--gris-oscuro); }
+  .presencia__actual strong { color: var(--blanco); }
+  @media (min-width: 900px) { .presencia__rejilla { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s-8); } }
 </style>
 
 <script>

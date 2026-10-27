@@ -3,10 +3,11 @@
 // La detección y el cambio de precios los hace src/scripts/precios.ts.
 import { paises } from "../data/paises";
 import { precios } from "../data/precios";
+import { contornos } from "../data/contornos";
 const visibles = paises.filter((p) => p.codigo !== "OT");
 ---
 <!-- Países y precios para el navegador (una vez por página) -->
-<script type="application/json" id="datos-precios" set:html={JSON.stringify({ paises, precios })} />
+<script type="application/json" id="datos-precios" set:html={JSON.stringify({ paises, precios, contornos })} />
 
 <!-- Banderas simplificadas (sin escudos), recortadas en círculo; se reutilizan con <use> -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -34,6 +35,12 @@ const visibles = paises.filter((p) => p.codigo !== "OT");
     <button class="pais-panel__cerrar" value="cerrar" aria-label="Cerrar"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3 3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg></button>
   </form>
   <p class="pais-panel__titulo" id="pais-panel-titulo">Selecciona el país de tu ubicación:</p>
+  <!-- Geolocalización: el navegador pide permiso; la ubicación no sale del dispositivo (se compara con los contornos) -->
+  <button type="button" class="pais-panel__ubicar" data-ubicacion>
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2" fill="currentColor" /><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="2" /><path d="M12 1.5v3.5M12 19v3.5M1.5 12h3.5M19 12h3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+    Usar mi ubicación
+  </button>
+  <p class="pais-panel__estado" data-ubicacion-estado aria-live="polite"></p>
   <ul role="list" class="pais-panel__lista">
     {visibles.map((p) => (
       <li>
@@ -77,6 +84,10 @@ const visibles = paises.filter((p) => p.codigo !== "OT");
   .pais-opcion[aria-pressed="true"] { background: rgba(201, 162, 75, 0.14); color: var(--amarillo); box-shadow: inset 0 0 0 2px var(--amarillo); }
   .pais-panel__otro { min-height: 2.75rem; padding: 0 1.1rem; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, 0.25); background: transparent; color: var(--blanco); font-weight: 600; font-size: var(--t-sm); cursor: pointer; }
   .pais-panel__otro[aria-pressed="true"] { border-color: var(--amarillo); color: var(--amarillo); }
+  .pais-panel__ubicar { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; margin-top: var(--s-5); padding: 0 1.2rem; border: 1.5px solid var(--amarillo); border-radius: 999px; background: transparent; color: var(--amarillo-60); font-family: var(--font-marca); font-weight: 700; font-size: var(--t-sm); cursor: pointer; }
+  .pais-panel__ubicar:hover { background: var(--amarillo); color: var(--negro); }
+  .pais-panel__ubicar[aria-busy="true"] { opacity: 0.7; cursor: progress; }
+  .pais-panel__estado { min-height: 1.4em; margin-top: var(--s-2); font-size: var(--t-xs); color: var(--gris-oscuro); }
   .pais-panel__nota { margin-top: var(--s-4); font-size: var(--t-xs); color: #a6a6a6; }
   @media (max-width: 560px) {
     .pais-panel { padding-inline: var(--s-4); }

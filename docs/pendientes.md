@@ -30,6 +30,7 @@ Esta lista recoge lo que debe confirmar la institución antes de publicar. Nada 
 - Docentes con foto y biografía autorizadas.
 - Cifras (alumnos, países, años), testimonios, alianzas y logos de terceros.
 - Dirección física, horario de atención, correo público y URLs de redes sociales.
+- **Sedes:** el mapa de América del inicio muestra los 7 países atendidos («Nuestra presencia en América»). Si hay sedes físicas, faltan su país, ciudad y dirección para marcarlas en el mapa (`src/components/MapaPaises.astro`).
 - URL del aula virtual. Por eso no hay botón «Aula virtual» en la navegación.
 - Fotografía institucional. El diseño se apoya en tipografía y en el arco de marca; ver «Fotografía» abajo.
 

@@ -244,6 +244,35 @@ const ok = (nombre, cond, detalle = "") => { resultados.push({ nombre, ok: !!con
   ok("precio: formato Perú (S/ 449)", (await page.textContent(".datos__inversion [data-precio]")).trim() === "S/ 449");
   await ctxCo.close();
 
+  // Mapa de América y geolocalización (ubicaciones simuladas; la ubicación no sale del navegador)
+  for (const [lugar, lat, lon, esperado] of [["Bogotá", 4.71, -74.07, "CO"], ["Lima", -12.05, -77.04, "PE"], ["Ciudad de Panamá", 8.98, -79.52, "PA"], ["Madrid", 40.42, -3.7, "OT"]]) {
+    const ctxGeo = await browser.newContext({ viewport: { width: 1440, height: 900 }, geolocation: { latitude: lat, longitude: lon }, permissions: ["geolocation"], timezoneId: "Europe/Madrid" });
+    const pg = await ctxGeo.newPage();
+    await pg.goto(BASE + "/");
+    await pg.click(".presencia [data-ubicacion]");
+    await pg.waitForFunction((c) => document.documentElement.dataset.pais === c, esperado, { timeout: 5000 }).catch(() => {});
+    ok(`geolocalización: ${lugar} → ${esperado}`, (await pg.getAttribute("html", "data-pais")) === esperado);
+    await ctxGeo.close();
+  }
+  page = await ctx.newPage();
+  await page.goto(BASE + "/");
+  ok("mapa: 7 países atendidos para elegir", (await page.locator('.mapa svg [data-elegir-pais]').count()) === 7);
+  await page.click('.mapa svg [data-elegir-pais="AR"]');
+  ok("mapa: tocar Argentina elige ARS", (await page.getAttribute("html", "data-pais")) === "AR" && (await page.textContent("[data-pais-moneda]")) === "ARS");
+  ok("mapa: el país elegido se resalta", (await page.getAttribute('.mapa svg [data-elegir-pais="AR"]', "aria-pressed")) === "true");
+  await page.focus('.mapa svg [data-elegir-pais="MX"]');
+  await page.keyboard.press("Enter");
+  ok("mapa: se elige con el teclado", (await page.getAttribute("html", "data-pais")) === "MX");
+  const ctxNo = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const pgNo = await ctxNo.newPage();
+  await pgNo.goto(BASE + "/");
+  await pgNo.click("[data-pais-boton]");
+  await pgNo.click("[data-pais-panel] [data-ubicacion]");
+  await pgNo.waitForFunction(() => /elige tu país/i.test(document.querySelector("[data-pais-panel] [data-ubicacion-estado]")?.textContent ?? ""), null, { timeout: 15000 }).catch(() => {});
+  const textoNo = await pgNo.textContent("[data-pais-panel] [data-ubicacion-estado]");
+  ok("ubicación sin permiso: explica y deja elegir", /elige tu país/i.test(textoNo), textoNo);
+  await ctxNo.close();
+
   // Teclado: enlace para saltar al contenido
   page = await ctx.newPage();
   await page.goto(BASE + "/");
