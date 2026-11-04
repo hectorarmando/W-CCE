@@ -46,7 +46,9 @@
   .portada { min-height: min(100svh, 62rem); display: flex; flex-direction: column; padding-bottom: clamp(2rem, 1.5rem + 3vw, 4rem); }
   .portada__foto { position: absolute; inset: 0; z-index: -1; }
   .portada__foto img, .portada__foto video { width: 100%; height: 100%; object-fit: cover; object-position: 60% 30%; }
-  .portada__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.25) 50%, rgba(0,0,0,.55) 100%), linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,0) 55%); }
+  /* Efecto oscuro sobre el video: velo general + degradados hacia el texto y hacia abajo */
+  .portada__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.45) 50%, rgba(0,0,0,.7) 100%), linear-gradient(0deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.15) 60%), rgba(0,0,0,.2); }
+  .portada__foto video { filter: brightness(0.82) contrast(1.06) saturate(0.95); }
   .portada .contenedor { display: flex; flex-direction: column; flex: 1; }
   .portada__cuerpo { margin-top: auto; display: grid; gap: 2rem; align-items: end; }
   .portada h1 { margin-top: 0.7rem; font: 800 clamp(2.7rem, 1.1rem + 5.6vw, 6.4rem)/0.9 var(--titulo); letter-spacing: -0.03em; text-transform: uppercase; color: #fff; }
@@ -182,8 +184,8 @@
     <div class="portada__foto">
       <!-- Video de fondo de la portada: sin sonido y en bucle; mientras carga se ve la foto original -->
       <video autoplay muted loop playsinline preload="auto" poster="assets/img/hero.webp" aria-label="Video: colaborador reponiendo una góndola de snacks mientras un camarógrafo lo graba">
-        <source src="assets/video/solucion.webm" type="video/webm">
-        <source src="assets/video/solucion.mp4" type="video/mp4">
+        <source src="assets/video/portada.webm" type="video/webm">
+        <source src="assets/video/portada.mp4" type="video/mp4">
       </video>
     </div>
     <div class="contenedor">
