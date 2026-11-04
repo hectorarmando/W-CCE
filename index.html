@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Academia Digital Operativa · Cámara de Comercio Exterior</title>
+<title>Academia Digital Operativa</title>
 <meta name="description" content="Microlearning andragógico grabado en el lugar de los hechos para retail, tiendas de conveniencia, supermercados, cafeterías y centros logísticos.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,7 +72,7 @@
   /* 3. SOLUCIÓN */
   .solucion { display: grid; gap: 2rem; }
   .solucion__foto { position: relative; overflow: hidden; min-height: 26rem; }
-  .solucion__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .solucion__foto img, .solucion__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 55% center; }
   .solucion__caja { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; padding: 1.3rem 1.4rem; border: 1.5px solid var(--linea); border-radius: 1rem; background: rgba(10, 10, 10, 0.88); }
   .solucion__caja .etiqueta-tarjeta { margin-top: 0.9rem; }
   .pilares { display: grid; gap: 1rem; margin-top: 1.6rem; padding: 0; list-style: none; }
@@ -122,6 +122,7 @@
     .lado-der { display: grid; gap: 1rem; }
   }
   @media (max-width: 520px) {
+    .solucion__foto { min-height: 34rem; }
     .cifra { grid-template-columns: 7rem 1fr; }
     .versus { grid-template-columns: 1fr; border-radius: var(--radio); text-align: center; }
     .versus div:last-child { text-align: center; }
@@ -185,7 +186,11 @@
       <div class="barra"><img src="assets/img/logo-ce.svg" alt="" width="168" height="110"><span class="seccion">Nuestra solución</span></div>
       <div class="solucion">
         <div class="tarjeta solucion__foto">
-          <img src="assets/img/solucion.webp" alt="Grabación de un colaborador en una tienda con una cámara sobre estabilizador" loading="lazy">
+          <!-- Video de fondo: sin sonido, en bucle; con «reducir movimiento» se queda en la primera imagen -->
+          <video class="solucion__video" poster="assets/video/solucion-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="Video: grabación de un colaborador reponiendo productos en una tienda, con una cámara sobre estabilizador">
+            <source src="assets/video/solucion.webm" type="video/webm">
+            <source src="assets/video/solucion.mp4" type="video/mp4">
+          </video>
           <div class="solucion__caja">
             <span class="pastilla">Cero interrupción comercial</span>
             <h3 class="etiqueta-tarjeta">Cine digital ligero de despliegue rápido</h3>
@@ -252,6 +257,13 @@
     </div>
   </section>
 </main>
+
+<script>
+  // Respeta «reducir movimiento»: el video no se reproduce solo
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.querySelectorAll("video[autoplay]").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
+  }
+</script>
 
 </body>
 </html>
