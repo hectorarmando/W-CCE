@@ -95,6 +95,11 @@
   .solucion { display: grid; gap: 2rem; }
   .solucion__foto { position: relative; overflow: hidden; min-height: 26rem; }
   .solucion__foto img, .solucion__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 55% center; }
+  .sonido { position: absolute; top: 1rem; right: 1rem; z-index: 2; display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0 1rem; border: 1.5px solid var(--linea); border-radius: 999px; background: rgba(10, 10, 10, 0.75); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: var(--oro-claro); font: 700 0.85rem var(--titulo); cursor: pointer; transition: background-color 0.2s, color 0.2s; }
+  .sonido:hover { background: var(--oro); color: #111; }
+  .sonido .sonido__on { display: none; }
+  .sonido[aria-pressed="true"] .sonido__on { display: block; }
+  .sonido[aria-pressed="true"] .sonido__off { display: none; }
   .solucion__caja { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; padding: 1.3rem 1.4rem; border: 1.5px solid var(--linea); border-radius: 1rem; background: rgba(10, 10, 10, 0.88); }
   .solucion__caja .etiqueta-tarjeta { margin-top: 0.9rem; }
   .solucion__lado { display: flex; flex-direction: column; }
@@ -240,6 +245,12 @@
             <source src="assets/video/solucion.webm" type="video/webm">
             <source src="assets/video/solucion.mp4" type="video/mp4">
           </video>
+          <!-- Botón de audio: los navegadores solo dejan reproducir con sonido tras una acción de la persona -->
+          <button type="button" class="sonido" data-sonido aria-pressed="false" aria-label="Activar sonido del video">
+            <svg class="sonido__off" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/><path d="m16 9 5 6m0-6-5 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <svg class="sonido__on" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span data-sonido-texto>Activar sonido</span>
+          </button>
           <div class="solucion__caja">
             <span class="pastilla">Cero interrupción comercial</span>
             <h3 class="etiqueta-tarjeta">Cine digital ligero de despliegue rápido</h3>
@@ -308,6 +319,19 @@
 </main>
 
 <script>
+  // Botón de audio del video de «Nuestra solución»
+  document.querySelectorAll("[data-sonido]").forEach((boton) => {
+    const video = boton.parentElement.querySelector("video");
+    const texto = boton.querySelector("[data-sonido-texto]");
+    boton.addEventListener("click", () => {
+      const activar = video.muted;
+      video.muted = !activar;
+      if (activar) { video.volume = 1; video.play().catch(() => {}); }
+      boton.setAttribute("aria-pressed", String(activar));
+      boton.setAttribute("aria-label", activar ? "Apagar sonido del video" : "Activar sonido del video");
+      texto.textContent = activar ? "Apagar sonido" : "Activar sonido";
+    });
+  });
   // Respeta «reducir movimiento»: el video no se reproduce solo
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
     document.querySelectorAll("video[autoplay]").forEach((v) => { v.removeAttribute("autoplay"); v.pause(); });
