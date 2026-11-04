@@ -1,6 +1,6 @@
 # Academia Digital Operativa — Cámara de Comercio Exterior (CE)
 
-Página del portafolio «Academia Digital Operativa», convertida desde el PDF de 4 láminas a HTML: texto real, diseño adaptable a celular y fotos optimizadas (WebP).
+Brochure digital «Academia Digital Operativa», convertida desde el PDF de 4 láminas a HTML: texto real, diseño adaptable a celular y fotos optimizadas (WebP).
 
 ## Estructura
 
