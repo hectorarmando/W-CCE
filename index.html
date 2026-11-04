@@ -112,32 +112,41 @@
   .sla { margin-top: clamp(1rem, 0.6rem + 1vw, 1.4rem); padding: clamp(1.1rem, 0.8rem + 0.8vw, 1.6rem) 1.4rem; border-radius: 0.9rem; background: var(--oro); color: #111; text-align: center; font: 800 clamp(0.62rem, 1.9cqi, 1.02rem)/1.3 var(--titulo); text-transform: uppercase; }
 
   /* 4. ECOSISTEMA & CONTACTO */
-  .ecosistema { display: grid; gap: 1.5rem; margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
-  .pasos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; padding: 0; list-style: none; }
-  .paso { overflow: hidden; }
+  .titulo--fino { font: 500 clamp(2rem, 0.9rem + 3.2vw, 4.2rem)/1 var(--texto); letter-spacing: -0.045em; }
+  .titulo--fino strong { font-weight: 700; }
+  .lamina--ancha > .contenedor > .pastilla { font-size: clamp(0.74rem, 0.62rem + 0.35vw, 0.95rem); padding: 0.5rem 1.3rem; }
+  .ecosistema { display: grid; gap: clamp(1rem, 0.6rem + 1vw, 1.6rem); margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+  .pasos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1rem, 0.6rem + 1vw, 1.6rem); padding: 0; list-style: none; }
+  .paso { overflow: hidden; background: linear-gradient(180deg, #121110 0%, #121110 70%, #3a321f 100%); }
   .paso img { width: 100%; aspect-ratio: 1 / 0.98; object-fit: cover; }
-  .paso div { padding: 0.9rem 1rem 1.1rem; }
-  .paso .etiqueta-tarjeta { font-size: 0.98rem; }
-  .paso .texto-tarjeta { font-size: 0.92rem; }
-  .certificacion { grid-column: 1 / -1; padding: 1.6rem 1.8rem 1.8rem; }
-  .certificacion img { width: min(100%, 26rem); margin: 0 auto 1.4rem; }
-  .demo { display: flex; flex-direction: column; padding: clamp(1.4rem, 1rem + 2vw, 2.6rem); border-radius: 2rem; background: linear-gradient(160deg, #f3e3b0 0%, #d9bf72 55%, #c7a457 100%); color: #111; }
+  .paso div { padding: clamp(0.9rem, 0.7rem + 0.6vw, 1.3rem) clamp(1rem, 0.7rem + 0.8vw, 1.5rem) clamp(1.1rem, 0.8rem + 0.8vw, 1.6rem); }
+  .paso .etiqueta-tarjeta { font-size: clamp(0.98rem, 0.8rem + 0.5vw, 1.3rem); }
+  .paso .texto-tarjeta { font-size: clamp(0.92rem, 0.8rem + 0.3vw, 1.08rem); }
+  .certificacion { padding: clamp(1.6rem, 1rem + 1.5vw, 2.6rem) clamp(1.6rem, 1rem + 2vw, 3rem); }
+  .certificacion img { width: min(100%, 24rem); margin: 0 auto 1.4rem; }
+  .certificacion .etiqueta-tarjeta, .lms .etiqueta-tarjeta { font-size: clamp(1.05rem, 0.85rem + 0.6vw, 1.45rem); }
+  .certificacion .texto-tarjeta, .lms .texto-tarjeta { font-size: clamp(0.92rem, 0.8rem + 0.3vw, 1.1rem); }
+  .demo { display: flex; flex-direction: column; flex: 1; padding: clamp(1.6rem, 1rem + 2.4vw, 3.2rem); border-radius: 2rem; background: linear-gradient(160deg, #f3e3b0 0%, #d9bf72 55%, #c7a457 100%); color: #111; }
   .demo .pastilla { align-self: flex-start; background: #0d0d0d; color: var(--oro-claro); text-transform: none; }
-  .demo h2 { margin-top: 1rem; font: 500 clamp(2rem, 1.3rem + 2.6vw, 3.3rem)/0.98 var(--titulo); letter-spacing: -0.045em; text-transform: uppercase; }
+  .demo .pastilla { font-size: clamp(0.72rem, 0.62rem + 0.3vw, 0.9rem); padding: 0.5rem 1.2rem; }
+  .demo h2 { margin-top: 1.2rem; font: 400 clamp(2.2rem, 1.2rem + 3.2vw, 4.4rem)/0.95 var(--titulo); letter-spacing: -0.045em; text-transform: uppercase; }
+  .demo { container-type: inline-size; }
   .demo h2 strong { font-weight: 900; }
-  .demo > p { margin-top: 0.9rem; max-width: 34rem; font-size: 1.02rem; line-height: 1.35; }
-  .polaroids { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; margin: 1.8rem 0 2rem; padding: 0.5rem; list-style: none; }
-  .polaroids li { padding: 0.55rem 0.55rem 1.6rem; background: #fff; box-shadow: 0 18px 30px -14px rgba(0, 0, 0, 0.55); transition: transform 0.4s cubic-bezier(.16,1,.3,1); }
-  .polaroids li:nth-child(1) { transform: rotate(-3deg); } .polaroids li:nth-child(2) { transform: rotate(4deg) translateY(-0.4rem); }
-  .polaroids li:nth-child(3) { transform: rotate(2deg) translateY(-1.4rem); } .polaroids li:nth-child(4) { transform: rotate(-4deg) translateY(-0.6rem); }
-  .polaroids li:hover { transform: rotate(0) scale(1.04); z-index: 1; }
-  .polaroids img { width: 100%; aspect-ratio: 1.42; object-fit: cover; }
-  .contacto { margin-top: auto; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 1.2rem; padding: 1.1rem; border-radius: 1.2rem; background: #0d0d0d; color: var(--marfil); text-decoration: none; }
+  .demo h2 .linea { display: block; white-space: nowrap; }
+  .demo h2 { font-size: min(9.6cqi, 4.6rem) !important; }
+  .demo > p { margin-top: 1rem; max-width: 38rem; font-size: clamp(1rem, 0.85rem + 0.4vw, 1.2rem); line-height: 1.35; }
+  .polaroids { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; margin: clamp(1.6rem, 1rem + 2vw, 2.8rem) 0 clamp(1.6rem, 1rem + 2vw, 2.8rem); padding: 0.5rem 0.5rem; list-style: none; flex: 1; align-content: center; margin-inline: -0.5rem; }
+  .polaroids li { position: relative; padding: clamp(0.5rem, 0.3rem + 0.5vw, 0.8rem) clamp(0.5rem, 0.3rem + 0.5vw, 0.8rem) clamp(1.4rem, 0.8rem + 1.6vw, 2.6rem); background: #fff; box-shadow: 0 18px 30px -14px rgba(0, 0, 0, 0.55); transition: transform 0.4s cubic-bezier(.16,1,.3,1); }
+  .polaroids li:nth-child(1) { transform: rotate(-3deg); z-index: 1; } .polaroids li:nth-child(2) { transform: rotate(4deg) translate(-4%, -4%); }
+  .polaroids li:nth-child(3) { transform: rotate(3deg) translate(6%, -22%); z-index: 2; } .polaroids li:nth-child(4) { transform: rotate(-5deg) translate(-2%, -14%); z-index: 3; }
+  .polaroids li:hover { transform: rotate(0) scale(1.04); z-index: 5; }
+  .polaroids img { width: 100%; aspect-ratio: 1.15; object-fit: cover; }
+  .contacto { margin-top: auto; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: clamp(1rem, 0.6rem + 1vw, 1.6rem); padding: clamp(1rem, 0.7rem + 1vw, 1.6rem); border-radius: 1.2rem; background: #0d0d0d; color: var(--marfil); text-decoration: none; }
   .contacto img { width: clamp(6rem, 5rem + 3vw, 8.5rem); height: auto; aspect-ratio: 1; align-self: center; border-radius: 0.5rem; background: #fff; padding: 0.35rem; }
-  .contacto b { display: block; font: 800 clamp(1rem, 0.8rem + 0.6vw, 1.3rem)/1.1 var(--titulo); color: var(--oro); text-transform: uppercase; }
-  .contacto strong { display: block; font: 800 clamp(1.4rem, 1rem + 1.2vw, 2rem)/1.15 var(--titulo); letter-spacing: -0.02em; }
-  .contacto a { display: inline-block; margin-top: 0.15rem; font-size: clamp(0.72rem, 0.65rem + 0.25vw, 0.9rem); color: #e9e4d8; word-break: break-all; text-decoration-color: var(--oro); }
-  .lms { padding: 1.5rem 1.8rem; }
+  .contacto b { display: block; font: 800 clamp(1rem, 0.75rem + 0.8vw, 1.55rem)/1.1 var(--titulo); color: var(--oro); text-transform: uppercase; }
+  .contacto strong { display: block; font: 800 clamp(1.4rem, 0.9rem + 1.6vw, 2.4rem)/1.15 var(--titulo); letter-spacing: -0.02em; }
+  .contacto a { display: inline-block; margin-top: 0.15rem; font-size: clamp(0.72rem, 0.6rem + 0.35vw, 1rem); color: #e9e4d8; overflow-wrap: anywhere; text-decoration-color: var(--oro); }
+  .lms { padding: clamp(1.4rem, 1rem + 1vw, 2rem) clamp(1.6rem, 1rem + 2vw, 3rem); }
 
   @media (min-width: 640px) {
     .sectores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -148,9 +157,9 @@
     .realidad__cabeza { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 3rem; }
     .sectores { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .solucion { grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.05fr); align-items: stretch; gap: clamp(2rem, 1rem + 2vw, 3rem); }
-    .ecosistema { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
-    .lado-izq { display: grid; gap: 1rem; }
-    .lado-der { display: grid; gap: 1rem; }
+    .ecosistema { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; }
+    .lado-izq { display: flex; flex-direction: column; gap: clamp(1rem, 0.6rem + 1vw, 1.6rem); }
+    .lado-der { display: flex; flex-direction: column; gap: clamp(1rem, 0.6rem + 1vw, 1.6rem); }
   }
   @media (max-width: 520px) {
     .solucion__foto { min-height: 34rem; }
@@ -245,11 +254,11 @@
   </section>
 
   <!-- 4. ECOSISTEMA & CONTACTO -->
-  <section class="lamina" aria-labelledby="t4">
+  <section class="lamina lamina--ancha" aria-labelledby="t4">
     <div class="contenedor">
       <div class="barra"><img src="assets/img/logo-ce.svg" alt="" width="168" height="110"><span class="seccion">Ecosistema &amp; contacto</span></div>
       <span class="pastilla">Just - in - time learning</span>
-      <h2 id="t4" class="titulo">El Loop Phygital QR en <strong class="oro">60 segundos</strong></h2>
+      <h2 id="t4" class="titulo titulo--fino">El Loop Phygital QR en <strong class="oro">60 segundos</strong></h2>
       <div class="ecosistema">
         <div class="lado-izq">
           <ol class="pasos">
@@ -263,7 +272,7 @@
         <div class="lado-der">
           <div class="demo">
             <span class="pastilla">+7 años de respaldo regional</span>
-            <h2>Agenda tu <strong>demo<br>piloto hoy</strong></h2>
+            <h2><span class="linea">Agenda tu <strong>demo</strong></span> <span class="linea"><strong>piloto hoy</strong></span></h2>
             <p>Retén hasta un 82% más a tu nuevo talento y estandariza tus sucursales en tiempo récord.</p>
             <ul class="polaroids" aria-label="Nuestro equipo en grabación">
               <li><img src="assets/img/equipo1.webp" alt="Camarógrafa sonriente con una cámara profesional" loading="lazy"></li>
