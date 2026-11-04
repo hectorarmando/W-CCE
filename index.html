@@ -45,7 +45,7 @@
   /* 1. PORTADA */
   .portada { min-height: min(100svh, 62rem); display: flex; flex-direction: column; padding-bottom: clamp(2rem, 1.5rem + 3vw, 4rem); }
   .portada__foto { position: absolute; inset: 0; z-index: -1; }
-  .portada__foto img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 30%; }
+  .portada__foto img, .portada__foto video { width: 100%; height: 100%; object-fit: cover; object-position: 60% 30%; }
   .portada__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.25) 50%, rgba(0,0,0,.55) 100%), linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,0) 55%); }
   .portada .contenedor { display: flex; flex-direction: column; flex: 1; }
   .portada__cuerpo { margin-top: auto; display: grid; gap: 2rem; align-items: end; }
@@ -179,7 +179,13 @@
 <main>
   <!-- 1. PORTADA -->
   <section class="lamina portada" aria-labelledby="t1">
-    <div class="portada__foto"><img src="assets/img/hero.webp" alt="Colaborador ordenando una góndola de snacks mientras un camarógrafo lo graba" fetchpriority="high"></div>
+    <div class="portada__foto">
+      <!-- Video de fondo de la portada: sin sonido y en bucle; mientras carga se ve la foto original -->
+      <video autoplay muted loop playsinline preload="auto" poster="assets/img/hero.webp" aria-label="Video: colaborador reponiendo una góndola de snacks mientras un camarógrafo lo graba">
+        <source src="assets/video/solucion.webm" type="video/webm">
+        <source src="assets/video/solucion.mp4" type="video/mp4">
+      </video>
+    </div>
     <div class="contenedor">
       <div class="barra"><img src="assets/img/logo-ce.svg" alt="Cámara de Comercio Exterior" width="168" height="110"><span class="seccion">Portafolio</span></div>
       <div class="portada__cuerpo">
