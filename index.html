@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Academia Digital Operativa · Cámara de Comercio Exterior</title>
+<meta name="description" content="Microlearning andragógico grabado en el lugar de los hechos para retail, tiendas de conveniencia, supermercados, cafeterías y centros logísticos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* Academia Digital Operativa — versión HTML del portafolio en PDF (4 láminas). Negro y dorado. */
+  :root {
+    --negro: #0a0a0a; --tarjeta: #111111; --linea: rgba(217, 191, 114, 0.55);
+    --oro: #d9bf72; --oro-claro: #ecd9a0; --oro-oscuro: #b8913f; --marfil: #f4efe3; --gris: #b9b2a2;
+    --degradado: linear-gradient(100deg, #f6e7b6 0%, #d9bf72 45%, #b8913f 100%);
+    --titulo: "Montserrat", system-ui, sans-serif; --texto: "Inter Tight", system-ui, sans-serif;
+    --ancho: 76rem; --margen: clamp(1rem, 4vw, 3.5rem); --radio: 1.25rem;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--negro); color: var(--marfil); font: 400 1rem/1.5 var(--texto); -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+  h1, h2, h3, p { margin: 0; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--oro-claro); outline-offset: 3px; }
+  .contenedor { width: 100%; max-width: var(--ancho); margin-inline: auto; padding-inline: var(--margen); }
+  .oro { background: var(--degradado); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  /* Elementos comunes de las láminas */
+  .lamina { position: relative; padding-block: clamp(2rem, 1.5rem + 2vw, 3rem) clamp(3rem, 2rem + 4vw, 5.5rem); overflow: hidden; }
+  .lamina + .lamina { border-top: 1px solid rgba(217, 191, 114, 0.15); }
+  .barra { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+  .barra img { width: clamp(6rem, 5rem + 3vw, 8.5rem); height: auto; }
+  .seccion { font: 700 0.72rem/1 var(--titulo); letter-spacing: 0.24em; text-transform: uppercase; padding-bottom: 0.45rem; border-bottom: 3px solid var(--oro); }
+  .pastilla { display: inline-block; padding: 0.45rem 1.1rem; border-radius: 999px; background: var(--oro); color: #111; font: 700 0.74rem/1.2 var(--titulo); letter-spacing: 0.02em; text-transform: uppercase; }
+  .titulo { font: 500 clamp(1.9rem, 1.2rem + 2.8vw, 3.4rem)/1.05 var(--titulo); letter-spacing: -0.035em; margin-top: 0.8rem; }
+  .titulo strong { font-weight: 800; }
+  .tarjeta { border: 1.5px solid var(--linea); border-radius: var(--radio); background: linear-gradient(180deg, #0d0d0d, #17161a); }
+  .etiqueta-tarjeta { font: 800 clamp(1rem, 0.9rem + 0.4vw, 1.2rem)/1.15 var(--titulo); color: var(--oro); text-transform: uppercase; letter-spacing: 0.01em; }
+  .texto-tarjeta { margin-top: 0.35rem; color: #e9e4d8; font-size: 0.98rem; line-height: 1.4; }
+
+  /* 1. PORTADA */
+  .portada { min-height: min(100svh, 62rem); display: flex; flex-direction: column; padding-bottom: clamp(2rem, 1.5rem + 3vw, 4rem); }
+  .portada__foto { position: absolute; inset: 0; z-index: -1; }
+  .portada__foto img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 30%; }
+  .portada__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.25) 50%, rgba(0,0,0,.55) 100%), linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,0) 55%); }
+  .portada .contenedor { display: flex; flex-direction: column; flex: 1; }
+  .portada__cuerpo { margin-top: auto; display: grid; gap: 2rem; align-items: end; }
+  .portada h1 { margin-top: 0.8rem; font: 900 clamp(2.7rem, 1.2rem + 5.4vw, 6.2rem)/0.88 var(--titulo); letter-spacing: -0.055em; text-transform: uppercase; }
+  .portada h1 span { display: block; }
+  .portada__sub { margin-top: 1.2rem; max-width: 40rem; padding-left: 0.8rem; border-left: 3px solid var(--oro); font-size: clamp(1rem, 0.9rem + 0.3vw, 1.15rem); line-height: 1.35; }
+  .cifras { display: grid; padding: 0.4rem 1.6rem; border: 1.5px solid var(--linea); border-radius: var(--radio); background: rgba(8, 8, 8, 0.62); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .cifra { display: grid; grid-template-columns: 9.5rem 1fr; align-items: center; gap: 1rem; padding: 1rem 0; }
+  .cifra + .cifra { border-top: 1px solid rgba(217, 191, 114, 0.35); }
+  .cifra b { font: 800 clamp(2.2rem, 1.8rem + 1.4vw, 3.1rem)/1 var(--titulo); letter-spacing: -0.04em; text-align: center; }
+  .cifra span { font: 800 0.86rem/1.2 var(--titulo); text-transform: uppercase; }
+
+  /* 2. REALIDAD */
+  .realidad__cabeza { display: grid; gap: 2rem; align-items: center; }
+  .versus { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; padding: 1.4rem clamp(1rem, 0.5rem + 2vw, 2.2rem); border: 1.5px solid var(--linea); border-radius: 999px; }
+  .versus div:last-child { text-align: right; }
+  .versus b { display: block; font: 800 clamp(1.4rem, 1rem + 1.4vw, 2.3rem)/1 var(--titulo); letter-spacing: -0.03em; }
+  .versus small { display: block; margin-top: 0.3rem; font: 600 0.8rem/1.2 var(--titulo); text-transform: uppercase; }
+  .versus i { display: grid; place-items: center; width: 3.2rem; height: 3.2rem; border-radius: 50%; background: var(--oro); color: #111; font: 800 1.15rem var(--titulo); font-style: normal; }
+  .sectores { display: grid; gap: 1.2rem; margin-top: clamp(2rem, 1.5rem + 2vw, 3rem); padding: 0; list-style: none; }
+  .sector { display: flex; flex-direction: column; overflow: hidden; }
+  .sector .pastilla { align-self: stretch; margin: 1rem 1rem 0.9rem; text-align: center; font-size: 0.78rem; }
+  .sector img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .sector__texto { padding: 1rem 1.1rem 1.3rem; }
+
+  /* 3. SOLUCIÓN */
+  .solucion { display: grid; gap: 2rem; }
+  .solucion__foto { position: relative; overflow: hidden; min-height: 26rem; }
+  .solucion__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .solucion__caja { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; padding: 1.3rem 1.4rem; border: 1.5px solid var(--linea); border-radius: 1rem; background: rgba(10, 10, 10, 0.88); }
+  .solucion__caja .etiqueta-tarjeta { margin-top: 0.9rem; }
+  .pilares { display: grid; gap: 1rem; margin-top: 1.6rem; padding: 0; list-style: none; }
+  .pilar { padding: 1.6rem 1.6rem 2rem; }
+  .pilar b { display: block; font: 800 clamp(2.2rem, 1.8rem + 1.2vw, 2.8rem)/1 var(--titulo); letter-spacing: -0.04em; margin-bottom: 0.4rem; }
+  .sla { margin-top: 1rem; padding: 1.15rem 1.4rem; border-radius: 0.9rem; background: var(--oro); color: #111; text-align: center; font: 800 0.86rem/1.3 var(--titulo); text-transform: uppercase; }
+
+  /* 4. ECOSISTEMA & CONTACTO */
+  .ecosistema { display: grid; gap: 1.5rem; margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+  .pasos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; padding: 0; list-style: none; }
+  .paso { overflow: hidden; }
+  .paso img { width: 100%; aspect-ratio: 1 / 0.98; object-fit: cover; }
+  .paso div { padding: 0.9rem 1rem 1.1rem; }
+  .paso .etiqueta-tarjeta { font-size: 0.98rem; }
+  .paso .texto-tarjeta { font-size: 0.92rem; }
+  .certificacion { grid-column: 1 / -1; padding: 1.6rem 1.8rem 1.8rem; }
+  .certificacion img { width: min(100%, 26rem); margin: 0 auto 1.4rem; }
+  .demo { display: flex; flex-direction: column; padding: clamp(1.4rem, 1rem + 2vw, 2.6rem); border-radius: 2rem; background: linear-gradient(160deg, #f3e3b0 0%, #d9bf72 55%, #c7a457 100%); color: #111; }
+  .demo .pastilla { align-self: flex-start; background: #0d0d0d; color: var(--oro-claro); text-transform: none; }
+  .demo h2 { margin-top: 1rem; font: 500 clamp(2rem, 1.3rem + 2.6vw, 3.3rem)/0.98 var(--titulo); letter-spacing: -0.045em; text-transform: uppercase; }
+  .demo h2 strong { font-weight: 900; }
+  .demo > p { margin-top: 0.9rem; max-width: 34rem; font-size: 1.02rem; line-height: 1.35; }
+  .polaroids { position: relative; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; margin: 1.8rem 0 2rem; padding: 0.5rem; list-style: none; }
+  .polaroids li { padding: 0.55rem 0.55rem 1.6rem; background: #fff; box-shadow: 0 18px 30px -14px rgba(0, 0, 0, 0.55); transition: transform 0.4s cubic-bezier(.16,1,.3,1); }
+  .polaroids li:nth-child(1) { transform: rotate(-3deg); } .polaroids li:nth-child(2) { transform: rotate(4deg) translateY(-0.4rem); }
+  .polaroids li:nth-child(3) { transform: rotate(2deg) translateY(-1.4rem); } .polaroids li:nth-child(4) { transform: rotate(-4deg) translateY(-0.6rem); }
+  .polaroids li:hover { transform: rotate(0) scale(1.04); z-index: 1; }
+  .polaroids img { width: 100%; aspect-ratio: 1.42; object-fit: cover; }
+  .contacto { margin-top: auto; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 1.2rem; padding: 1.1rem; border-radius: 1.2rem; background: #0d0d0d; color: var(--marfil); text-decoration: none; }
+  .contacto img { width: clamp(6rem, 5rem + 3vw, 8.5rem); height: auto; aspect-ratio: 1; align-self: center; border-radius: 0.5rem; background: #fff; padding: 0.35rem; }
+  .contacto b { display: block; font: 800 clamp(1rem, 0.8rem + 0.6vw, 1.3rem)/1.1 var(--titulo); color: var(--oro); text-transform: uppercase; }
+  .contacto strong { display: block; font: 800 clamp(1.4rem, 1rem + 1.2vw, 2rem)/1.15 var(--titulo); letter-spacing: -0.02em; }
+  .contacto a { display: inline-block; margin-top: 0.15rem; font-size: clamp(0.72rem, 0.65rem + 0.25vw, 0.9rem); color: #e9e4d8; word-break: break-all; text-decoration-color: var(--oro); }
+  .lms { padding: 1.5rem 1.8rem; }
+
+  @media (min-width: 640px) {
+    .sectores { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pilares { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 1000px) {
+    .portada__cuerpo { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+    .realidad__cabeza { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+    .sectores { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .solucion { grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); align-items: stretch; }
+    .ecosistema { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+    .lado-izq { display: grid; gap: 1rem; }
+    .lado-der { display: grid; gap: 1rem; }
+  }
+  @media (max-width: 520px) {
+    .cifra { grid-template-columns: 7rem 1fr; }
+    .versus { grid-template-columns: 1fr; border-radius: var(--radio); text-align: center; }
+    .versus div:last-child { text-align: center; }
+    .versus i { margin-inline: auto; }
+    .pasos { grid-template-columns: 1fr; }
+    .contacto { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .polaroids li { transition: none; } }
+</style>
+</head>
+<body>
+
+<main>
+  <!-- 1. PORTADA -->
+  <section class="lamina portada" aria-labelledby="t1">
+    <div class="portada__foto"><img src="assets/img/hero.webp" alt="Colaborador ordenando una góndola de snacks mientras un camarógrafo lo graba" fetchpriority="high"></div>
+    <div class="contenedor">
+      <div class="barra"><img src="assets/img/logo-ce.svg" alt="Cámara de Comercio Exterior" width="168" height="110"><span class="seccion">Portafolio</span></div>
+      <div class="portada__cuerpo">
+        <div>
+          <span class="pastilla">Un video vale más que mil manuales</span>
+          <h1 id="t1"><span>Academia</span><span class="oro">Digital</span><span class="oro">Operativa</span></h1>
+          <p class="portada__sub">Microlearning andragógico grabado ‘en el lugar de los hechos’ para retail, tiendas de conveniencia, supermercados, cafeterías, centros logísticos, etc.</p>
+        </div>
+        <ul class="cifras" role="list" style="list-style:none;margin:0">
+          <li class="cifra"><b class="oro">-60%</b><span>Tiempo de entrenamiento operativo</span></li>
+          <li class="cifra"><b class="oro">95%</b><span>Retención visual vs. 10% en manuales PDF</span></li>
+          <li class="cifra"><b class="oro">0 min</b><span>De interrupción en tu tienda, local, planta o almacén</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. REALIDAD -->
+  <section class="lamina" aria-labelledby="t2">
+    <div class="contenedor">
+      <div class="barra"><img src="assets/img/logo-ce.svg" alt="" width="168" height="110"><span class="seccion">Realidad</span></div>
+      <div class="realidad__cabeza">
+        <div>
+          <span class="pastilla">Los primeros 90 días</span>
+          <h2 id="t2" class="titulo">El costo de entrenar con <strong class="oro">PDFS o videos que pocos entienden</strong></h2>
+        </div>
+        <div class="versus" role="group" aria-label="PDF frente a video">
+          <div><b class="oro">10% PDF</b><small>60% errores operativos</small></div>
+          <i aria-hidden="true">VS</i>
+          <div><b class="oro">95% VIDEO</b><small>60,000X más rápido</small></div>
+        </div>
+      </div>
+      <ul class="sectores">
+        <li class="tarjeta sector"><span class="pastilla">Tiendas de conveniencia</span><img src="assets/img/tiendas.webp" alt="Colaborador reponiendo productos en una tienda de conveniencia" loading="lazy"><div class="sector__texto"><h3 class="etiqueta-tarjeta">Errores en góndola</h3><p class="texto-tarjeta">Productos mal ubicados y pérdidas por desconocer la rotación FEFO/FIFO.</p></div></li>
+        <li class="tarjeta sector"><span class="pastilla">Cafeterías - Alimentos</span><img src="assets/img/cafeterias.webp" alt="Barista preparando café con derrames en la barra" loading="lazy"><div class="sector__texto"><h3 class="etiqueta-tarjeta">Mermas en recetas</h3><p class="texto-tarjeta">Fallas en preparación y quiebres de calidad entre el turno o tiendas.</p></div></li>
+        <li class="tarjeta sector"><span class="pastilla">Retail y supermercados</span><img src="assets/img/retail.webp" alt="Larga cola de clientes frente a las cajas de un supermercado" loading="lazy"><div class="sector__texto"><h3 class="etiqueta-tarjeta">Colas en caja o atención al cliente</h3><p class="texto-tarjeta">El personal se enfoca en enseñar en lugar de atender.</p></div></li>
+        <li class="tarjeta sector"><span class="pastilla">Logística y almacenes</span><img src="assets/img/logistica.webp" alt="Montacargas junto a cajas frágiles caídas y rotas en un almacén" loading="lazy"><div class="sector__texto"><h3 class="etiqueta-tarjeta">Daños y accidentes</h3><p class="texto-tarjeta">Carga frágil destruida y 3x más riesgo laboral por mal uso de maquinaria o equipos.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. NUESTRA SOLUCIÓN -->
+  <section class="lamina" aria-labelledby="t3">
+    <div class="contenedor">
+      <div class="barra"><img src="assets/img/logo-ce.svg" alt="" width="168" height="110"><span class="seccion">Nuestra solución</span></div>
+      <div class="solucion">
+        <div class="tarjeta solucion__foto">
+          <img src="assets/img/solucion.webp" alt="Grabación de un colaborador en una tienda con una cámara sobre estabilizador" loading="lazy">
+          <div class="solucion__caja">
+            <span class="pastilla">Cero interrupción comercial</span>
+            <h3 class="etiqueta-tarjeta">Cine digital ligero de despliegue rápido</h3>
+            <p class="texto-tarjeta">Grabamos con unidades 4K compactas y estabilizadores directamente en tus pasillos, cocinas o almacenes sin bloquear clientes ni detener tu flujo.</p>
+          </div>
+        </div>
+        <div>
+          <span class="pastilla">Se acabó lo “referencial”</span>
+          <h2 id="t3" class="titulo">Del manual al <strong class="oro">video en cancha</strong></h2>
+          <ol class="pilares">
+            <li class="tarjeta pilar"><b class="oro" aria-hidden="true">01</b><h3 class="etiqueta-tarjeta">Hiper-contextualizado</h3><p class="texto-tarjeta">Tus propias sedes, tus máquinas, tu POS y tus activos reales paso a paso.</p></li>
+            <li class="tarjeta pilar"><b class="oro" aria-hidden="true">02</b><h3 class="etiqueta-tarjeta">Hiper-personalizado</h3><p class="texto-tarjeta">Estructurado a tu medida con tus procesos, con tus detalles. Tu ecosistema.</p></li>
+            <li class="tarjeta pilar"><b class="oro" aria-hidden="true">03</b><h3 class="etiqueta-tarjeta">Microlearning adulto</h3><p class="texto-tarjeta">Cápsulas andragógicas de 2 a 10 min: +50% compromiso y +17% conocimiento inmediato.</p></li>
+            <li class="tarjeta pilar"><b class="oro" aria-hidden="true">04</b><h3 class="etiqueta-tarjeta">Efecto espejo real</h3><p class="texto-tarjeta">El nuevo ingreso aprende viendo a sus propios compañeros operar con éxito.</p></li>
+          </ol>
+          <p class="sla">SLAs desde 5 días. Tiempos personalizados según proceso y/o prioridad.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ECOSISTEMA & CONTACTO -->
+  <section class="lamina" aria-labelledby="t4">
+    <div class="contenedor">
+      <div class="barra"><img src="assets/img/logo-ce.svg" alt="" width="168" height="110"><span class="seccion">Ecosistema &amp; contacto</span></div>
+      <span class="pastilla">Just - in - time learning</span>
+      <h2 id="t4" class="titulo">El Loop Phygital QR en <strong class="oro">60 segundos</strong></h2>
+      <div class="ecosistema">
+        <div class="lado-izq">
+          <ol class="pasos">
+            <li class="tarjeta paso"><img src="assets/img/paso1.webp" alt="Operario en un almacén con un rollo de film y una duda sobre el empaque" loading="lazy"><div><h3 class="etiqueta-tarjeta">1. Duda in-situ</h3><p class="texto-tarjeta">En tienda, almacén, planta, cafetería, etc.</p></div></li>
+            <li class="tarjeta paso"><img src="assets/img/paso2.webp" alt="Cartel con código QR que dice «Si tienes dudas, escanea aquí» en una mesa de empaque" loading="lazy"><div><h3 class="etiqueta-tarjeta">2. Sticker QR</h3><p class="texto-tarjeta">Escanea en su estación.</p></div></li>
+            <li class="tarjeta paso"><img src="assets/img/paso3.webp" alt="Mano sosteniendo un celular que reproduce el video del proceso" loading="lazy"><div><h3 class="etiqueta-tarjeta">3. Video real</h3><p class="texto-tarjeta">Mira el proceso en móvil.</p></div></li>
+            <li class="tarjeta paso"><img src="assets/img/paso4.webp" alt="Operario sonriente con la caja ya embalada correctamente" loading="lazy"><div><h3 class="etiqueta-tarjeta">4. Cero error</h3><p class="texto-tarjeta">Sin llamar al supervisor.</p></div></li>
+          </ol>
+          <div class="tarjeta certificacion"><img src="assets/img/certificado.webp" alt="Certificado de la Cámara de Comercio Exterior en un marco de vidrio, con el texto «Tu nombre podría ir aquí»" loading="lazy"><h3 class="etiqueta-tarjeta">Certificación CE</h3><p class="texto-tarjeta">Respaldo de tus procesos regulados auditables, de alta complejidad o todos los que requieras.</p></div>
+        </div>
+        <div class="lado-der">
+          <div class="demo">
+            <span class="pastilla">+7 años de respaldo regional</span>
+            <h2>Agenda tu <strong>demo<br>piloto hoy</strong></h2>
+            <p>Retén hasta un 82% más a tu nuevo talento y estandariza tus sucursales en tiempo récord.</p>
+            <ul class="polaroids" aria-label="Nuestro equipo en grabación">
+              <li><img src="assets/img/equipo1.webp" alt="Camarógrafa sonriente con una cámara profesional" loading="lazy"></li>
+              <li><img src="assets/img/equipo2.webp" alt="Camarógrafo grabando con estabilizador" loading="lazy"></li>
+              <li><img src="assets/img/equipo3.webp" alt="Camarógrafo con estabilizador en una oficina" loading="lazy"></li>
+              <li><img src="assets/img/equipo4.webp" alt="Operador de dron al aire libre" loading="lazy"></li>
+            </ul>
+            <div class="contacto">
+              <img src="assets/img/qr.png" alt="Código QR para escribir por WhatsApp a la Cámara de Comercio Exterior" width="400" height="400" loading="lazy">
+              <div>
+                <b>Escanea por WhatsApp</b>
+                <strong><a href="https://wa.me/51965177878" target="_blank" rel="noopener" style="font:inherit;color:inherit;text-decoration:none;word-break:normal">+51 965 177 878</a></strong>
+                <a href="mailto:AcademiaDigitalCE@camaracomercioexterior.edu.pe">AcademiaDigitalCE@camaracomercioexterior.edu.pe</a>
+              </div>
+            </div>
+          </div>
+          <div class="tarjeta lms">
+            <h3 class="etiqueta-tarjeta">Plataforma educativa LMS</h3>
+            <p class="texto-tarjeta">Sistema de aprendizaje personalizado para medición y seguimiento. Dashboard a tu medida.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>
