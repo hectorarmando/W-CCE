@@ -63,17 +63,31 @@
   .cifra span { max-width: 22em; font: 700 clamp(0.76rem, 0.68rem + 0.22vw, 0.86rem)/1.2 var(--titulo); text-transform: uppercase; letter-spacing: 0.01em; }
 
   /* 2. REALIDAD */
+  /* Láminas a lo ancho: el contenido llega casi a los bordes, con el mismo margen que la portada */
+  .lamina--ancha .contenedor { max-width: none; padding-inline: clamp(1rem, -1rem + 6vw, 5.5rem); }
   .realidad__cabeza { display: grid; gap: 2rem; align-items: center; }
-  .versus { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; padding: 1.4rem clamp(1rem, 0.5rem + 2vw, 2.2rem); border: 1.5px solid var(--linea); border-radius: 999px; }
+  .realidad__cabeza > div:first-child { container-type: inline-size; }
+  .realidad__cabeza .titulo { font: 500 clamp(1.9rem, 0.8rem + 3.2vw, 3.9rem)/0.98 var(--texto); letter-spacing: -0.045em; }
+  /* En escritorio el título va en dos líneas, como en el PDF, y su tamaño se ajusta al ancho disponible */
+  @media (min-width: 1000px) {
+    .realidad__cabeza .titulo { font-size: min(6.6cqi, 4.4rem); letter-spacing: -0.05em; }
+    .realidad__cabeza .titulo .linea { display: block; white-space: nowrap; }
+  }
+  .realidad__cabeza .titulo strong { font-weight: 700; }
+  .realidad__cabeza .pastilla { font-size: clamp(0.74rem, 0.62rem + 0.35vw, 0.95rem); padding: 0.5rem 1.3rem; }
+  .versus { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; padding: clamp(1.1rem, 0.7rem + 1.1vw, 1.8rem) clamp(1.2rem, 0.4rem + 2.2vw, 2.6rem); border: 1.5px solid var(--linea); border-radius: 999px; }
   .versus div:last-child { text-align: right; }
-  .versus b { display: block; font: 800 clamp(1.4rem, 1rem + 1.4vw, 2.3rem)/1 var(--titulo); letter-spacing: -0.03em; }
-  .versus small { display: block; margin-top: 0.3rem; font: 600 0.8rem/1.2 var(--titulo); text-transform: uppercase; }
-  .versus i { display: grid; place-items: center; width: 3.2rem; height: 3.2rem; border-radius: 50%; background: var(--oro); color: #111; font: 800 1.15rem var(--titulo); font-style: normal; }
+  .versus { container-type: inline-size; }
+  .versus b { display: block; white-space: nowrap; font: 800 clamp(1.3rem, 7.6cqi, 2.5rem)/1 var(--titulo); letter-spacing: -0.03em; }
+  .versus small { display: block; white-space: nowrap; margin-top: 0.35rem; font: 600 clamp(0.7rem, 2.75cqi, 1.02rem)/1.2 var(--titulo); letter-spacing: -0.01em; text-transform: uppercase; }
+  .versus i { display: grid; place-items: center; width: clamp(2.6rem, 9cqi, 3.8rem); height: clamp(2.6rem, 9cqi, 3.8rem); box-shadow: 0 0 24px rgba(217, 191, 114, 0.35); border-radius: 50%; background: var(--oro); color: #111; font: 800 1.15rem var(--titulo); font-style: normal; }
   .sectores { display: grid; gap: 1.2rem; margin-top: clamp(2rem, 1.5rem + 2vw, 3rem); padding: 0; list-style: none; }
-  .sector { display: flex; flex-direction: column; overflow: hidden; }
-  .sector .pastilla { align-self: stretch; margin: 1rem 1rem 0.9rem; text-align: center; font-size: 0.78rem; }
+  .sector { display: flex; flex-direction: column; overflow: hidden; background: linear-gradient(180deg, #2a2416 0%, #121110 8%, #121110 62%, #3a321f 100%); }
+  .sector .pastilla { align-self: stretch; margin: 0.9rem 1rem 0.9rem; text-align: center; font-size: clamp(0.74rem, 0.62rem + 0.35vw, 0.95rem); font-weight: 800; }
   .sector img { width: 100%; aspect-ratio: 1; object-fit: cover; }
-  .sector__texto { padding: 1rem 1.1rem 1.3rem; }
+  .sector .etiqueta-tarjeta { font-size: clamp(1rem, 0.85rem + 0.45vw, 1.3rem); }
+  .sector .texto-tarjeta { font-size: clamp(0.92rem, 0.82rem + 0.3vw, 1.1rem); }
+  .sector__texto { padding: 1.1rem 1.3rem 1.5rem; }
 
   /* 3. SOLUCIÓN */
   .solucion { display: grid; gap: 2rem; }
@@ -120,7 +134,7 @@
   }
   @media (min-width: 1000px) {
     .portada__cuerpo { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); }
-    .realidad__cabeza { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+    .realidad__cabeza { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 3rem; }
     .sectores { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .solucion { grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); align-items: stretch; }
     .ecosistema { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
@@ -164,13 +178,13 @@
   </section>
 
   <!-- 2. REALIDAD -->
-  <section class="lamina" aria-labelledby="t2">
+  <section class="lamina lamina--ancha" aria-labelledby="t2">
     <div class="contenedor">
       <div class="barra"><img src="assets/img/logo-ce.svg" alt="" width="168" height="110"><span class="seccion">Realidad</span></div>
       <div class="realidad__cabeza">
         <div>
           <span class="pastilla">Los primeros 90 días</span>
-          <h2 id="t2" class="titulo">El costo de entrenar con <strong class="oro">PDFS o videos que pocos entienden</strong></h2>
+          <h2 id="t2" class="titulo"><span class="linea">El costo de entrenar con <strong class="oro">PDFS o</strong></span> <span class="linea"><strong class="oro">videos que pocos entienden</strong></span></h2>
         </div>
         <div class="versus" role="group" aria-label="PDF frente a video">
           <div><b class="oro">10% PDF</b><small>60% errores operativos</small></div>
