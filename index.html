@@ -31,6 +31,8 @@
   .lamina { position: relative; padding-block: clamp(2rem, 1.5rem + 2vw, 3rem) clamp(3rem, 2rem + 4vw, 5.5rem); overflow: hidden; }
   .lamina + .lamina { border-top: 1px solid rgba(217, 191, 114, 0.15); }
   .barra { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem); }
+  /* En la portada, el logo y «Portafolio» van más pegados a los bordes de la pantalla */
+  .portada .barra { margin-inline: calc(50% - 50vw + clamp(1rem, 0.5rem + 1.5vw, 2rem)); }
   .barra img { width: clamp(6rem, 5rem + 3vw, 8.5rem); height: auto; }
   .seccion { font: 700 0.72rem/1 var(--titulo); letter-spacing: 0.24em; text-transform: uppercase; padding-bottom: 0.45rem; border-bottom: 3px solid var(--oro); }
   .pastilla { display: inline-block; padding: 0.45rem 1.1rem; border-radius: 999px; background: var(--oro); color: #111; font: 700 0.74rem/1.2 var(--titulo); letter-spacing: 0.02em; text-transform: uppercase; }
