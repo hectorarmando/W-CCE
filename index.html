@@ -52,11 +52,11 @@
   .portada h1 { margin-top: 0.8rem; font: 900 clamp(2.7rem, 1.2rem + 5.4vw, 6.2rem)/0.88 var(--titulo); letter-spacing: -0.055em; text-transform: uppercase; }
   .portada h1 span { display: block; }
   .portada__sub { margin-top: 1.2rem; max-width: 40rem; padding-left: 0.8rem; border-left: 3px solid var(--oro); font-size: clamp(1rem, 0.9rem + 0.3vw, 1.15rem); line-height: 1.35; }
-  .cifras { display: grid; padding: 0.4rem 1.6rem; border: 1.5px solid var(--linea); border-radius: var(--radio); background: rgba(8, 8, 8, 0.62); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-  .cifra { display: grid; grid-template-columns: 9.5rem 1fr; align-items: center; gap: 1rem; padding: 1rem 0; }
+  .cifras { display: grid; justify-self: end; width: 100%; max-width: 46rem; padding: 0.6rem 2rem; border: 1.5px solid var(--linea); border-radius: var(--radio); background: rgba(8, 8, 8, 0.62); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .cifra { display: grid; grid-template-columns: minmax(8.5rem, 0.78fr) 1.4fr; align-items: center; gap: clamp(1rem, 0.5rem + 1.5vw, 2rem); padding: clamp(0.9rem, 0.6rem + 0.8vw, 1.35rem) 0; }
   .cifra + .cifra { border-top: 1px solid rgba(217, 191, 114, 0.35); }
-  .cifra b { font: 800 clamp(2.2rem, 1.8rem + 1.4vw, 3.1rem)/1 var(--titulo); letter-spacing: -0.04em; text-align: center; }
-  .cifra span { font: 800 0.86rem/1.2 var(--titulo); text-transform: uppercase; }
+  .cifra b { font: 800 clamp(2.4rem, 1.4rem + 3vw, 4.4rem)/1 var(--titulo); letter-spacing: -0.045em; text-align: center; white-space: nowrap; }
+  .cifra span { max-width: 22em; font: 700 clamp(0.82rem, 0.7rem + 0.35vw, 1.05rem)/1.2 var(--titulo); text-transform: uppercase; letter-spacing: 0.01em; }
 
   /* 2. REALIDAD */
   .realidad__cabeza { display: grid; gap: 2rem; align-items: center; }
@@ -115,7 +115,7 @@
     .pilares { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (min-width: 1000px) {
-    .portada__cuerpo { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); }
+    .portada__cuerpo { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); }
     .realidad__cabeza { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
     .sectores { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .solucion { grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); align-items: stretch; }
@@ -125,7 +125,8 @@
   }
   @media (max-width: 520px) {
     .solucion__foto { min-height: 34rem; }
-    .cifra { grid-template-columns: 7rem 1fr; }
+    .cifras { padding-inline: 1.2rem; }
+    .cifra { grid-template-columns: 7.5rem 1fr; }
     .versus { grid-template-columns: 1fr; border-radius: var(--radio); text-align: center; }
     .versus div:last-child { text-align: center; }
     .versus i { margin-inline: auto; }
