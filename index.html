@@ -309,6 +309,9 @@
   .cierre .contacto .contacto__correo { font-size: clamp(0.75rem, 0.7rem + 0.15vw, 0.85rem); }
   .cierre .contacto a.contacto__boton { min-height: 46px; margin-top: 0.6rem; padding: 0 1.4rem; font-size: clamp(0.8rem, 0.75rem + 0.2vw, 0.92rem); }
   @media (min-width: 1000px) { .cierre { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+
+  /* Certificado plano (sin marco): se presenta como una hoja con borde dorado fino y sombra */
+  .cierre .certificacion img { border-radius: 0.4rem; border: 1px solid rgba(217, 191, 114, 0.6); box-shadow: 0 20px 40px -18px rgba(0, 0, 0, 0.85), 0 0 0 6px rgba(217, 191, 114, 0.08); filter: none; }
 </style>
 </head>
 <body>
@@ -452,7 +455,7 @@
       <div class="cierre">
         <div class="tarjeta certificacion">
           <span class="pastilla">Tu equipo certificado</span>
-          <div class="certificacion__marco"><img src="assets/img/certificado.webp" alt="Certificado de la Cámara de Comercio Exterior en un marco de vidrio, con el texto «Tu nombre podría ir aquí»" loading="lazy"></div>
+          <div class="certificacion__marco"><img src="assets/img/certificado.webp" alt="Modelo de certificado de la Cámara de Comercio Exterior: «Tu nombre podría ir aquí», curso «Metodología FIFO y FEFO en gestión de productos perecibles», con firmas y código QR de verificación" loading="lazy"></div>
           <h3 class="etiqueta-tarjeta">Certificación CE</h3>
           <p class="texto-tarjeta">Respaldo de tus procesos regulados auditables, de alta complejidad o todos los que requieras.</p>
         </div>
