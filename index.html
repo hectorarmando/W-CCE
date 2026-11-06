@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="es">
 <head>
+<script>if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("anima");</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Academia Digital Operativa</title>
@@ -182,6 +183,68 @@
     .contacto { grid-template-columns: 1fr; justify-items: center; text-align: center; }
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .polaroids li { transition: none; } }
+
+  /* ============ TRANSICIONES Y EFECTOS ============
+     Solo se activan con JavaScript y si la persona no pidió «reducir movimiento» (clase .anima en <html>).
+     Se usan las propiedades translate/scale/rotate por separado para no pisar los transform propios (polaroids). */
+  .anima [data-anim] { opacity: 0; transition: opacity 0.9s cubic-bezier(.16,1,.3,1), translate 0.9s cubic-bezier(.16,1,.3,1), scale 0.9s cubic-bezier(.16,1,.3,1), filter 0.9s cubic-bezier(.16,1,.3,1), clip-path 1.1s cubic-bezier(.16,1,.3,1); transition-delay: var(--retraso, 0ms); }
+  .anima [data-anim="subir"] { translate: 0 2.2rem; }
+  .anima [data-anim="izq"] { translate: -2.5rem 0; }
+  .anima [data-anim="der"] { translate: 2.5rem 0; }
+  .anima [data-anim="zoom"] { scale: 0.92; filter: blur(6px); }
+  .anima [data-anim="cortina"] { clip-path: inset(0 100% 0 0); opacity: 1; }
+  .anima [data-anim="caer"] { translate: 0 -2.5rem; scale: 1.08; }
+  .anima [data-anim].visible { opacity: 1; translate: 0 0; scale: 1; filter: none; clip-path: inset(0 0 0 0); }
+
+  /* Portada: el video entra con un acercamiento lento */
+  .anima .portada__foto video { scale: 1.12; transition: scale 6s cubic-bezier(.16,1,.3,1); }
+  .anima .portada.visible .portada__foto video { scale: 1; }
+
+  /* Brillo dorado que recorre los textos dorados una vez al aparecer */
+  .anima .oro { background-size: 220% 100%; background-position: 100% 0; transition: background-position 1.8s cubic-bezier(.16,1,.3,1) 0.3s; }
+  .anima .visible .oro, .anima .oro.visible { background-position: 0 0; }
+  .anima .portada h1 .oro { background-image: linear-gradient(90deg, #c39a45 0%, #d8bc78 18%, #ecdcae 35%, #fff6dc 45%, #ecdcae 55%, #d8bc78 75%, #f7ecd0 100%); }
+
+  /* Subrayado de la etiqueta de sección que se dibuja */
+  .anima .seccion { border-bottom-color: transparent; background: linear-gradient(var(--oro), var(--oro)) left bottom / 0 3px no-repeat; transition: background-size 1s cubic-bezier(.16,1,.3,1) 0.4s; }
+  .anima .seccion.visible, .anima .visible .seccion { background-size: 100% 3px; }
+
+  /* Hover: tarjetas que se elevan con brillo dorado y fotos que se acercan */
+  .tarjeta { transition: transform 0.45s cubic-bezier(.16,1,.3,1), box-shadow 0.45s, border-color 0.45s; }
+  .tarjeta:hover { transform: translateY(-6px); border-color: var(--oro); box-shadow: 0 22px 40px -22px rgba(217, 191, 114, 0.45); }
+  .sector img, .paso img, .certificacion img { transition: transform 0.8s cubic-bezier(.16,1,.3,1); }
+  .sector, .paso { overflow: hidden; }
+  .sector:hover img, .paso:hover img { transform: scale(1.06); }
+  .certificacion:hover img { transform: scale(1.04) rotate(-1deg); }
+  .pilar b { display: inline-block; transition: transform 0.45s cubic-bezier(.16,1,.3,1); }
+  .pilar:hover b { transform: translateX(6px); }
+  .solucion__foto:hover { transform: none; }
+  .pastilla { transition: transform 0.3s, box-shadow 0.3s; }
+  .sector .pastilla:hover, .lamina > .contenedor > .pastilla:hover { transform: translateY(-2px); box-shadow: 0 8px 18px -8px rgba(217, 191, 114, 0.6); }
+  .contacto { transition: transform 0.45s cubic-bezier(.16,1,.3,1), box-shadow 0.45s; }
+  .contacto:hover { transform: translateY(-4px); box-shadow: 0 20px 36px -18px rgba(0, 0, 0, 0.6); }
+  .contacto img { transition: transform 0.45s cubic-bezier(.16,1,.3,1); }
+  .contacto:hover img { transform: scale(1.06); }
+
+  /* «VS» que late suavemente y cifras con animación */
+  @keyframes latido { 0%, 100% { box-shadow: 0 0 18px rgba(217, 191, 114, 0.3); scale: 1; } 50% { box-shadow: 0 0 36px rgba(217, 191, 114, 0.65); scale: 1.06; } }
+  .anima .versus.visible i { animation: latido 2.8s ease-in-out infinite; }
+  .cifra b, .versus b { font-variant-numeric: tabular-nums; }
+  .cifras { transition: border-color 0.4s, box-shadow 0.4s; }
+  .cifras:hover { border-color: var(--oro); box-shadow: 0 0 40px -12px rgba(217, 191, 114, 0.4); }
+  .cifra { transition: background-color 0.3s; }
+  .sla { transition: transform 0.4s cubic-bezier(.16,1,.3,1), box-shadow 0.4s; }
+  .sla:hover { transform: translateY(-3px); box-shadow: 0 16px 30px -16px rgba(217, 191, 114, 0.7); }
+
+  /* Indicador para bajar en la portada */
+  .bajar { position: absolute; left: 50%; bottom: 1.2rem; translate: -50% 0; width: 26px; height: 42px; border: 2px solid rgba(244, 239, 227, 0.6); border-radius: 14px; z-index: 1; }
+  .bajar::after { content: ""; position: absolute; left: 50%; top: 8px; width: 4px; height: 8px; margin-left: -2px; border-radius: 2px; background: var(--oro); animation: rueda 1.8s ease-in-out infinite; }
+  @keyframes rueda { 0% { opacity: 0; translate: 0 0; } 30% { opacity: 1; } 100% { opacity: 0; translate: 0 14px; } }
+  @media (max-width: 999px) { .bajar { display: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .tarjeta, .tarjeta:hover, .sector:hover img, .paso:hover img, .certificacion:hover img, .contacto:hover, .sla:hover { transform: none; transition: none; }
+    .bajar::after { animation: none; }
+  }
 </style>
 </head>
 <body>
@@ -196,6 +259,7 @@
         <source src="assets/video/portada.mp4" type="video/mp4">
       </video>
     </div>
+    <a class="bajar" href="#t2" aria-label="Bajar a la siguiente sección"></a>
     <div class="contenedor">
       <div class="barra"><img src="assets/img/logo-ce.svg" alt="Cámara de Comercio Exterior" width="168" height="110"><span class="seccion">Brochure Digital</span></div>
       <div class="portada__cuerpo">
@@ -345,5 +409,58 @@
   }
 </script>
 
+<script>
+  // Transiciones: asigna el efecto a cada elemento y lo revela al entrar en pantalla (con retraso escalonado)
+  (() => {
+    if (!document.documentElement.classList.contains("anima")) return;
+    const efectos = [
+      [".barra img", "izq"], [".barra .seccion", "der"],
+      [".portada .pastilla--franja", "cortina"], [".portada h1 span", "subir"], [".portada__sub", "subir"], [".cifras", "der"], [".cifra", "der"],
+      [".lamina:not(.portada) > .contenedor > .pastilla, .realidad__cabeza .pastilla, .solucion__lado > .pastilla", "izq"],
+      [".titulo", "subir"], [".versus", "der"],
+      [".sector", "subir"], [".solucion__foto", "zoom"], [".solucion__caja", "subir"], [".pilar", "subir"], [".sla", "subir"],
+      [".paso", "subir"], [".certificacion", "zoom"], [".demo", "der"], [".demo h2 .linea", "subir"], [".demo > p", "subir"],
+      [".polaroids li", "caer"], [".contacto", "subir"], [".lms", "subir"],
+    ];
+    const grupos = new Map();
+    efectos.forEach(([sel, tipo]) => document.querySelectorAll(sel).forEach((el) => {
+      if (el.dataset.anim) return;
+      el.dataset.anim = tipo;
+      const padre = el.parentElement;
+      const n = (grupos.get(padre) ?? 0); grupos.set(padre, n + 1);
+      el.style.setProperty("--retraso", `${Math.min(n, 6) * 110}ms`);
+    }));
+    const obs = new IntersectionObserver((entradas) => entradas.forEach((e) => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("visible");
+      obs.unobserve(e.target);
+      if (e.target.matches(".cifras, .versus")) contar(e.target);
+    }), { threshold: 0.15, rootMargin: "0px 0px -6% 0px" });
+    // La portada se ve al cargar: se revela de inmediato (la cortina no tiene área visible y el observador no la detectaría)
+    const portada = document.querySelector(".portada");
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      portada?.classList.add("visible");
+      portada?.querySelectorAll("[data-anim], .seccion, .oro").forEach((el) => el.classList.add("visible"));
+      const cifras = portada?.querySelector(".cifras"); if (cifras) contar(cifras);
+    }));
+    document.querySelectorAll("[data-anim], .seccion, .oro").forEach((el) => { if (!portada?.contains(el)) obs.observe(el); });
+
+    // Contadores: -60%, 95%, 0 min, 10% PDF, 95% VIDEO suben desde 0
+    function contar(caja) {
+      caja.querySelectorAll("b").forEach((b) => {
+        const original = b.textContent, m = original.match(/-?\d+/);
+        if (!m) return;
+        const fin = parseInt(m[0], 10), t0 = performance.now(), dur = 1600;
+        if (fin === 0) return;
+        const paso = (t) => {
+          const k = Math.min(1, (t - t0) / dur), v = Math.round(fin * (1 - Math.pow(1 - k, 3)));
+          b.textContent = original.replace(m[0], String(v));
+          if (k < 1) requestAnimationFrame(paso); else b.textContent = original;
+        };
+        requestAnimationFrame(paso);
+      });
+    }
+  })();
+</script>
 </body>
 </html>
