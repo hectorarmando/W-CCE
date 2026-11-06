@@ -153,6 +153,9 @@
   .contacto b { display: block; font: 800 clamp(1rem, 0.75rem + 0.8vw, 1.55rem)/1.1 var(--titulo); color: var(--oro); text-transform: uppercase; }
   .contacto strong { display: block; font: 800 clamp(1.4rem, 0.9rem + 1.6vw, 2.4rem)/1.15 var(--titulo); letter-spacing: -0.02em; }
   .contacto a { display: inline-block; margin-top: 0.15rem; font-size: clamp(0.72rem, 0.6rem + 0.35vw, 1rem); color: #e9e4d8; overflow-wrap: anywhere; text-decoration-color: var(--oro); }
+  .lms__lista { display: grid; gap: 0.3rem; margin: 0.5rem 0 0; padding: 0; list-style: none; }
+  .lms__lista li { position: relative; padding-left: 1.1rem; }
+  .lms__lista li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--oro); }
   .lms { padding: clamp(1.4rem, 1rem + 1vw, 2rem) clamp(1.6rem, 1rem + 2vw, 3rem); }
 
   @media (min-width: 640px) {
@@ -264,7 +267,7 @@
             <li class="tarjeta pilar"><b class="oro" aria-hidden="true">01</b><h3 class="etiqueta-tarjeta">Hiper-contextualizado</h3><p class="texto-tarjeta">Tus propias sedes, tus máquinas, tu POS y tus activos reales paso a paso.</p></li>
             <li class="tarjeta pilar"><b class="oro" aria-hidden="true">02</b><h3 class="etiqueta-tarjeta">Hiper-personalizado</h3><p class="texto-tarjeta">Estructurado a tu medida con tus procesos, con tus detalles. Tu ecosistema.</p></li>
             <li class="tarjeta pilar"><b class="oro" aria-hidden="true">03</b><h3 class="etiqueta-tarjeta">Microlearning adulto</h3><p class="texto-tarjeta">Cápsulas andragógicas de 2 a 10 min: +50% compromiso y +17% conocimiento inmediato.</p></li>
-            <li class="tarjeta pilar"><b class="oro" aria-hidden="true">04</b><h3 class="etiqueta-tarjeta">Efecto espejo real</h3><p class="texto-tarjeta">El nuevo ingreso aprende viendo a sus propios compañeros operar con éxito.</p></li>
+            <li class="tarjeta pilar"><b class="oro" aria-hidden="true">04</b><h3 class="etiqueta-tarjeta">Estandarización</h3><p class="texto-tarjeta">Iguala y replica tus procesos en todo tu equipo y/o en todas tus sucursales sin excepción.</p></li>
           </ol>
           <p class="sla">SLAs desde 5 días. Tiempos personalizados según proceso y/o prioridad.</p>
         </div>
@@ -310,7 +313,11 @@
           </div>
           <div class="tarjeta lms">
             <h3 class="etiqueta-tarjeta">Plataforma educativa LMS</h3>
-            <p class="texto-tarjeta">Sistema de aprendizaje personalizado para medición y seguimiento. Dashboard a tu medida.</p>
+            <ul class="texto-tarjeta lms__lista">
+              <li>Sistema de aprendizaje personalizado para medición y seguimiento.</li>
+              <li>Dashboard a tu medida.</li>
+              <li>Protocolos y estándares de alta seguridad para protección de tu información.</li>
+            </ul>
           </div>
         </div>
       </div>
