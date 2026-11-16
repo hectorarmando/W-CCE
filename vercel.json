@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/erp-diego-thomson/Prototipo_ERP_Diego_Thomson.html" }
+  ]
+}
