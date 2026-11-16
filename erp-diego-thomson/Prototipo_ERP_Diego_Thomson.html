@@ -173,7 +173,7 @@ table.t{width:100%;border-collapse:collapse;font-size:13.5px}
 .chip.AD{background:var(--ok-soft);color:var(--ok)}.chip.A{background:var(--violet-soft);color:var(--violet)}.chip.B{background:var(--warn-soft);color:var(--warn)}.chip.C{background:var(--bad-soft);color:var(--bad)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:9px;padding:9px 16px;font-weight:600;font-size:13.5px;cursor:pointer;background:var(--primary);color:var(--on-primary);white-space:nowrap}
 .btn:hover{background:var(--primary-h)}
-.btn.ghost{background:var(--surface);border-color:var(--line);color:var(--fg)}
+.btn.ghost{background:var(--surface);border-color:var(--line);color:var(--fg)}.btn.out{display:inline-flex;align-items:center;gap:6px;color:var(--bad)}.btn.out:hover{background:var(--bad-soft);border-color:var(--bad)}@media(max-width:700px){.btn.out span{display:none}}
 .btn.ghost:hover{border-color:var(--primary);color:var(--primary)}
 .btn.sm{padding:5px 11px;font-size:12.5px;border-radius:8px}
 .btn.block{width:100%;padding:12px}
@@ -884,7 +884,7 @@ function shell(){
  <main class="main">
   <header class="top">
    <div class="top-l"><h1>${navL(view)}</h1><p>Año escolar 2026 · ${EYEBROW[view]}</p></div>
-   <div class="top-r">${['dir','sed','sec','tes'].includes(r)?globalSearch():''}${sedeCtl}<button class="bell" data-a="bell" aria-label="Notificaciones">${icon('bell',20)}${notifs().length?`<i>${notifs().length}</i>`:''}</button><button class="btn ghost sm" data-a="logout">Cambiar perfil</button><div class="who"><span class="avatar">${initials(u.user)}</span><div><b>${esc(u.user)}</b><span>${u.n}</span></div></div></div>
+   <div class="top-r">${['dir','sed','sec','tes'].includes(r)?globalSearch():''}${sedeCtl}<button class="bell" data-a="bell" aria-label="Notificaciones">${icon('bell',20)}${notifs().length?`<i>${notifs().length}</i>`:''}</button><button class="btn ghost sm" data-a="logout">Cambiar perfil</button><div class="who"><span class="avatar">${initials(u.user)}</span><div><b>${esc(u.user)}</b><span>${u.n}</span></div></div><button class="btn ghost sm out" data-a="signout" title="Cerrar sesión" aria-label="Cerrar sesión"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/></svg><span>Cerrar sesión</span></button></div>
   </header>
   <div class="content">${VIEWS[view]()}</div>
  </main></div>`}
@@ -1520,6 +1520,7 @@ const A={
  go(el){const d=el.dataset;let v=d.v;const nav=user().nav;if(!nav.includes(v)){const m={aula:'cursos',cursos:'aula',pagos:'fpagos',com:'favisos',eval:'fexam'};if(m[v]&&nav.includes(m[v]))v=m[v]}S.ui.view=v;if(d.aula)S.ui.aula=d.aula;if(d.tab){const tk={pagos:'pagosTab',notas:'notasTab',aula:'aulaTab',cursos:'aulaTab',eval:'evalTab',asistencia:'asTab'}[v];if(tk)S.ui[tk]=d.tab}if(d.sid)S.ui.pagosSid=d.sid;closeModal();save();render();window.scrollTo(0,0)},
  ui(el){const k=el.dataset.k;let v=el.dataset.v;if(k==='bim')v=+v;S.ui[k]=v;save();render()},
  setsede(el){S.ui.sede=el.dataset.v;save();render()},
+ signout(){S.session=null;EXAM=null;LOGIN_STEP='login';closeModal();save();render();window.scrollTo(0,0);toast('Sesión cerrada correctamente')},
  logout(){S.session=null;EXAM=null;LOGIN_STEP='choose';closeModal();save();render();window.scrollTo(0,0)},
  reset(){if(!RESETARM){RESETARM=true;render();setTimeout(()=>{RESETARM=false;if(S.session)render()},4000);return}RESETARM=false;const ses=S.session;S=generate();S.session=ses;AULAS=S.aulas;DRAFT={asis:{},qt:'om',comT:null};EXAM=null;save();render();toast('Datos de la demo restablecidos.')},
  close(){closeModal()},
