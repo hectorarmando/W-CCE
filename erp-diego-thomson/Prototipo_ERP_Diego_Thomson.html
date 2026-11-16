@@ -1659,4 +1659,178 @@ document.addEventListener('change',e=>{const el=e.target,c=el.dataset.c;if(!c)re
 render();
 </script>
 
+
+<!-- ===== WhatsApp + Asistente IA (simulado) ===== -->
+<style>
+.wa-fab{position:fixed;left:20px;bottom:20px;z-index:60;display:flex;align-items:center;gap:10px;background:#25D366;color:#fff;border:0;border-radius:999px;padding:12px 18px 12px 14px;font:600 14px/1 inherit;font-family:inherit;box-shadow:0 10px 26px rgba(37,211,102,.45);cursor:pointer;text-decoration:none;animation:waPulse 2.4s infinite}
+.wa-fab:hover{background:#1ebe5b}
+.wa-fab svg{width:24px;height:24px;flex:none}
+@keyframes waPulse{0%,100%{box-shadow:0 10px 26px rgba(37,211,102,.45),0 0 0 0 rgba(37,211,102,.5)}60%{box-shadow:0 10px 26px rgba(37,211,102,.45),0 0 0 14px rgba(37,211,102,0)}}
+.btn.wa{background:#25D366;color:#fff;border-color:#25D366;display:inline-flex;align-items:center;gap:8px}
+.btn.wa svg{width:18px;height:18px}
+.ai-fab{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:12px 18px 12px 12px;background:var(--grad,#123E7C);color:#fff;font:600 14px/1 inherit;font-family:inherit;cursor:pointer;box-shadow:0 12px 28px rgba(18,62,124,.4)}
+.ai-fab .orb{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#7fe3ff,#1F9FD3 55%,#123E7C);display:grid;place-items:center;font-size:15px;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+.ai-panel{position:fixed;right:20px;bottom:84px;z-index:61;width:min(400px,calc(100vw - 24px));height:min(600px,calc(100vh - 110px));background:var(--surface,#fff);color:var(--fg,#13284A);border:1px solid var(--line,#DBE4EE);border-radius:18px;box-shadow:0 24px 60px rgba(10,30,70,.28);display:flex;flex-direction:column;overflow:hidden}
+.ai-head{background:var(--grad,#123E7C);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.ai-head .orb{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#7fe3ff,#1F9FD3 55%,#0A2A5E);display:grid;place-items:center;font-size:18px;flex:none}
+.ai-head b{display:block;font-size:15px}.ai-head small{opacity:.85;font-size:12px;display:flex;align-items:center;gap:6px}
+.ai-head small:before{content:"";width:7px;height:7px;border-radius:50%;background:#4ade80}
+.ai-head button{margin-left:auto;background:rgba(255,255,255,.15);border:0;color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
+.ai-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--bg,#F3F7FB)}
+.ai-m{max-width:88%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.5;white-space:normal}
+.ai-m.u{align-self:flex-end;background:var(--primary,#123E7C);color:#fff;border-bottom-right-radius:4px}
+.ai-m.b{align-self:flex-start;background:var(--surface,#fff);border:1px solid var(--line,#DBE4EE);border-bottom-left-radius:4px}
+.ai-m.b ul{margin:6px 0 2px;padding-left:18px}.ai-m.b li{margin:2px 0}
+.ai-m.b .src{display:block;margin-top:6px;font-size:11px;color:var(--muted,#5D6F88)}
+.ai-typing{display:inline-flex;gap:4px}.ai-typing i{width:7px;height:7px;border-radius:50%;background:var(--muted,#5D6F88);animation:aiDot 1s infinite}
+.ai-typing i:nth-child(2){animation-delay:.15s}.ai-typing i:nth-child(3){animation-delay:.3s}
+@keyframes aiDot{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.ai-sug{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;padding:8px 12px 4px;background:var(--surface,#fff)}
+.ai-sug button{flex:none;white-space:nowrap;border:1px solid var(--line,#DBE4EE);background:var(--violet-soft,#E2F1FA);color:var(--primary,#123E7C);border-radius:999px;padding:6px 11px;font:500 12px/1.2 inherit;font-family:inherit;cursor:pointer}
+.ai-form{display:flex;gap:8px;padding:10px 12px 12px;background:var(--surface,#fff)}
+.ai-form input{flex:1;border:1px solid var(--line,#DBE4EE);border-radius:999px;padding:10px 14px;font:14px inherit;font-family:inherit;color:inherit;background:var(--bg,#F3F7FB)}
+.ai-form button{border:0;border-radius:50%;width:40px;height:40px;background:var(--primary,#123E7C);color:#fff;font-size:17px;cursor:pointer}
+.ai-note{font-size:10.5px;color:var(--muted,#5D6F88);text-align:center;padding:0 12px 8px;background:var(--surface,#fff)}
+@media (max-width:600px){.ai-fab span.t,.wa-fab span.t{display:none}.ai-fab,.wa-fab{padding:12px}.ai-panel{right:12px;bottom:78px}}
+</style>
+<a id="waFab" class="wa-fab" target="_blank" rel="noopener" hidden aria-label="Escríbenos por WhatsApp"></a>
+<button id="aiFab" class="ai-fab" type="button" hidden aria-label="Abrir asistente de IA"><span class="orb">✦</span><span class="t">Asistente IA</span></button>
+<section id="aiPanel" class="ai-panel" hidden aria-label="Asistente Thomson IA">
+ <div class="ai-head"><span class="orb">✦</span><div><b>Thomson IA</b><small>Asistente conversacional · en línea</small></div><button type="button" id="aiClose" aria-label="Cerrar">×</button></div>
+ <div class="ai-body" id="aiBody" aria-live="polite"></div>
+ <div class="ai-sug" id="aiSug"></div>
+ <form class="ai-form" id="aiForm"><input id="aiIn" autocomplete="off" placeholder="Escribe tu pregunta…" aria-label="Pregunta para el asistente"><button type="submit" aria-label="Enviar">➤</button></form>
+ <div class="ai-note">Simulación del módulo 11. Responde con los datos de ejemplo del sistema, según tus permisos.</div>
+</section>
+<script>
+"use strict";
+/* Número de WhatsApp del colegio (ejemplo: reemplazar por el real) */
+const WA_NUM='51900000000';
+const WA_TXT='Hola, quisiera información sobre la I.E.P. Diego Thomson y la admisión 2027.';
+const WA_ICON='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91A9.9 9.9 0 0 0 12.04 2zm5.8 14.13c-.24.68-1.42 1.3-1.95 1.34-.5.05-.97.23-3.27-.68-2.77-1.09-4.52-3.92-4.66-4.1-.13-.18-1.1-1.47-1.1-2.8 0-1.33.7-1.99.95-2.26.24-.27.53-.34.71-.34h.51c.16 0 .38-.06.6.46.23.54.77 1.87.84 2 .07.14.11.3.02.48-.09.18-.14.29-.27.45-.14.16-.29.35-.41.47-.14.14-.28.28-.12.55.16.27.7 1.16 1.51 1.88 1.04.93 1.91 1.21 2.18 1.35.27.14.43.11.59-.07.16-.18.68-.79.86-1.07.18-.27.36-.23.61-.14.25.09 1.58.75 1.85.88.27.14.45.2.52.32.07.11.07.66-.17 1.34z"/></svg>';
+const WA_URL='https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(WA_TXT);
+
+const AI={open:false,role:null,busy:false};
+const $=id=>document.getElementById(id);
+const waFab=$('waFab');waFab.href=WA_URL;waFab.innerHTML=WA_ICON+'<span class="t">¿Consultas? Escríbenos</span>';
+
+const SUG={
+ pad:['¿Cómo va Mateo en sus notas?','¿Tiene tareas pendientes?','¿Cuánto debo de pensión?','¿Cómo va su asistencia?','Últimos comunicados'],
+ est:['¿Cuáles son mis notas?','¿Qué tareas tengo pendientes?','¿Cómo va mi asistencia?','Últimos comunicados'],
+ doc:['Resumen de mis aulas','¿Qué alumnos necesitan apoyo?','Redacta un comunicado para padres','Propón 3 preguntas de fracciones'],
+ dir:['¿Qué sede tiene más morosidad?','¿Cómo va la asistencia hoy?','Alumnos con más faltas','¿Cuánto se recaudó este mes?','Alumnos que requieren apoyo'],
+ sed:['Morosidad de mi sede','¿Cómo va la asistencia hoy?','Alumnos con más faltas','¿Cuánto se recaudó este mes?'],
+ sec:['¿Cómo va la asistencia hoy?','Alumnos con más faltas','Ratificaciones pendientes','Solicitudes de admisión nuevas'],
+ tes:['Morosidad por sede','¿Cuánto se recaudó este mes?','Vouchers por revisar','Familias con más deuda']};
+
+const has=(q,...w)=>w.some(x=>q.includes(x));
+const curBim=()=>{const b=+S.ui.bim;return isNaN(b)?3:b};
+function kidAvg(s,c){const b=curBim();let v=promBim(s.id,c,b);if(v==null&&b>0)v=promBim(s.id,c,b-1);return v}
+function nTxt(n,s){if(n==null)return '—';const lv=aulaById(s.aula).nivel;return lv==='Secundaria'?pad(n):`${lit(n)} (${pad(n)})`}
+function pickKid(q){const ks=famKids();return ks.find(k=>q.includes(fold(k.nom)))||(role()==='pad'?curKid():ks[0])}
+function pendTasks(s){const out=[];CURSOS.forEach(c=>{const l=S.lms[s.aula+'|'+c];if(!l)return;l.tar.forEach(t=>{if(!t.ent[s.id]&&t.lim>=TISO)out.push({c,t:t.t,lim:t.lim})})});return out}
+const li=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+const src=t=>`<span class="src">Fuente: ${t}</span>`;
+
+function ansFam(q){
+ const k=pickKid(q),nm=k.nom,me=role()==='est';
+ if(has(q,'asistencia','falta','tardanza','asistio')){
+  const a=S.asis[k.id];return `${me?'Tu':'La'} asistencia ${me?'':'de '+nm+' '}del año es de <b>${asisPct(k.id)}%</b>: ${a.A} días presente, ${a.T} tardanza(s) y ${a.F} falta(s).${src('Asistencia de alumnos')}`}
+ if(has(q,'nota','promedio','curso','como va','como le fue','rendimiento','libreta','boleta')){
+  const rows=CURSOS.map(c=>({c,v:kidAvg(k,c)})).filter(r=>r.v!=null);const best=rows.slice().sort((a,b)=>b.v-a.v)[0],low=rows.slice().sort((a,b)=>a.v-b.v)[0];
+  return `${me?'Tus':'Las'} notas ${me?'':'de '+nm+' '}en el ${BIM[curBim()]} bimestre:${li(rows.map(r=>`${r.c}: <b>${nTxt(r.v,k)}</b>`))}Su mejor curso es <b>${best.c}</b>${low.v<14?` y conviene reforzar <b>${low.c}</b>`:''}.${src('Notas y boletas')}`}
+ if(has(q,'tarea','pendiente','entregar','deber')){
+  const t=pendTasks(k);if(!t.length)return `${me?'No tienes':nm+' no tiene'} tareas pendientes. ¡Todo al día! 🎉${src('Aula virtual')}`;
+  return `${me?'Tienes':nm+' tiene'} ${t.length} tarea(s) pendiente(s):${li(t.map(x=>`<b>${x.c}</b>: ${esc(x.t)} · vence el ${fds(x.lim)}`))}${src('Aula virtual')}`}
+ if(has(q,'pago','pension','deuda','debo','cuota','mensualidad','vencid')){
+  if(me)return 'La información de pagos la ve tu padre, madre o apoderado desde su cuenta. 😊';
+  const ks=famKids();const out=ks.map(s=>{const c=cuenta(s);const next=c.rows.find(r=>r.est==='Pendiente');return `<b>${s.nom}</b>: ${c.venc?`${money(c.venc)} vencido (${c.nV} cuota/s)`:'sin deuda vencida'}${next?` · próxima: ${next.n} (${money(next.m)}), vence el ${fds(next.v)}`:''}`});
+  return `Este es el estado de cuenta de sus hijos:${li(out)}Puede enviar su voucher desde <b>Pensiones</b>.${src('Pagos, pensiones y estados de cuenta')}`}
+ if(has(q,'comunicado','aviso','reunion','noticia')){
+  const cs=kidComs(k).slice(0,3);return `Últimos comunicados:${li(cs.map(c=>`<b>${esc(c.tit)}</b> (${fds(c.f)}): ${esc(c.body)}`))}${src('Comunicados y avisos')}`}
+ return null}
+
+function ansDoc(q){
+ const aulas=AULAS.filter(a=>DOC_AULAS.includes(a.id)),c='Matemática',b=curBim();
+ if(has(q,'resumen','aula','como van','avance')){
+  return `Resumen de Matemática, ${BIM[b]} bimestre:${li(aulas.map(a=>{const sts=aulaStudents(a.id);const vs=sts.map(s=>promBim(s.id,c,b)).filter(v=>v!=null);const avg=vs.length?Math.round(vs.reduce((x,y)=>x+y,0)/vs.length):null;const t=S.lms[a.id+'|'+c].tar[0];const sin=sts.filter(s=>!t.ent[s.id]).length;return `<b>${a.n}</b>: promedio ${avg??'—'} · ${sin} alumno(s) sin entregar «${esc(t.t)}»`}))}${src('Registro de notas y aula virtual')}`}
+ if(has(q,'apoyo','riesgo','bajo','desaprob','refuerzo')){
+  const r=[];aulas.forEach(a=>aulaStudents(a.id).forEach(s=>{const v=promBim(s.id,c,b)??promBim(s.id,c,b-1);if(v!=null&&v<13)r.push(`${fullName(s)} (${a.n}): ${pad(v)}`)}));
+  return r.length?`Estos estudiantes necesitan apoyo en Matemática:${li(r.slice(0,6))}Sugerencia: reforzar fracciones con la ficha N.° 7 y una práctica guiada.${src('Registro de notas')}`:'Ningún estudiante está por debajo de 13 en este bimestre. 👏'}
+ if(has(q,'comunicado','redacta','mensaje','padres')){
+  return `Aquí tienes un borrador:<br><br><i>«Estimadas familias: les recordamos que esta semana trabajaremos fracciones y decimales en Matemática. Les pedimos revisar con sus hijos la ficha N.° 7 publicada en el aula virtual y verificar la entrega de la tarea antes de la fecha límite. Gracias por su apoyo. Prof. Rosa Quispe Huamán.»</i><br><br>Puedes copiarlo en <b>Avisos</b> y elegir el aula de destino.`}
+ if(has(q,'pregunta','examen','evaluacion','propon')){
+  return `Propuesta de preguntas para el banco:${li(['<b>Opción múltiple:</b> ¿Cuál es el resultado de 2/3 + 1/6? a) 5/6 ✓ b) 3/9 c) 1/2 d) 3/6','<b>Verdadero/Falso:</b> 3/5 es mayor que 1/2. (Verdadero)','<b>Respuesta corta:</b> Escribe 3/4 como número decimal. (0,75)'])}Puedes agregarlas en <b>Evaluaciones › Banco de preguntas</b>.`}
+ return null}
+
+function ansAdm(q){
+ const sts=visStudents(),r=role();
+ const sedes=fixedSede()?SEDES.filter(s=>s.id===fixedSede()):SEDES;
+ if(has(q,'morosidad','moroso','deuda','vencid')&&!has(q,'familia')){
+  const rows=sedes.map(se=>{const ss=S.students.filter(s=>s.sede===se.id);let v=0,n=0;ss.forEach(s=>{const c=cuenta(s);if(c.venc){v+=c.venc;n++}});return{n:se.n,v,f:n,t:ss.length}}).sort((a,b)=>b.v-a.v);
+  return `Morosidad al ${fd(TISO)}:${li(rows.map(x=>`<b>${x.n}</b>: ${money(x.v)} vencido · ${x.f} de ${x.t} alumnos (${pct(x.f,x.t)}%)`))}${rows.length>1?`La sede con más deuda es <b>${rows[0].n}</b>. Puedo ayudarte a preparar un recordatorio para esas familias.`:''}${src('Pagos y estados de cuenta')}`}
+ if(has(q,'familia','mas deuda')){
+  const rows=sts.map(s=>({s,c:cuenta(s)})).filter(x=>x.c.venc).sort((a,b)=>b.c.venc-a.c.venc).slice(0,5);
+  return `Familias con más deuda vencida:${li(rows.map(x=>`${esc(x.s.apod)} (${fullName(x.s)}, ${sedeN(x.s.sede)}): <b>${money(x.c.venc)}</b>`))}${src('Estados de cuenta')}`}
+ if(has(q,'recaud','ingreso','cobr')){
+  const m=recaudacion(sts),cur=m[MT],prev=m[MT-1];
+  return `En ${MESL[MT].toLowerCase()} se ha recaudado <b>${money(cur)}</b> hasta hoy${fixedSede()?' en '+sedeN(fixedSede()):' en las 4 sedes'}. El mes anterior cerró con ${money(prev)}.${src('Control de ingresos')}`}
+ if(has(q,'voucher','constancia')){
+  const v=visVou().filter(x=>x.estado==='Por revisar');
+  return v.length?`Hay <b>${v.length}</b> voucher(s) por revisar:${li(v.map(x=>{const s=stu(x.sid);return `${fullName(s)} · ${money(x.monto)} · ${x.m} N.° ${x.op}`}))}Puedes aprobarlos en <b>Pensiones</b>.`:'No hay vouchers pendientes de revisión. ✅'}
+ if(has(q,'asistencia')&&has(q,'hoy','dia')){
+  const h=asisHoyStats(visAulas());return `Hoy la asistencia va en <b>${h.pctv}%</b> (${h.pres} de ${h.tot} alumnos registrados).${h.pend.length?` Aún falta registrar: ${h.pend.map(a=>a.n+' ('+sedeN(a.sede)+')').join(', ')}.`:' Todas las aulas registraron.'}${src('Asistencia de alumnos')}`}
+ if(has(q,'falta','asistencia','inasist')){
+  const rows=sts.slice().sort((a,b)=>S.asis[b.id].F-S.asis[a.id].F).slice(0,5);
+  return `Alumnos con más faltas en el año:${li(rows.map(s=>`${fullName(s)} · ${aulaById(s.aula).n}, ${sedeN(s.sede)}: <b>${S.asis[s.id].F} faltas</b>`))}Sugiero que los tutores se comuniquen con estas familias.${src('Asistencia de alumnos')}`}
+ if(has(q,'apoyo','riesgo','rendimiento','bajo','desaprob')){
+  const b=curBim(),rows=[];sts.forEach(s=>{const low=CURSOS.filter(c=>{const v=promBim(s.id,c,b)??promBim(s.id,c,b-1);return v!=null&&v<11});if(low.length)rows.push({s,low})});
+  rows.sort((a,b)=>b.low.length-a.low.length);
+  return rows.length?`<b>${rows.length}</b> alumno(s) tienen al menos un curso en C (menos de 11). Los casos principales:${li(rows.slice(0,5).map(x=>`${fullName(x.s)} (${aulaById(x.s.aula).n}): ${x.low.join(', ')}`))}${src('Notas y boletas')}`:'No hay alumnos con cursos en C en este bimestre. 👏'}
+ if(has(q,'ratific')){
+  const p=sts.filter(s=>s.rat==='Pendiente');return `Hay <b>${p.length}</b> ratificaciones pendientes de ${sts.length} alumnos (${pct(p.length,sts.length)}%).${src('Alumnos y padres')}`}
+ if(has(q,'admision','solicitud')){
+  const n=S.sol.filter(x=>x.estado==='Nueva');return `Hay <b>${n.length}</b> solicitudes de admisión nuevas:${li(n.map(x=>`${esc(x.apod)} · ${x.grado} ${x.nivel} · ${sedeN(x.sede)}`))}${src('Admisión y página web')}`}
+ if(has(q,'alumno','matricul','cuantos')){
+  return `Hay <b>${sts.length}</b> alumnos matriculados${fixedSede()?' en '+sedeN(fixedSede()):' en las 4 sedes'}.${src('Alumnos y padres')}`}
+ return null}
+
+function answer(text){
+ const q=fold(text),r=role();
+ if(has(q,'hola','buenos','buenas'))return `¡Hola, ${user().user.split(' ').filter(w=>!/\./.test(w))[0]}! Soy Thomson IA. Puedo responder preguntas con la información del sistema. Prueba con una de las sugerencias.`;
+ if(has(q,'gracias'))return '¡Con gusto! Si necesitas algo más, aquí estoy. 😊';
+ let a=null;
+ if(r==='pad'||r==='est')a=ansFam(q);else if(r==='doc')a=ansDoc(q);else a=ansAdm(q);
+ return a||`No encontré esa información en el sistema o no está dentro de tus permisos. Voy a derivar tu consulta a <b>secretaría</b> para que te respondan. También puedes escribirnos por <a href="${WA_URL}" target="_blank" rel="noopener">WhatsApp</a>.`}
+
+function addMsg(html,who){const d=document.createElement('div');d.className='ai-m '+who;d.innerHTML=html;$('aiBody').appendChild(d);$('aiBody').scrollTop=1e6;return d}
+function ask(text){
+ text=String(text||'').trim();if(!text||AI.busy)return;AI.busy=true;
+ addMsg(esc(text),'u');$('aiIn').value='';
+ const t=addMsg('<span class="ai-typing"><i></i><i></i><i></i></span>','b');
+ setTimeout(()=>{try{t.innerHTML=answer(text)}catch(e){t.innerHTML='Tuve un problema al consultar los datos. Inténtalo de nuevo.'}
+  $('aiBody').scrollTop=1e6;AI.busy=false;
+  try{S.log.unshift({t:`${TISO} ${hhmm()}`,u:user().user,r:user().n,a:'Consulta al asistente IA',d:text.slice(0,80)});save()}catch(e){}},700+Math.random()*700)}
+function aiReset(){
+ const r=role();AI.role=r;$('aiBody').innerHTML='';
+ const who=r==='pad'?'sobre las notas, tareas, asistencia y pagos de sus hijos':r==='est'?'sobre tus notas, tareas y asistencia':r==='doc'?'sobre tus aulas, o pedirme ayuda para redactar avisos y preguntas':'sobre asistencia, rendimiento, morosidad y recaudación';
+ addMsg(`¡Hola, <b>${esc(user().user)}</b>! 👋 Soy <b>Thomson IA</b>, el asistente del colegio. Pregúntame ${who}. Solo uso la información que tu perfil puede ver.`,'b');
+ $('aiSug').innerHTML=(SUG[r]||[]).map(s=>`<button type="button">${s}</button>`).join('')}
+function aiSync(){
+ const inApp=!WEB&&!!S.session;
+ waFab.hidden=!WEB;
+ $('aiFab').hidden=!inApp||AI.open;
+ if(!inApp){AI.open=false;$('aiPanel').hidden=true;return}
+ if(AI.role!==role())aiReset();
+ $('aiPanel').hidden=!AI.open;
+}
+function aiWeb(){if(!WEB)return;const hb=document.querySelector('#w-inicio .cta');if(hb&&!hb.querySelector('.wa'))hb.insertAdjacentHTML('beforeend',`<a class="btn wa" href="${WA_URL}" target="_blank" rel="noopener">${WA_ICON}Escríbenos por WhatsApp</a>`);waFab.hidden=false;$('aiFab').hidden=true;$('aiPanel').hidden=true}
+$('aiFab').onclick=()=>{AI.open=true;aiSync();setTimeout(()=>$('aiIn').focus(),50)};
+$('aiClose').onclick=()=>{AI.open=false;aiSync()};
+$('aiForm').onsubmit=e=>{e.preventDefault();ask($('aiIn').value)};
+$('aiSug').onclick=e=>{const b=e.target.closest('button');if(b)ask(b.textContent)};
+const _render0=render;
+render=function(){_render0();aiSync();aiWeb()};
+aiSync();aiWeb();
+</script>
 </body></html>
