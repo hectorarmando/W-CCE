@@ -1663,9 +1663,9 @@ render();
 
 <!-- ===== WhatsApp + Asistente IA (simulado) ===== -->
 <style>
-.wa-fab{position:fixed;left:20px;bottom:20px;z-index:60;display:flex;align-items:center;gap:10px;background:#25D366;color:#fff;border:0;border-radius:999px;padding:12px 18px 12px 14px;font:600 14px/1 inherit;font-family:inherit;box-shadow:0 10px 26px rgba(37,211,102,.45);cursor:pointer;text-decoration:none;animation:waPulse 2.4s infinite}
+.wa-fab{position:fixed;right:20px;bottom:20px;z-index:60;display:grid;place-items:center;width:60px;height:60px;background:#25D366;color:#fff;border:0;border-radius:50%;padding:0;font:600 14px/1 inherit;font-family:inherit;box-shadow:0 10px 26px rgba(37,211,102,.45);cursor:pointer;text-decoration:none;animation:waPulse 2.4s infinite}
 .wa-fab:hover{background:#1ebe5b}
-.wa-fab svg{width:24px;height:24px;flex:none}
+.wa-fab svg{width:34px;height:34px}.totop{bottom:calc(92px + env(safe-area-inset-bottom,0px))!important;right:calc(27px + env(safe-area-inset-right,0px))!important}
 @keyframes waPulse{0%,100%{box-shadow:0 10px 26px rgba(37,211,102,.45),0 0 0 0 rgba(37,211,102,.5)}60%{box-shadow:0 10px 26px rgba(37,211,102,.45),0 0 0 14px rgba(37,211,102,0)}}
 .btn.wa{background:#25D366;color:#fff;border-color:#25D366;display:inline-flex;align-items:center;gap:8px}
 .btn.wa svg{width:18px;height:18px}
@@ -1692,7 +1692,7 @@ render();
 .ai-form input{flex:1;border:1px solid var(--line,#DBE4EE);border-radius:999px;padding:10px 14px;font:14px inherit;font-family:inherit;color:inherit;background:var(--bg,#F3F7FB)}
 .ai-form button{border:0;border-radius:50%;width:40px;height:40px;background:var(--primary,#123E7C);color:#fff;font-size:17px;cursor:pointer}
 .ai-note{font-size:10.5px;color:var(--muted,#5D6F88);text-align:center;padding:0 12px 8px;background:var(--surface,#fff)}
-@media (max-width:600px){.ai-fab span.t,.wa-fab span.t{display:none}.ai-fab,.wa-fab{padding:12px}.ai-panel{right:12px;bottom:78px}}
+@media (max-width:600px){.ai-fab span.t{display:none}.ai-fab{padding:12px}.wa-fab{width:54px;height:54px;right:16px;bottom:16px}.ai-panel{right:12px;bottom:78px}}
 </style>
 <a id="waFab" class="wa-fab" target="_blank" rel="noopener" hidden aria-label="Escríbenos por WhatsApp"></a>
 <button id="aiFab" class="ai-fab" type="button" hidden aria-label="Abrir asistente de IA"><span class="orb">✦</span><span class="t">Asistente IA</span></button>
@@ -1713,7 +1713,7 @@ const WA_URL='https://wa.me/'+WA_NUM+'?text='+encodeURIComponent(WA_TXT);
 
 const AI={open:false,role:null,busy:false};
 const $=id=>document.getElementById(id);
-const waFab=$('waFab');waFab.href=WA_URL;waFab.innerHTML=WA_ICON+'<span class="t">¿Consultas? Escríbenos</span>';
+const waFab=$('waFab');waFab.href=WA_URL;waFab.innerHTML=WA_ICON;waFab.title='Escríbenos por WhatsApp';
 
 const SUG={
  pad:['¿Cómo va Mateo en sus notas?','¿Tiene tareas pendientes?','¿Cuánto debo de pensión?','¿Cómo va su asistencia?','Últimos comunicados'],
