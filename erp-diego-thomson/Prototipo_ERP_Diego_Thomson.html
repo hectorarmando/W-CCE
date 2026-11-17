@@ -613,6 +613,63 @@ html{scroll-behavior:smooth}
 .msg-pick{display:grid;gap:14px;max-height:55vh;overflow-y:auto}.msg-pick .grp{display:grid;gap:2px}.msg-pick .eyebrow{margin:0 0 2px 8px}
 @media (max-width:900px){.chat{grid-template-columns:minmax(0,1fr);height:calc(100vh - 250px);min-height:420px}.chat.open .chat-side{display:none}.chat:not(.open) .chat-pane{display:none}.chat-back{display:inline-flex}}
 body:has(.chat.open) .ai-fab,body:has(.chat.open) .ai-panel{display:none!important}
+/* ---------- Clases en vivo y pizarra ---------- */
+.live{display:inline-flex;align-items:center;gap:6px;background:#C8202F;color:#fff;font-weight:700;font-size:10.5px;letter-spacing:.06em;border-radius:6px;padding:3px 8px;white-space:nowrap}
+.live:before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;animation:liveP 1.2s infinite}
+@keyframes liveP{50%{opacity:.25}}
+.item.vlive{border-color:#C8202F;box-shadow:inset 3px 0 0 #C8202F}
+body.room-on{overflow:hidden}
+body.room-on .ai-fab,body.room-on .ai-panel,body.room-on .wa-fab{display:none!important}
+.room{position:fixed;inset:0;z-index:48;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.rm-top{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:10px 16px;background:var(--grad);color:#fff;flex-wrap:wrap}
+.rm-top .tt{display:flex;align-items:center;gap:12px;min-width:0}
+.rm-top .tt b{display:block;font-size:15px;line-height:1.25}.rm-top .tt span:not(.live){font-size:12px;opacity:.85}
+.rm-ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rbtn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:9px;padding:7px 12px;font-weight:600;font-size:12.5px;line-height:1.2;cursor:pointer;white-space:nowrap}
+.rbtn:hover{background:rgba(255,255,255,.22)}
+.rbtn[aria-pressed="true"]{background:#fff;color:#123E7C;border-color:#fff}
+.rbtn.end{background:#C8202F;border-color:#C8202F}
+.rm-time{font-variant-numeric:tabular-nums;font-weight:700;font-size:13.5px;min-width:44px}
+.rec{background:#fff;color:#C8202F;font-weight:800;font-size:11px;border-radius:6px;padding:3px 8px;animation:liveP 1.6s infinite}
+.rm-main{flex:1;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:12px;padding:12px;min-height:0}
+.rm-main.free{grid-template-columns:minmax(0,1fr)}
+.rm-board{display:flex;flex-direction:column;gap:8px;min-height:0;min-width:0}
+.tb{display:flex;gap:4px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 8px}
+.tb .tl{width:36px;height:36px;border-radius:8px;border:1px solid transparent;background:none;color:var(--fg);cursor:pointer;display:grid;place-items:center;padding:0}
+.tb .tl:hover:not(:disabled){background:var(--surface-2)}
+.tb .tl[aria-pressed="true"]{background:var(--violet-soft);border-color:var(--primary);color:var(--primary)}
+.tb .sep{width:1px;height:24px;background:var(--line);margin:0 4px}
+.tb .sw{width:24px;height:24px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0;margin:0 1px}
+.tb .sw[aria-pressed="true"]{box-shadow:0 0 0 2px var(--primary)}
+.tb button:disabled{opacity:.35;cursor:not-allowed}
+.cv-wrap{flex:1;min-height:0;position:relative;display:grid;place-items:center}
+#cv{background:#fff;border-radius:10px;box-shadow:var(--shadow);border:1px solid var(--line);touch-action:none;display:block}
+#cv.pen{cursor:crosshair}
+.ro-tag{position:absolute;top:10px;left:50%;transform:translateX(-50%);background:rgba(19,40,74,.8);color:#fff;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;pointer-events:none;white-space:nowrap}
+.cv-txt{position:absolute;z-index:2;border:1px dashed var(--primary);background:rgba(255,255,255,.95);padding:0 4px;min-width:200px;outline:none;border-radius:4px}
+.pgbar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.rm-side{display:flex;flex-direction:column;gap:10px;min-height:0}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.tile{position:relative;aspect-ratio:16/10;border-radius:10px;background:#0E2347;color:#fff;display:grid;place-items:center;overflow:hidden;font-size:12px}
+.tile.main{grid-column:1/-1}
+.tile.more{background:#1B3766;font-weight:700;font-size:14px}
+.tile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.tile .av{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;font-weight:700;font-size:13px}
+.tile.main .av{width:64px;height:64px;font-size:20px}
+.tile.talk .av{animation:talk 1.4s infinite}
+@keyframes talk{0%,100%{box-shadow:0 0 0 2px #4ade80}50%{box-shadow:0 0 0 7px rgba(74,222,128,.25)}}
+.tile .nm{position:absolute;left:6px;bottom:5px;font-size:10.5px;background:rgba(0,0,0,.5);padding:1px 6px;border-radius:5px;max-width:calc(100% - 12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rm-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;min-height:0;flex:1;overflow:hidden}
+.rm-tabs{display:flex;border-bottom:1px solid var(--line)}
+.rm-tabs button{flex:1;border:0;background:none;padding:10px;font-weight:600;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent}
+.rm-tabs button[aria-selected="true"]{color:var(--primary);border-bottom-color:var(--primary)}
+.rm-panel{flex:1;overflow-y:auto;padding:10px 12px;display:grid;gap:10px;align-content:start;min-height:120px}
+.rm-msg{display:grid;gap:1px}.rm-msg b{font-size:12px;display:flex;gap:6px;align-items:center}.rm-msg p{font-size:13px;margin:0;line-height:1.4;overflow-wrap:anywhere}.rm-msg small{font-size:10.5px;color:var(--muted)}
+.rm-msg.me b{color:var(--primary)}
+.rm-chat{display:flex;gap:6px;padding:8px;border-top:1px solid var(--line)}
+.ppl{display:flex;align-items:center;gap:8px;font-size:13px}.ppl .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
+.rm-foot{font-size:11px;color:var(--muted);text-align:center;padding:0 12px 8px;margin:0}
+@media (max-width:900px){.rm-main{grid-template-columns:minmax(0,1fr);overflow-y:auto;align-content:start}.rm-board{min-height:auto}.cv-wrap{flex:none;aspect-ratio:16/9;width:100%}.rm-side{min-height:440px}.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}.tile.main{grid-column:span 2;grid-row:span 2;aspect-ratio:auto}.rm-top{padding:8px 12px}.rm-top .tt span:not(.live){display:none}.tb.ro{display:none}.rm-foot{display:none}.ro-tag{top:auto;bottom:8px}}
 </style>
 
 <div id="app"></div>
@@ -669,17 +726,17 @@ const NF=['Valeria','Camila','Lucía','Mariana','Sofía','Daniela','Ximena','Fer
 const NM=['Mateo','Santiago','Sebastián','Diego','Thiago','Gael','Adrián','Joaquín','Rodrigo','Leonardo','Gabriel','Fabricio','Matías','Bruno','Alonso','Emiliano'];
 const APES=['Quispe','Huamán','Flores','Mamani','Rojas','Sánchez','García','Torres','Chávez','Ramírez','Vargas','Castillo','Gutiérrez','Espinoza','Paredes','Salazar','Ríos','Cárdenas','Vílchez','Ccahuana','Palomino','Zevallos','Lozano','Rivera'];
 const ROLES={
- dir:{n:'Dirección general',user:'Mg. Elena Paredes Salazar',mail:'direccion@diegothomson.edu.pe',nav:['inicio','sedes','alumnos','adm','docentes','asistencia','notas','aula','eval','pagos','ingresos','com','msg','seg']},
+ dir:{n:'Dirección general',user:'Mg. Elena Paredes Salazar',mail:'direccion@diegothomson.edu.pe',nav:['inicio','sedes','alumnos','adm','docentes','asistencia','notas','aula','vivo','eval','pagos','ingresos','com','msg','seg']},
  sed:{n:'Dirección de sede',user:'Lic. Raúl Castillo Torres',mail:'direccion.norte@diegothomson.edu.pe',sede:'nor',nav:['inicio','alumnos','docentes','asistencia','notas','aula','eval','pagos','ingresos','com']},
  sec:{n:'Secretaría',user:'Patricia Rojas Vílchez',mail:'secretaria.central@diegothomson.edu.pe',sede:'cen',nav:['inicio','alumnos','adm','asistencia','notas','com']},
  tes:{n:'Tesorería',user:'Jorge Lozano Ríos',mail:'tesoreria.central@diegothomson.edu.pe',sede:'cen',nav:['inicio','pagos','ingresos','com']},
- doc:{n:'Docente',user:'Prof. Rosa Quispe Huamán',mail:'rquispe@diegothomson.edu.pe',sede:'cen',nav:['inicio','cursos','notas','asistencia','tutoria','eval','com','msg']},
+ doc:{n:'Docente',user:'Prof. Rosa Quispe Huamán',mail:'rquispe@diegothomson.edu.pe',sede:'cen',nav:['inicio','cursos','vivo','notas','asistencia','tutoria','eval','com','msg']},
  pad:{n:'Padre de familia',user:'Carlos Mendoza Ríos',mail:'cmendoza@correo.pe',sede:'cen',nav:['finicio','fcursos','fexam','fnotas','fasis','fpagos','favisos']},
- est:{n:'Estudiante',user:'Valeria Mendoza Salazar',mail:'vmendoza@diegothomson.edu.pe',sede:'cen',nav:['finicio','fcursos','fexam','fnotas','fasis','favisos','msg']}};
-const NAV={inicio:'Inicio',sedes:'Sedes y año escolar',alumnos:'Alumnos y padres',adm:'Admisión y página web',docentes:'Docentes',asistencia:'Asistencia de alumnos',notas:'Notas y libretas',aula:'Aula virtual',eval:'Evaluaciones',pagos:'Pensiones',ingresos:'Control de ingresos',com:'Comunicados y avisos',seg:'Usuarios y seguridad',cursos:'Mis cursos',tutoria:'Mi tutoría',finicio:'Inicio',fcursos:'Mis cursos',fexam:'Exámenes',fnotas:'Notas y libretas',fasis:'Asistencia',fpagos:'Pensiones y pagos',favisos:'Avisos',msg:'Mensajes'};
+ est:{n:'Estudiante',user:'Valeria Mendoza Salazar',mail:'vmendoza@diegothomson.edu.pe',sede:'cen',nav:['finicio','fcursos','vivo','fexam','fnotas','fasis','favisos','msg']}};
+const NAV={inicio:'Inicio',sedes:'Sedes y año escolar',alumnos:'Alumnos y padres',adm:'Admisión y página web',docentes:'Docentes',asistencia:'Asistencia de alumnos',notas:'Notas y libretas',aula:'Aula virtual',eval:'Evaluaciones',pagos:'Pensiones',ingresos:'Control de ingresos',com:'Comunicados y avisos',seg:'Usuarios y seguridad',cursos:'Mis cursos',tutoria:'Mi tutoría',finicio:'Inicio',fcursos:'Mis cursos',fexam:'Exámenes',fnotas:'Notas y libretas',fasis:'Asistencia',fpagos:'Pensiones y pagos',favisos:'Avisos',msg:'Mensajes',vivo:'Clases en vivo'};
 const NAVR={dir:{inicio:'Panel de la dirección',msg:'Supervisión de mensajes'},sed:{inicio:'Panel de la sede'},doc:{notas:'Registro de notas',com:'Avisos'}};
 const navL=k=>(NAVR[role()]||{})[k]||NAV[k];
-const EYEBROW={msg:'Chat interno del colegio',inicio:'Resumen',sedes:'Sedes, niveles y periodos',alumnos:'Fichas, matrícula y ratificación',adm:'Solicitudes desde la página web',docentes:'Fichas y asignación de cursos',asistencia:'Control diario y reportes',notas:'Calificaciones, libretas y actas',aula:'Plataforma virtual',eval:'Evaluaciones virtuales y presenciales',pagos:'Cronogramas, pagos y vouchers',ingresos:'Recaudación por sede y mes',com:'Comunicados y notificaciones',seg:'Usuarios, permisos y copias',cursos:'Aula virtual',tutoria:'Seguimiento de tu aula',finicio:'Portal de familias',fcursos:'Aula virtual',fexam:'Evaluaciones',fnotas:'Libretas',fasis:'Control de asistencia',fpagos:'Estado de cuenta',favisos:'Comunicados'};
+const EYEBROW={vivo:'Clases virtuales y pizarra interactiva',msg:'Chat interno del colegio',inicio:'Resumen',sedes:'Sedes, niveles y periodos',alumnos:'Fichas, matrícula y ratificación',adm:'Solicitudes desde la página web',docentes:'Fichas y asignación de cursos',asistencia:'Control diario y reportes',notas:'Calificaciones, libretas y actas',aula:'Plataforma virtual',eval:'Evaluaciones virtuales y presenciales',pagos:'Cronogramas, pagos y vouchers',ingresos:'Recaudación por sede y mes',com:'Comunicados y notificaciones',seg:'Usuarios, permisos y copias',cursos:'Aula virtual',tutoria:'Seguimiento de tu aula',finicio:'Portal de familias',fcursos:'Aula virtual',fexam:'Evaluaciones',fnotas:'Libretas',fasis:'Control de asistencia',fpagos:'Estado de cuenta',favisos:'Comunicados'};
 const ICA={cursos:'aula',tutoria:'alumnos',finicio:'inicio',fcursos:'aula',fexam:'eval',fnotas:'notas',fasis:'asistencia',fpagos:'pagos',favisos:'bell',ingresos:'chart',seg:'roles',docentes:'alumnos',sedes:'sedes'};
 const IC={
  inicio:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
@@ -698,6 +755,7 @@ const IC={
  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
  money:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/>',
+ vivo:'<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10.5l5-3v9l-5-3z"/>',
  msg:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.5h8M8 12.5h5"/>',
  bell:'<path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
  search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/>',
@@ -823,6 +881,7 @@ function ensureS(){
  if(!S.config.ai)S.config.ai={on:{dir:true,sed:true,sec:true,tes:true,doc:true,pad:true,est:true},lim:50,base:17.6};
  if(!S.deudas)S.deudas=[];
  msgSeed();
+ vivoSeed();
  if(!S.siagie)S.siagie=[];
  if(!S.onlineSeed){S.onlineSeed=true;let n=0;S.students.forEach(st=>{Object.values(S.pagos[st.id]||{}).forEach(p=>{if(n<8&&p.f&&p.f.slice(0,7)===TISO.slice(0,7)&&p.m!=='En línea'&&(st.id.charCodeAt(st.id.length-1)%3===0)){p.m='En línea';p.canal=n%2?'Yape':'Tarjeta';p.op='IZ-'+(704512+n*137);n++}})})}
  if(!S.deriv)S.deriv=[
@@ -945,7 +1004,7 @@ function shell(){
  return `<div class="shell">
  <aside class="side">
   <div class="brand"><img src="${CREST}" alt="Escudo Diego Thomson"><div><b>I.E.P. Diego Thomson</b><span>Plataforma educativa</span></div></div>
-  <nav class="nav" aria-label="Módulos">${u.nav.map(k=>`<button data-a="go" data-v="${k}" ${k===view?'aria-current="page"':''}>${icon(k)}<span>${navL(k)}</span>${k==='msg'&&msgBadge()?`<i class="nb">${msgBadge()}</i>`:''}</button>`).join('')}</nav>
+  <nav class="nav" aria-label="Módulos">${u.nav.map(k=>`<button data-a="go" data-v="${k}" ${k===view?'aria-current="page"':''}>${icon(k)}<span>${navL(k)}</span>${k==='msg'&&msgBadge()?`<i class="nb">${msgBadge()}</i>`:''}${k==='vivo'&&vivoLiveN()?'<i class="nb">En vivo</i>':''}</button>`).join('')}</nav>
   <div class="side-foot"><button data-a="reset">${RESETARM?'Toca otra vez para confirmar':'Reiniciar datos de la demo'}</button><b>HR7</b><span>Desarrollado por HR7 · prototipo con datos ficticios</span></div>
  </aside>
  <main class="main">
@@ -975,6 +1034,8 @@ function notifs(){const r=role(),out=[];
   let nf=0;DOC_AULAS.forEach(id=>aulaStudents(id).forEach(s=>S.notas[s.id]['Matemática'][3].forEach(x=>{if(x==null)nf++})));if(nf)out.push({n:nf,t:'Notas del IV bimestre sin registrar',v:'notas'})}
  if(r==='est'){const k=curKid();const tp=CURSOS.reduce((n,c)=>n+lmsOf(k.aula,c).tar.filter(t=>!t.ent[k.id]&&daysTo(t.lim)>=0).length,0);if(tp)out.push({n:tp,t:'Tareas por entregar',v:'fcursos'});
   const ep=S.exams.filter(e=>e.aula===k.aula&&!e.res[k.id]).length;if(ep)out.push({n:ep,t:'Exámenes por rendir',v:'fexam'})}
+ if(r==='est'){const lv=vivoLiveN();if(lv)out.push({n:lv,t:'Clase en vivo ahora',v:'vivo'})}
+ if(r==='doc'){const hp=vMine().filter(c=>c.estado==='prog'&&c.f===TISO).length;if(hp)out.push({n:hp,t:'Clases en vivo programadas para hoy',v:'vivo'})}
  if(['doc','est'].includes(r)){const u=msgUnread();if(u)out.push({n:u,t:'Mensajes sin leer',v:'msg'})}
  if(r==='dir'){const p=msgRepPend();if(p)out.push({n:p,t:'Conversaciones reportadas',v:'msg'})}
  if(r==='pad'){const kids=famKids().map(k=>k.id);const un=S.com.filter(c=>!c.read.includes(FAM)&&audStudents(c.aud).some(s=>kids.includes(s.id))).length;if(un)out.push({n:un,t:'Comunicados sin leer',v:'favisos'});
@@ -1155,7 +1216,7 @@ function coursePage(aid,c){
  const L=lmsOf(aid,c),a=aulaById(aid),ed=['doc','dir','sed'].includes(role()),est=['est','pad'].includes(role());
  const back=est?`<button class="link" data-a="ui" data-k="estCurso" data-v="">‹ Mis cursos</button>`:'';
  let body='';
- if(S.ui.aulaTab==='mat')body=`<div class="list">${L.mat.map(m=>`<div class="item"><div class="ic">${m.tipo==='Video enlazado'?'▶':'PDF'}</div><div class="body"><b>${esc(m.t)}</b><span class="meta">${m.tipo} · publicado el ${fd(m.f)} · ${esc(m.ref)}</span></div></div>`).join('')}</div>
+ if(S.ui.aulaTab==='mat')body=`<div class="list">${L.mat.map(m=>`<div class="item"><div class="ic">${m.tipo==='Video enlazado'||m.tipo==='Grabación de clase'?'▶':m.tipo==='Pizarra de clase'?'✎':'PDF'}</div><div class="body"><b>${esc(m.t)}</b><span class="meta">${m.tipo} · publicado el ${fd(m.f)} · ${esc(m.ref)}</span></div>${m.cls&&m.tipo==='Pizarra de clase'&&vHasBoard(m.cls)?`<div class="act"><button class="btn ghost sm" data-a="vivoBoard" data-id="${m.cls}">Ver pizarra</button></div>`:m.cls&&m.tipo==='Grabación de clase'?`<div class="act"><button class="btn ghost sm" data-a="vivoRec" data-id="${m.cls}">Ver grabación</button></div>`:''}</div>`).join('')}</div>
   ${ed?`<form class="card" data-f="material" style="margin-top:14px;box-shadow:none"><h3 style="font-size:14.5px;margin-bottom:12px">Publicar material</h3><div class="fg"><div class="field"><label for="mt1">Título *</label><input class="in" id="mt1" name="t" required placeholder="Ej. Guía de repaso"></div><div class="field"><label for="mt2">Tipo</label><select class="in" id="mt2" name="tipo">${['Archivo PDF','Video enlazado','Enlace'].map(x=>opt(x,x,'')).join('')}</select></div><div class="field"><label for="mt3">Archivo</label><input class="in" id="mt3" type="file" name="file"></div><div class="field"><label for="mt4">O enlace</label><input class="in" id="mt4" name="url" placeholder="https://…"></div></div><div class="mf" style="margin-top:12px"><button class="btn">Publicar en el curso</button></div></form>`:''}`;
  else if(S.ui.aulaTab==='tar')body=`<div class="list">${L.tar.map(t=>tareaItem(t,aid,ed,est)).join('')}</div>
   ${ed?`<form class="card" data-f="tarea" style="margin-top:14px;box-shadow:none"><h3 style="font-size:14.5px;margin-bottom:12px">Nueva tarea</h3><div class="fg"><div class="field"><label for="ta1">Título *</label><input class="in" id="ta1" name="t" required></div><div class="field"><label for="ta2">Fecha límite *</label><input class="in" id="ta2" type="date" name="lim" value="${addDays(7)}" required></div><div class="field full"><label for="ta3">Indicaciones</label><textarea class="in" id="ta3" name="d" placeholder="Qué deben entregar y en qué formato"></textarea></div></div><div class="mf" style="margin-top:12px"><button class="btn">Asignar tarea</button></div></form>`:''}`;
@@ -1503,7 +1564,7 @@ function vSeg(){if(!S.ui.segTab)S.ui.segTab='usr';
  return `<div class="card">${t}<div style="margin-top:16px">${b}</div></div>`}
 function permMatrix(){
  const P=[['Dirección general','Todas'],['Dirección de sede','Su sede'],['Secretaría','Su sede'],['Tesorería','Su sede'],['Docente','Sus aulas'],['Padre de familia','Sus hijos'],['Estudiante','Sus cursos']];
- const M=[['Sedes, año escolar y usuarios',['E','—','—','—','—','—','—']],['Matrícula y fichas',['E','E','E','V','—','V','—']],['Docentes y asignación',['E','E','—','—','—','—','—']],['Asistencia',['E','E','V','—','E','V','V']],['Notas y libretas',['E','E','V','—','E','V','V']],['Aula virtual',['V','V','—','—','E','V','E']],['Evaluaciones',['V','V','—','—','E','V','E']],['Pensiones y vouchers',['E','E','—','E','—','E','—']],['Control de ingresos',['V','V','—','V','—','—','—']],['Comunicados',['E','E','E','E','E','V','V']],['Mensajería interna',['V','—','—','—','E','—','E']],['Bitácora y copias',['V','—','—','—','—','—','—']]];
+ const M=[['Sedes, año escolar y usuarios',['E','—','—','—','—','—','—']],['Matrícula y fichas',['E','E','E','V','—','V','—']],['Docentes y asignación',['E','E','—','—','—','—','—']],['Asistencia',['E','E','V','—','E','V','V']],['Notas y libretas',['E','E','V','—','E','V','V']],['Aula virtual',['V','V','—','—','E','V','E']],['Evaluaciones',['V','V','—','—','E','V','E']],['Pensiones y vouchers',['E','E','—','E','—','E','—']],['Control de ingresos',['V','V','—','V','—','—','—']],['Comunicados',['E','E','E','E','E','V','V']],['Mensajería interna',['V','—','—','—','E','—','E']],['Clases en vivo y pizarra',['V','—','—','—','E','—','V']],['Bitácora y copias',['V','—','—','—','—','—','—']]];
  const cell=x=>x==='E'?'<span class="chip ok">Editar</span>':x==='V'?'<span class="chip info">Ver</span>':'<span class="muted">—</span>';
  return `<div class="tw"><table class="t matrix vh"><thead><tr><th>Módulo</th>${P.map(p=>`<th class="c">${p[0]}<span class="sub" style="text-transform:none;letter-spacing:0;opacity:.8">${p[1]}</span></th>`).join('')}</tr></thead><tbody>${M.map(([m,v])=>`<tr><td><b>${m}</b></td>${v.map(x=>`<td class="c">${cell(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="muted" style="font-size:12.5px;margin-top:10px">Padre de familia "Editar" en pensiones significa subir vouchers; en evaluaciones el estudiante rinde exámenes. En mensajería, la dirección general supervisa las conversaciones y atiende los reportes.</p>`}
 function newUserHTML(){return `${mhead('Nuevo usuario','Recibirá un correo para crear su contraseña')}<form data-f="user" class="fg"><div class="field full"><label for="nu1">Nombres y apellidos *</label><input class="in" id="nu1" name="n" required></div><div class="field full"><label for="nu2">Correo *</label><input class="in" id="nu2" name="mail" type="email" required></div><div class="field"><label for="nu3">Perfil</label><select class="in" id="nu3" name="perfil">${PERFILES.map(p=>opt(p,p,'Secretaría')).join('')}</select></div><div class="field"><label for="nu4">Sede</label><select class="in" id="nu4" name="sede">${opt('all','Todas las sedes','cen')}${SEDES.map(s=>opt(s.id,s.n,'cen')).join('')}</select></div><div class="mf full"><button type="button" class="btn ghost" data-a="close">Cancelar</button><button class="btn">Crear usuario</button></div></form>`}
@@ -1686,7 +1747,170 @@ function msgViewHTML(c){const r=c.rep;return `${mhead(c.p.map(pName).map(esc).jo
  <div class="chat-body ro">${bubbles(c,null)}</div>
  <div class="mf" style="margin-top:12px"><button class="btn ghost" data-a="close">Cerrar</button>${r&&r.estado==='Pendiente'?`<button class="btn" data-a="msgRev" data-id="${c.id}">Marcar como revisada</button>`:''}</div>`}
 
-const VIEWS={msg:vMsg,adm:vAdm,inicio:vInicio,sedes:vSedes,alumnos:vAlumnos,docentes:vDocentes,asistencia:vAsistencia,notas:vNotas,aula:vAula,cursos:vAula,tutoria:vTutoria,eval:vEval,pagos:vPagos,ingresos:vIngresos,com:vCom,seg:vSeg,finicio:fInicio,fcursos:fCursos,fexam:fExam,fnotas:fNotas,fasis:fAsis,fpagos:fPagos,favisos:fAvisos};
+/* ---------- CLASES EN VIVO Y PIZARRA INTERACTIVA ---------- */
+var LIVE,ROOM,VBC;
+function lkey(){return 'erp-diego-thomson-vivo-v1'}
+function LS(){try{return JSON.parse(localStorage.getItem(lkey())||'{}')||{}}catch(e){return {}}}
+function liveAll(){if(!LIVE)LIVE=LS();return LIVE}
+function liveOf(id){const o=liveAll();return o[id]||(o[id]={pages:[[]],pg:0,allow:false,chat:[],hands:[],rec:false})}
+function liveSave(){try{localStorage.setItem(lkey(),JSON.stringify(liveAll()))}catch(e){}}
+const gid=id=>document.getElementById(id);
+function boardFractions(){const N='#123E7C',B='rgba(42,166,220,.35)',out=[];
+ out.push({t:'text',c:N,s:56,x:80,y:110,tx:'Fracciones equivalentes'},{t:'line',c:'#C8202F',w:6,a:[80,135],b:[690,135]});
+ [[230,4,3,'3/4'],[390,8,6,'6/8']].forEach(([y,n,k,l])=>{const x0=120,W=640,cw=W/n;out.push({t:'rect',c:N,w:4,a:[x0,y],b:[x0+cw*k,y+90],f:B},{t:'rect',c:N,w:5,a:[x0,y],b:[x0+W,y+90]});
+  for(let i=1;i<n;i++)out.push({t:'line',c:N,w:4,a:[x0+cw*i,y],b:[x0+cw*i,y+90]});out.push({t:'text',c:N,s:60,x:800,y:y+68,tx:l})});
+ out.push({t:'text',c:'#14805A',s:76,x:1010,y:400,tx:'3/4 = 6/8'});
+ const pts=[];for(let a=0;a<=Math.PI*2.1;a+=.12)pts.push([1165+Math.cos(a)*(225+Math.sin(a*3)*6),375+Math.sin(a)*(85+Math.cos(a*2)*5)]);out.push({t:'pen',c:'#C8202F',w:5,pts});
+ out.push({t:'text',c:'#5D6F88',s:34,x:960,y:540,tx:'Multiplicamos numerador y'},{t:'text',c:'#5D6F88',s:34,x:960,y:585,tx:'denominador por el mismo número.'});
+ out.push({t:'text',c:N,s:40,x:120,y:700,tx:'Practica: 2/5 = ¿?/10'});
+ return out.map((s,i)=>Object.assign(s,{id:'s'+i}))}
+function boardEnglish(){const N='#123E7C',out=[{t:'text',c:N,s:56,x:80,y:110,tx:'Daily routines'},{t:'line',c:'#C8202F',w:6,a:[80,135],b:[470,135]},
+  {t:'ellipse',c:N,w:6,a:[160,220],b:[460,520]},{t:'line',c:N,w:9,a:[310,370],b:[291,442]},{t:'line',c:'#C8202F',w:5,a:[310,370],b:[310,480]},{t:'text',c:N,s:44,x:250,y:590,tx:'6:30'},
+  {t:'hl',c:'#F5C518',w:30,pts:[[668,245],[835,245]]},
+  {t:'text',c:N,s:44,x:600,y:260,tx:'I wake up at 6:30.'},{t:'text',c:N,s:44,x:600,y:345,tx:'I have breakfast at 7:00.'},{t:'text',c:N,s:44,x:600,y:430,tx:'I go to school at 7:30.'},
+  {t:'text',c:'#C8202F',s:42,x:600,y:560,tx:'What time do you wake up?'}];
+ return out.map((s,i)=>Object.assign(s,{id:'e'+i}))}
+function vivoSeed(){if(S.vivo)return;
+ const p2=n=>String(n).padStart(2,'0'),st=new Date(Date.now()-12*60000),cls=S.students.filter(s=>s.aula==='cen-1'&&s.id!==S.ids.vale);
+ S.vivo={cls:[
+  {id:'V1',aula:'cen-1',curso:'Matemática',doc:'D1',tit:'Repaso: suma de fracciones',f:TISO,h:'15:00',dur:45,modo:'int',estado:'prog',asis:[]},
+  {id:'V2',aula:'cen-1',curso:'Inglés',doc:'D9',tit:'Speaking practice: daily routines',f:TISO,h:`${p2(st.getHours())}:${p2(st.getMinutes())}`,dur:40,modo:'int',estado:'vivo',ini:st.getTime(),asis:[]},
+  {id:'V3',aula:'cen-0',curso:'Matemática',doc:'D1',tit:'Números decimales en la vida diaria',f:addDays(1),h:'10:00',dur:45,modo:'ext',link:'https://zoom.us/j/0000000000',estado:'prog',asis:[]},
+  {id:'V4',aula:'cen-1',curso:'Matemática',doc:'D1',tit:'Fracciones equivalentes',f:addDays(-3),h:'10:00',dur:45,modo:'int',estado:'fin',asis:S.students.filter(s=>s.aula==='cen-1').slice(0,-3).map(s=>s.id),grab:true,piz:true}]};
+ const L=S.lms['cen-1|Matemática'];if(L)L.mat.unshift({t:'Pizarra: Fracciones equivalentes',tipo:'Pizarra de clase',f:addDays(-3),ref:'pizarra-fracciones-equivalentes.png',cls:'V4'},{t:'Grabación: Fracciones equivalentes',tipo:'Grabación de clase',f:addDays(-3),ref:'45 min · clase en vivo',cls:'V4'});
+ const c1=cls[0]?`${cls[0].nom} ${cls[0].ape}`:'Estudiante',c2=cls[4]?`${cls[4].nom} ${cls[4].ape}`:'Estudiante',hh=d=>{const x=new Date(st.getTime()+d*60000);return `${p2(x.getHours())}:${p2(x.getMinutes())}`};
+ LIVE={V1:{pages:[[]],pg:0,allow:false,chat:[],hands:[],rec:false},
+  V2:{pages:[boardEnglish()],pg:0,allow:false,chat:[{n:'Prof. Andrea Gutiérrez Ríos',r:'doc',tx:'Good morning, class! Today we practice daily routines.',h:hh(1)},{n:c1,r:'est',tx:'Good morning, teacher!',h:hh(2)},{n:c2,r:'est',tx:'I wake up at 6:00 😊',h:hh(9)}],hands:[c2],rec:true},
+  V4:{pages:[boardFractions()],pg:0,allow:false,chat:[],hands:[],rec:false}};
+ liveSave()}
+function vCls(id){return S.vivo.cls.find(c=>c.id===id)}
+function vDocN(c){const d=S.docentes.find(x=>x.id===c.doc);return d?d.n:'Docente'}
+function vMyName(){return role()==='est'?fullName(stu(S.ids.vale)):user().user}
+function vMine(){const r=role();if(r==='doc'){const me=msgMe();return S.vivo.cls.filter(c=>c.doc===me)}if(r==='est'){const a=curKid().aula;return S.vivo.cls.filter(c=>c.aula===a)}return S.vivo.cls.filter(c=>!fixedSede()||aulaById(c.aula).sede===fixedSede())}
+function vivoLiveN(){if(!S.vivo||!['doc','est','dir'].includes(role()))return 0;return vMine().filter(c=>c.estado==='vivo').length}
+function vWhen(c){const d=c.f===TISO?'Hoy':c.f===addDays(1)?'Mañana':c.f===addDays(-1)?'Ayer':fd(c.f);return `${d} · ${c.h} · ${c.dur} min`}
+function vModo(c){return c.modo==='int'?'<span class="chip info">Video integrado</span>':'<span class="chip">Zoom o Meet</span>'}
+function vHasBoard(id){const l=liveAll()[id];return !!(l&&l.pages.some(p=>p.length))}
+function vItem(c){const r=role(),doc=r==='doc',a=aulaById(c.aula);let act='',chips='';
+ if(c.estado==='vivo')act=doc?`<button class="btn sm" data-a="vivoJoin" data-id="${c.id}">Volver a la clase</button>`:`<button class="btn sm" data-a="vivoJoin" data-id="${c.id}">${r==='dir'?'Observar':'Unirse'}</button>`;
+ else if(c.estado==='prog'){act=doc&&c.f===TISO?`<button class="btn sm" data-a="vivoStart" data-id="${c.id}">Iniciar clase</button>`:doc?`<button class="btn ghost sm" data-a="vivoStart" data-id="${c.id}">Iniciar ahora</button>`:'';
+  if(c.modo==='ext')act+=`<button class="btn ghost sm" data-a="vivoLink" data-id="${c.id}">Enlace de la reunión</button>`}
+ else{const tot=aulaStudents(c.aula).length;chips=`<span class="chip ${c.asis.length/tot>=.85?'ok':'warn'}">${c.asis.length}/${tot} asistieron</span>${c.piz?'<span class="chip">Pizarra guardada</span>':''}${c.grab?'<span class="chip">Grabación</span>':''}`;
+  act=`${vHasBoard(c.id)?`<button class="btn ghost sm" data-a="vivoBoard" data-id="${c.id}">Ver pizarra</button>`:''}${c.grab?`<button class="btn ghost sm" data-a="vivoRec" data-id="${c.id}">Ver grabación</button>`:''}`}
+ return `<div class="item${c.estado==='vivo'?' vlive':''}"><div class="ic">${icon('vivo',18)}</div><div class="body"><b>${esc(c.tit)}</b><span class="meta">${c.curso} · ${a.n}${r==='dir'?' · '+sedeN(a.sede):''}${doc?'':' · '+esc(vDocN(c))}</span><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">${c.estado==='vivo'?'<span class="live">EN VIVO</span>':`<span class="chip">${vWhen(c)}</span>`}${vModo(c)}${chips}</div></div>${act?`<div class="act">${act}</div>`:''}</div>`}
+function vVivo(){const cs=vMine(),key=c=>c.f+' '+c.h,doc=role()==='doc';
+ const now=cs.filter(c=>c.estado==='vivo'),next=cs.filter(c=>c.estado==='prog').sort((a,b)=>key(a).localeCompare(key(b))),past=cs.filter(c=>c.estado==='fin').sort((a,b)=>key(b).localeCompare(key(a)));
+ const sec=(t,p,l,e)=>`<div class="card"><div class="card-h"><div><h2>${t}</h2>${p?`<p>${p}</p>`:''}</div>${t==='Próximas clases'&&doc?'<button class="btn" data-a="vivoNew">+ Programar clase</button>':''}</div>${l.length?`<div class="list">${l.map(vItem).join('')}</div>`:`<div class="empty">${e}</div>`}</div>`;
+ return `<div class="banner"><div><p class="eyebrow" style="color:#fff;opacity:.85">Aula virtual</p><h2>Clases en vivo</h2><p>${doc?'Dicta tu clase con video y pizarra interactiva. La asistencia se registra sola.':role()==='dir'?'Clases virtuales programadas en el colegio':'Entra a tus clases virtuales y sigue la pizarra del docente en tiempo real.'}</p></div>${doc?'<button class="btn ghost" data-a="vivoFree">Abrir pizarra libre</button>':''}</div>
+ ${now.length?sec('En vivo ahora','',now,''):''}
+ ${sec('Próximas clases',doc?'Video integrado en la plataforma o enlace de Zoom / Google Meet':'',next,doc?'No tienes clases programadas.':'No hay clases programadas.')}
+ ${sec('Clases anteriores','Pizarra y grabación quedan guardadas en los materiales del curso',past,'Aún no hay clases dictadas.')}`}
+function vivoNewHTML(){const as=[...new Set(Object.entries(S.asig).filter(([,d])=>d===msgMe()).map(([k])=>k.split('|')[0]))];const cs=visCursos();
+ return `${mhead('Programar clase en vivo','Los estudiantes del aula la verán en su portal')}<form data-f="vivoNew" class="fg">
+ <div class="field full"><label for="vn1">Tema de la clase *</label><input class="in" id="vn1" name="tit" required placeholder="Ej. Problemas con fracciones"></div>
+ <div class="field"><label for="vn2">Aula</label><select class="in" id="vn2" name="aula">${as.map(a=>opt(a,aulaById(a).n,'')).join('')}</select></div>
+ <div class="field"><label for="vn3">Curso</label><select class="in" id="vn3" name="curso">${cs.map(c=>opt(c,c,'')).join('')}</select></div>
+ <div class="field"><label for="vn4">Fecha</label><input class="in" id="vn4" type="date" name="f" value="${TISO}" required></div>
+ <div class="field"><label for="vn5">Hora</label><input class="in" id="vn5" type="time" name="h" value="16:00" required></div>
+ <div class="field"><label for="vn6">Duración</label><select class="in" id="vn6" name="dur">${[30,40,45,60,90].map(x=>opt(x,x+' minutos',45)).join('')}</select></div>
+ <div class="field"><label for="vn7">Video</label><select class="in" id="vn7" name="modo"><option value="int">Video integrado en la plataforma</option><option value="ext">Enlace externo (Zoom o Google Meet)</option></select></div>
+ <div class="field full"><label for="vn8">Enlace de la reunión (solo si usas Zoom o Meet)</label><input class="in" id="vn8" name="link" type="url" placeholder="https://zoom.us/j/…"></div>
+ <div class="mf full"><button type="button" class="btn ghost" data-a="close">Cancelar</button><button class="btn">Programar clase</button></div></form>`}
+function vivoEndHTML(c){const l=liveOf(c.id);return `${mhead('Finalizar la clase',esc(c.tit))}<form data-f="vivoEnd" data-id="${c.id}" class="fg">
+ <label class="full" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="piz" checked> Guardar la pizarra (${l.pages.length} hoja${l.pages.length>1?'s':''}) en los materiales del curso</label>
+ ${l.rec?'<label class="full" style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="grab" checked> Publicar la grabación en el aula virtual</label>':''}
+ <div class="alert info full"><span>ℹ</span><span>La asistencia de los ${vConn(c).length} estudiantes conectados se registrará automáticamente.</span></div>
+ <div class="mf full"><button type="button" class="btn ghost" data-a="close">Seguir en la clase</button><button class="btn">Finalizar clase</button></div></form>`}
+function vConn(c){const sts=aulaStudents(c.aula),n=Math.max(1,Math.round(sts.length*.87));const ids=sts.slice(0,n).map(s=>s.id);if(c.asis)c.asis.forEach(id=>{if(!ids.includes(id))ids.push(id)});return ids}
+/* sala: pizarra + video + chat */
+const VTOOLS=[['pen','Lápiz','<path d="M4 20l4-1 10.5-10.5a2.1 2.1 0 0 0-3-3L5 16z"/>'],['hl','Resaltador','<path d="M9 15l-4 4h5l2-2M9 15l7.5-7.5a2 2 0 0 1 3 3L12 18z"/>'],['er','Borrador','<path d="M8 20h12M5.5 14.5l7-7a2 2 0 0 1 3 0l3 3a2 2 0 0 1 0 3L13 19H9.5z"/>'],['line','Línea','<path d="M5 19L19 5"/>'],['rect','Rectángulo','<rect x="4" y="6" width="16" height="12" rx="1"/>'],['ellipse','Círculo','<ellipse cx="12" cy="12" rx="8" ry="7"/>'],['text','Texto','<path d="M5 6V4h14v2M12 4v16M9 20h6"/>']];
+const VCOL=['#13284A','#123E7C','#C8202F','#14805A','#E07B00','#1F9FD3','#7A3DB8'],VSZ=[3,7,14];
+function vCanDraw(){if(!ROOM||ROOM.view)return false;if(ROOM.free)return true;const c=vCls(ROOM.id);if(role()==='doc'&&(c.doc===msgMe()||ROOM.free))return true;return role()==='est'&&liveOf(ROOM.id).allow}
+function vIsHost(){if(!ROOM||ROOM.view)return false;if(ROOM.free)return true;const c=vCls(ROOM.id);return role()==='doc'&&c.doc===msgMe()}
+function roomOpen(id,o={}){if(ROOM)roomClose(true);const c=vCls(id);LIVE=LS();liveOf(id);
+ ROOM={id,view:!!o.view,free:!!o.free,tool:'pen',col:VCOL[1],sz:1,undo:[],redo:[],tmp:null,rtmp:null,mic:false,cam:false,stream:null,tab:'chat',k:1};
+ const el=document.createElement('div');el.id='room';el.className='room';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');el.setAttribute('aria-label',ROOM.free?'Pizarra':'Clase en vivo');
+ el.innerHTML=`<header class="rm-top"><div class="tt" id="rmTitle"></div><div class="rm-ctl" id="rmCtl"></div></header>
+ <div class="rm-main${ROOM.free||ROOM.view?' free':''}"><section class="rm-board"><div class="tb" id="rmTb"></div><div class="cv-wrap" id="cvWrap"><canvas id="cv"></canvas><span class="ro-tag" id="roTag" hidden></span></div><div class="pgbar" id="rmPg"></div></section>
+ ${ROOM.free||ROOM.view?'':`<aside class="rm-side"><div id="rmTiles"></div><div class="rm-card"><div class="rm-tabs" id="rmTabs"></div><div class="rm-panel" id="rmPanel"></div>${ROOM.view?'':`<form class="rm-chat" data-f="rmChat" id="rmChatF"><input class="in" id="rmIn" name="tx" maxlength="300" autocomplete="off" placeholder="Escribe en el chat de la clase…" aria-label="Mensaje para la clase" required><button class="btn sm">Enviar</button></form>`}</div></aside>`}</div>
+ <p class="rm-foot">${ROOM.view?'Pizarra guardada de la clase · solo lectura':'Demo: abre la plataforma en otra pestaña con el perfil de docente o estudiante y verás la pizarra y el chat sincronizados en tiempo real. En el sistema real se sincroniza por internet (Cloudflare).'}</p>`;
+ document.body.appendChild(el);document.body.classList.add('room-on');
+ roomParts();cvInit();if(!ROOM.view&&!ROOM.free){ROOM.tick=setInterval(rmTick,1000);rmTick()}
+ const f=el.querySelector('button,[tabindex]');f&&f.focus({preventScroll:true})}
+function roomClose(silent){if(!ROOM)return;clearInterval(ROOM.tick);if(ROOM.stream)ROOM.stream.getTracks().forEach(t=>t.stop());if(ROOM.obs)ROOM.obs.disconnect();const el=gid('room');el&&el.remove();document.body.classList.remove('room-on');ROOM=null;if(!silent)render()}
+function rmTick(){if(!ROOM)return;const c=vCls(ROOM.id),t=gid('rmTime');if(!t||!c.ini)return;const s=Math.max(0,Math.floor((Date.now()-c.ini)/1000));t.textContent=`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+function roomParts(){if(!ROOM)return;const c=vCls(ROOM.id),l=liveOf(ROOM.id),host=vIsHost(),r=role(),can=vCanDraw();
+ gid('rmTitle').innerHTML=ROOM.free?`<span class="live" style="background:rgba(255,255,255,.2)">PIZARRA</span><div><b>Pizarra libre</b><span>Úsala para preparar tu clase o compártela en Zoom o Meet</span></div>`:`${ROOM.view?'<span class="live" style="background:rgba(255,255,255,.2)">GRABADA</span>':'<span class="live">EN VIVO</span>'}<div><b>${esc(c.tit)}</b><span>${c.curso} · ${aulaById(c.aula).n} · ${esc(vDocN(c))}</span></div>`;
+ const hand=l.hands.includes(vMyName());
+ gid('rmCtl').innerHTML=ROOM.view||ROOM.free?`<button class="rbtn end" data-a="vivoLeave">Cerrar</button>`:`<span class="rm-time" id="rmTime">00:00</span>${l.rec?'<span class="rec">● REC</span>':''}
+  ${c.modo==='int'?`<button class="rbtn" data-a="rmMic" aria-pressed="${ROOM.mic}">${ROOM.mic?'Micrófono activo':'Micrófono silenciado'}</button><button class="rbtn" data-a="rmCam" aria-pressed="${ROOM.cam}">${ROOM.cam?'Cámara activa':'Activar cámara'}</button>`:`<button class="rbtn" data-a="vivoLink" data-id="${c.id}">Abrir reunión</button>`}
+  ${host?`<button class="rbtn" data-a="rmRec" aria-pressed="${l.rec}">${l.rec?'Detener grabación':'Grabar'}</button><button class="rbtn end" data-a="vivoEndAsk">Finalizar clase</button>`:`${r==='est'?`<button class="rbtn" data-a="rmHand" aria-pressed="${hand}">${hand?'Bajar la mano':'✋ Levantar la mano'}</button>`:''}<button class="rbtn end" data-a="vivoLeave">Salir</button>`}`;
+ gid('rmTb').classList.toggle('ro',!can);gid('rmTb').innerHTML=`${VTOOLS.map(([k,n,p])=>`<button class="tl" data-a="rmTool" data-v="${k}" aria-pressed="${ROOM.tool===k}" title="${n}" aria-label="${n}" ${can?'':'disabled'}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg></button>`).join('')}<span class="sep"></span>
+  ${VCOL.map(x=>`<button class="sw" data-a="rmCol" data-v="${x}" style="background:${x}" aria-pressed="${ROOM.col===x}" aria-label="Color" ${can?'':'disabled'}></button>`).join('')}<span class="sep"></span>
+  ${['Fino','Medio','Grueso'].map((n,i)=>`<button class="tl" data-a="rmSz" data-v="${i}" aria-pressed="${ROOM.sz===i}" title="${n}" aria-label="Grosor ${n}" ${can?'':'disabled'}><i style="width:${[4,8,13][i]}px;height:${[4,8,13][i]}px;border-radius:50%;background:currentColor;display:block"></i></button>`).join('')}<span class="sep"></span>
+  <button class="tl" data-a="rmUndo" title="Deshacer" aria-label="Deshacer" ${can&&ROOM.undo.length?'':'disabled'}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button><button class="tl" data-a="rmRedo" title="Rehacer" aria-label="Rehacer" ${can&&ROOM.redo.length?'':'disabled'}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button>
+  ${host?`<button class="btn ghost sm" data-a="rmClear" style="margin-left:auto">Limpiar hoja</button>`:''}`;
+ const n=l.pages.length;
+ gid('rmPg').innerHTML=`<div style="display:flex;gap:6px;align-items:center">${host?`<button class="btn ghost sm" data-a="rmPgGo" data-v="-1" ${l.pg?'':'disabled'} aria-label="Hoja anterior">‹</button>`:''}<span class="muted" style="font-size:12.5px">Hoja ${l.pg+1} de ${n}</span>${host?`<button class="btn ghost sm" data-a="rmPgGo" data-v="1" ${l.pg<n-1?'':'disabled'} aria-label="Hoja siguiente">›</button><button class="btn ghost sm" data-a="rmPgNew">+ Nueva hoja</button>`:''}</div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${host&&!ROOM.free?`<label class="muted" style="font-size:12.5px;display:flex;gap:6px;align-items:center"><input type="checkbox" data-c="rmAllow" ${l.allow?'checked':''}> Los alumnos pueden dibujar</label>`:''}<button class="btn ghost sm" data-a="rmPng">Descargar imagen</button></div>`;
+ const tag=gid('roTag');if(tag){tag.hidden=can||ROOM.free;tag.textContent=ROOM.view?'Pizarra de solo lectura':'Solo el docente está dibujando'}
+ const cv=gid('cv');if(cv)cv.className=can?'pen':'';
+ if(!ROOM.free)rmSide();rmTick()}
+function rmSide(){if(!ROOM||ROOM.free||ROOM.view)return;const c=vCls(ROOM.id),l=liveOf(ROOM.id),me=vMyName(),host=vIsHost(),conn=vConn(c),sts=conn.map(stu);
+ const docN=vDocN(c),meDoc=role()==='doc'&&c.doc===msgMe(),others=sts.filter(s=>fullName(s)!==me).slice(0,role()==='est'?4:5);
+ const tile=(n,main,self,talk)=>`<div class="tile${main?' main':''}${talk?' talk':''}">${self&&ROOM.cam?'<video id="rmVid" autoplay muted playsinline></video>':`<span class="av">${initials(n)}</span>`}<span class="nm">${esc(n)}${self?' (tú)':''}</span></div>`;
+ gid('rmTiles').innerHTML=c.modo==='ext'?`<div class="rm-card" style="padding:14px;gap:8px;flex:none"><b style="font-size:13.5px">El video de esta clase es por Zoom o Google Meet</b><span class="muted" style="font-size:12.5px">La pizarra y el chat siguen aquí, dentro de la plataforma.</span><button class="btn sm" data-a="vivoLink" data-id="${c.id}" style="justify-self:start">Abrir reunión</button></div>`
+  :`<div class="tiles">${tile(docN,true,meDoc,!meDoc&&!ROOM.view)}${role()==='est'?tile(me,false,true,false):''}${others.map(s=>tile(fullName(s),false,false,false)).join('')}${sts.length>others.length+1?`<div class="tile more">+${sts.length-others.length-(role()==='est'?1:0)}</div>`:''}</div>`;
+ if(ROOM.cam&&ROOM.stream){const v=gid('rmVid');if(v)v.srcObject=ROOM.stream}
+ const tb=gid('rmTabs');tb.innerHTML=[['chat','Chat',l.chat.length],['ppl','Participantes',sts.length+1]].map(([k,n,x])=>`<button data-a="rmTab" data-v="${k}" aria-selected="${ROOM.tab===k}">${n} <span class="muted">${x}</span></button>`).join('');
+ const p=gid('rmPanel');
+ if(ROOM.tab==='chat')p.innerHTML=l.chat.length?l.chat.map(m=>`<div class="rm-msg${m.n===me?' me':''}"><b>${esc(m.n)}${m.r==='doc'?' <span class="chip info" style="font-size:10px;padding:0 6px">Docente</span>':''}</b><p>${esc(m.tx)}</p><small>${m.h}</small></div>`).join(''):'<div class="empty">Aún no hay mensajes en el chat de la clase.</div>';
+ else p.innerHTML=`${l.hands.length?`<p class="eyebrow" style="margin:0">Manos levantadas</p>${l.hands.map(n=>`<div class="ppl"><span>✋</span><span style="flex:1">${esc(n)}</span>${host?`<button class="btn ghost sm" data-a="rmLower" data-n="${esc(n)}">Bajar</button>`:''}</div>`).join('')}<p class="eyebrow" style="margin:6px 0 0">Conectados</p>`:''}
+  <div class="ppl"><span class="dot"></span><b style="flex:1">${esc(docN)}</b><span class="chip info">Docente</span></div>${sts.map(s=>`<div class="ppl"><span class="dot"></span><span style="flex:1">${esc(fullName(s))}${fullName(s)===me?' (tú)':''}</span>${l.hands.includes(fullName(s))?'✋':''}</div>`).join('')}`;
+ if(ROOM.tab==='chat')p.scrollTop=p.scrollHeight}
+/* lienzo */
+function cvInit(){const cv=gid('cv'),w=gid('cvWrap');ROOM.obs=new ResizeObserver(cvSize);ROOM.obs.observe(w);cvSize();
+ cv.addEventListener('pointerdown',cvDown);cv.addEventListener('pointermove',cvMove);cv.addEventListener('pointerup',cvUp);cv.addEventListener('pointercancel',cvUp)}
+function cvSize(){if(!ROOM)return;const cv=gid('cv'),w=gid('cvWrap');if(!cv||!w)return;const W=w.clientWidth,H=w.clientHeight,s=H>60?Math.min(W/1600,H/900):W/1600,d=window.devicePixelRatio||1;
+ cv.style.width=Math.floor(1600*s)+'px';cv.style.height=Math.floor(900*s)+'px';cv.width=Math.floor(1600*s*d);cv.height=Math.floor(900*s*d);ROOM.k=s*d;cvDraw()}
+function drawStroke(x,s){x.save();x.globalCompositeOperation=s.t==='er'?'destination-out':'source-over';x.strokeStyle=s.c||'#000';x.fillStyle=s.c||'#000';x.lineWidth=s.w||4;x.lineCap='round';x.lineJoin='round';
+ if(s.t==='pen'||s.t==='hl'||s.t==='er'){if(s.t==='hl')x.globalAlpha=.35;const p=s.pts;x.beginPath();x.moveTo(p[0][0],p[0][1]);if(p.length===1)x.lineTo(p[0][0]+.1,p[0][1]);for(let i=1;i<p.length-1;i++){const mx=(p[i][0]+p[i+1][0])/2,my=(p[i][1]+p[i+1][1])/2;x.quadraticCurveTo(p[i][0],p[i][1],mx,my)}if(p.length>1)x.lineTo(p[p.length-1][0],p[p.length-1][1]);x.stroke()}
+ else if(s.t==='line'){x.beginPath();x.moveTo(s.a[0],s.a[1]);x.lineTo(s.b[0],s.b[1]);x.stroke()}
+ else if(s.t==='rect'){const X=Math.min(s.a[0],s.b[0]),Y=Math.min(s.a[1],s.b[1]),W=Math.abs(s.b[0]-s.a[0]),H=Math.abs(s.b[1]-s.a[1]);if(s.f){x.fillStyle=s.f;x.fillRect(X,Y,W,H)}x.strokeRect(X,Y,W,H)}
+ else if(s.t==='ellipse'){x.beginPath();x.ellipse((s.a[0]+s.b[0])/2,(s.a[1]+s.b[1])/2,Math.abs(s.b[0]-s.a[0])/2,Math.abs(s.b[1]-s.a[1])/2,0,0,Math.PI*2);x.stroke()}
+ else if(s.t==='text'){x.font=`600 ${s.s}px Inter,system-ui,-apple-system,sans-serif`;x.textBaseline='alphabetic';x.fillText(s.tx,s.x,s.y)}
+ x.restore()}
+function paintBoard(x,strokes,k){x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,x.canvas.width,x.canvas.height);x.setTransform(k,0,0,k,0,0);strokes.forEach(s=>drawStroke(x,s))}
+function cvDraw(){if(!ROOM)return;const cv=gid('cv');if(!cv)return;const l=liveOf(ROOM.id),pg=l.pages[l.pg]||[];paintBoard(cv.getContext('2d'),[...pg,...(ROOM.rtmp&&ROOM.rtmp.pg===l.pg?[ROOM.rtmp.s]:[]),...(ROOM.tmp?[ROOM.tmp]:[])],ROOM.k)}
+function cvPt(e){const cv=gid('cv'),r=cv.getBoundingClientRect();return [Math.round((e.clientX-r.left)/r.width*1600),Math.round((e.clientY-r.top)/r.height*900)]}
+function cvDown(e){if(!vCanDraw()||e.button>0)return;const p=cvPt(e),t=ROOM.tool,w=VSZ[ROOM.sz];
+ if(t==='text'){e.preventDefault();cvText(p);return}
+ e.target.setPointerCapture(e.pointerId);
+ ROOM.tmp=['pen','hl','er'].includes(t)?{t,c:ROOM.col,w:t==='hl'?w*4:t==='er'?w*5:w,pts:[p]}:{t,c:ROOM.col,w,a:p,b:p};cvDraw()}
+function cvMove(e){if(!ROOM||!ROOM.tmp)return;const p=cvPt(e),s=ROOM.tmp;if(s.pts){const q=s.pts[s.pts.length-1];if(Math.hypot(p[0]-q[0],p[1]-q[1])<2)return;s.pts.push(p)}else s.b=p;cvDraw();vbcPost({k:'tmp',id:ROOM.id,pg:liveOf(ROOM.id).pg,s})}
+function cvUp(){if(!ROOM||!ROOM.tmp)return;const s=ROOM.tmp;ROOM.tmp=null;if(!s.pts&&Math.hypot(s.b[0]-s.a[0],s.b[1]-s.a[1])<4){cvDraw();return}vAdd(s)}
+function vAdd(s){const l=liveOf(ROOM.id);s.id='s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);l.pages[l.pg].push(s);ROOM.undo.push({add:s.id,s,pg:l.pg});ROOM.redo=[];vCommit();cvDraw();roomParts()}
+function vCommit(){liveSave();vbcPost({k:'upd',id:ROOM&&ROOM.id})}
+function cvText(p){const w=gid('cvWrap'),cv=gid('cv'),r=cv.getBoundingClientRect(),wr=w.getBoundingClientRect(),sz=[30,44,64][ROOM.sz],sc=r.width/1600;
+ const old=gid('cvTxt');old&&old.remove();const i=document.createElement('input');i.id='cvTxt';i.className='cv-txt';i.placeholder='Escribe y presiona Enter';
+ i.style.left=(r.left-wr.left+p[0]*sc)+'px';i.style.top=(r.top-wr.top+p[1]*sc-sz*sc*.9)+'px';i.style.font=`600 ${Math.max(12,sz*sc)}px Inter,system-ui,sans-serif`;i.style.color=ROOM.col;w.appendChild(i);i.focus({preventScroll:true});
+ let done=false;const fin=ok=>{if(done)return;done=true;const v=i.value.trim();i.remove();if(ok&&v&&ROOM)vAdd({t:'text',c:ROOM.col,s:sz,x:p[0],y:p[1],tx:v})};
+ i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();fin(true)}else if(e.key==='Escape'){e.stopPropagation();fin(false)}});i.addEventListener('blur',()=>fin(true))}
+function vPng(id){const l=liveOf(id),c=vCls(id),cv=document.createElement('canvas');cv.width=1600;cv.height=900;const layer=document.createElement('canvas');layer.width=1600;layer.height=900;
+ paintBoard(layer.getContext('2d'),l.pages[l.pg]||[],1);const x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,1600,900);x.drawImage(layer,0,0);
+ const a=document.createElement('a');a.download=`pizarra-${fold(c?c.tit:'libre').replace(/[^a-z0-9]+/g,'-').slice(0,40)}-hoja-${l.pg+1}.png`;a.href=cv.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove()}
+/* sincronización entre pestañas (en producción: Cloudflare Durable Objects) */
+function vbc(){if(VBC===undefined){VBC=('BroadcastChannel' in window)?new BroadcastChannel('dt-vivo'):null;if(VBC)VBC.onmessage=e=>vivoMsg(e.data)}return VBC}
+function vbcPost(m){const b=vbc();if(b)try{b.postMessage(JSON.parse(JSON.stringify(m)))}catch(e){}}
+function vReloadS(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&x.vivo){S.vivo=x.vivo;if(x.lms)S.lms=x.lms}}catch(e){}}
+function vivoMsg(m){if(!m)return;
+ if(m.k==='tmp'){if(ROOM&&m.id===ROOM.id){ROOM.rtmp={pg:m.pg,s:m.s};cvDraw()}return}
+ if(m.k==='upd'){LIVE=LS();if(ROOM&&m.id===ROOM.id){ROOM.rtmp=null;cvDraw();roomParts()}return}
+ if(m.k==='state'){vReloadS();if(ROOM&&!ROOM.free){const c=vCls(ROOM.id);if(c&&c.estado==='fin'&&!ROOM.view){roomClose(true);toast('El docente finalizó la clase.')}}if(!ROOM||ROOM.free)render();else roomParts()}}
+addEventListener('storage',e=>{if(e.key===lkey())vivoMsg({k:'upd',id:ROOM&&ROOM.id})});
+vbc();
+
+const VIEWS={vivo:vVivo,msg:vMsg,adm:vAdm,inicio:vInicio,sedes:vSedes,alumnos:vAlumnos,docentes:vDocentes,asistencia:vAsistencia,notas:vNotas,aula:vAula,cursos:vAula,tutoria:vTutoria,eval:vEval,pagos:vPagos,ingresos:vIngresos,com:vCom,seg:vSeg,finicio:fInicio,fcursos:fCursos,fexam:fExam,fnotas:fNotas,fasis:fAsis,fpagos:fPagos,favisos:fAvisos};
 
 /* ---------- acciones ---------- */
 const A={
@@ -1827,6 +2051,44 @@ Object.assign(F,{
  msg(f,fd_){const tx=String(fd_.get('tx')||'').trim();if(!tx)return;const c=S.msg.convs.find(x=>x.id===f.dataset.id),me=msgMe();if(!c)return;c.m.push({fr:me,tx,f:TISO,h:hhmm()});c.seen[me]=c.m.length;save();render();msgFocus()},
  msgRep(f,fd_){const c=S.msg.convs.find(x=>x.id===f.dataset.id),det=String(fd_.get('det')||'').trim();c.rep={by:msgMe(),f:TISO,h:hhmm(),mot:fd_.get('mot')+(det?': '+det:''),estado:'Pendiente'};log('Conversación reportada',c.p.map(pName).join(' y '));save();closeModal();render();toast('Reporte enviado a la dirección. Gracias por avisar.')}});
 document.addEventListener('input',e=>{if(e.target.id!=='msgQ')return;const q=fold(e.target.value.trim());MODAL.querySelectorAll('.msg-pick .grp').forEach(g=>{let n=0;g.querySelectorAll('[data-q]').forEach(b=>{const ok=!q||b.dataset.q.includes(q);b.hidden=!ok;if(ok)n++});g.hidden=!n})});
+Object.assign(A,{
+ vivoNew(){openModal(vivoNewHTML())},
+ vivoStart(el){const c=vCls(el.dataset.id);c.estado='vivo';c.ini=Date.now();c.f=TISO;c.h=hhmm();log('Clase en vivo iniciada',`${c.tit} · ${aulaById(c.aula).n}`);save();vbcPost({k:'state'});render();roomOpen(c.id)},
+ vivoJoin(el){const c=vCls(el.dataset.id);if(role()==='est'&&!c.asis.includes(S.ids.vale)){c.asis.push(S.ids.vale);save();vbcPost({k:'state'})}roomOpen(c.id,{view:false})},
+ vivoBoard(el){roomOpen(el.dataset.id,{view:true})},
+ vivoFree(){roomOpen('FREE-'+msgMe(),{free:true})},
+ vivoLeave(){roomClose()},
+ vivoRec(el){toast('En el sistema real aquí se reproduce la grabación de la clase guardada en el aula virtual.')},
+ vivoLink(el){const c=vCls(el.dataset.id);if(c&&c.link&&!/0000000000/.test(c.link))window.open(c.link,'_blank','noopener');else toast('Aquí se abriría la reunión de Zoom o Google Meet que registró el docente.')},
+ vivoEndAsk(){openModal(vivoEndHTML(vCls(ROOM.id)),'sm')},
+ rmTool(el){ROOM.tool=el.dataset.v;roomParts()},
+ rmCol(el){ROOM.col=el.dataset.v;if(ROOM.tool==='er')ROOM.tool='pen';roomParts()},
+ rmSz(el){ROOM.sz=+el.dataset.v;roomParts()},
+ rmUndo(){const a=ROOM.undo.pop();if(!a)return;const l=liveOf(ROOM.id);if(a.clear!=null){l.pages[a.pg]=a.old}else{const pg=l.pages[a.pg];const i=pg.findIndex(s=>s.id===a.add);if(i>=0)pg.splice(i,1)}ROOM.redo.push(a);vCommit();cvDraw();roomParts()},
+ rmRedo(){const a=ROOM.redo.pop();if(!a)return;const l=liveOf(ROOM.id);if(a.clear!=null)l.pages[a.pg]=[];else l.pages[a.pg].push(a.s);ROOM.undo.push(a);vCommit();cvDraw();roomParts()},
+ rmClear(){const l=liveOf(ROOM.id);if(!l.pages[l.pg].length)return;ROOM.undo.push({clear:1,pg:l.pg,old:l.pages[l.pg]});ROOM.redo=[];l.pages[l.pg]=[];vCommit();cvDraw();roomParts();toast('Hoja limpiada. Puedes deshacerlo.')},
+ rmPgGo(el){const l=liveOf(ROOM.id);l.pg=clamp(l.pg+(+el.dataset.v),0,l.pages.length-1);vCommit();cvDraw();roomParts()},
+ rmPgNew(){const l=liveOf(ROOM.id);l.pages.push([]);l.pg=l.pages.length-1;vCommit();cvDraw();roomParts()},
+ rmPng(){vPng(ROOM.id)},
+ rmTab(el){ROOM.tab=el.dataset.v;rmSide()},
+ rmHand(){const l=liveOf(ROOM.id),n=vMyName(),i=l.hands.indexOf(n);if(i>=0)l.hands.splice(i,1);else{l.hands.push(n);toast('Levantaste la mano. El docente lo verá en la lista de participantes.')}vCommit();roomParts()},
+ rmLower(el){const l=liveOf(ROOM.id),i=l.hands.indexOf(el.dataset.n);if(i>=0)l.hands.splice(i,1);vCommit();roomParts()},
+ rmRec(){const l=liveOf(ROOM.id);l.rec=!l.rec;vCommit();roomParts();toast(l.rec?'Grabando la clase. Los estudiantes ven el aviso REC.':'Grabación detenida.')},
+ rmMic(){ROOM.mic=!ROOM.mic;roomParts()},
+ rmCam(){if(ROOM.cam){ROOM.cam=false;if(ROOM.stream)ROOM.stream.getTracks().forEach(t=>t.stop());ROOM.stream=null;roomParts();return}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast('Este navegador no permite usar la cámara.');return}
+  navigator.mediaDevices.getUserMedia({video:{width:640,height:360},audio:false}).then(st=>{if(!ROOM){st.getTracks().forEach(t=>t.stop());return}ROOM.stream=st;ROOM.cam=true;roomParts()}).catch(()=>toast('No se pudo acceder a la cámara. Revisa los permisos del navegador.'))}});
+Object.assign(F,{
+ vivoNew(f,fd_){const g=k=>String(fd_.get(k)||'').trim(),modo=g('modo'),link=g('link');if(modo==='ext'&&!link){toast('Pega el enlace de Zoom o Google Meet.');return}
+  const c={id:'V'+Date.now(),aula:g('aula'),curso:g('curso'),doc:msgMe(),tit:g('tit'),f:g('f'),h:g('h'),dur:+g('dur'),modo,link:modo==='ext'?link:'',estado:'prog',asis:[]};S.vivo.cls.push(c);
+  log('Clase en vivo programada',`${c.tit} · ${aulaById(c.aula).n} · ${fd(c.f)} ${c.h}`);save();vbcPost({k:'state'});closeModal();render();toast('Clase programada. Los estudiantes ya la ven en su portal.')},
+ vivoEnd(f,fd_){const c=vCls(f.dataset.id),l=liveOf(c.id),L=lmsK(c.aula+'|'+c.curso);c.estado='fin';c.asis=vConn(c);c.dur=Math.max(1,Math.round((Date.now()-(c.ini||Date.now()))/60000))||c.dur;
+  if(fd_.get('piz')&&l.pages.some(p=>p.length)){c.piz=true;L.mat.unshift({t:'Pizarra: '+c.tit,tipo:'Pizarra de clase',f:TISO,ref:`${l.pages.length} hoja(s) · imagen PNG`,cls:c.id})}
+  if(fd_.get('grab')&&l.rec){c.grab=true;L.mat.unshift({t:'Grabación: '+c.tit,tipo:'Grabación de clase',f:TISO,ref:`${c.dur} min · clase en vivo`,cls:c.id})}
+  l.rec=false;l.hands=[];liveSave();log('Clase en vivo finalizada',`${c.tit} · ${c.asis.length} asistentes`);save();vbcPost({k:'state'});vbcPost({k:'upd',id:c.id});closeModal();roomClose();toast(`Clase finalizada. Asistencia registrada: ${c.asis.length} estudiantes.`)},
+ rmChat(f,fd_){const tx=String(fd_.get('tx')||'').trim();if(!tx||!ROOM)return;const l=liveOf(ROOM.id);l.chat.push({n:vMyName(),r:role()==='doc'?'doc':'est',tx,h:hhmm()});vCommit();ROOM.tab='chat';f.reset();rmSide();const i=gid('rmIn');i&&i.focus()}});
+document.addEventListener('change',e=>{if(e.target.dataset.c==='rmAllow'&&ROOM){const l=liveOf(ROOM.id);l.allow=e.target.checked;vCommit();roomParts();toast(l.allow?'Los estudiantes ya pueden dibujar en la pizarra.':'Solo tú puedes dibujar en la pizarra.')}});
+document.addEventListener('keydown',e=>{if(!ROOM||!MODAL.hidden)return;if(e.key==='Escape'&&(ROOM.view||ROOM.free)){roomClose();return}const t=e.target;if(t.tagName==='INPUT'||t.tagName==='TEXTAREA')return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&vCanDraw()){e.preventDefault();e.shiftKey?A.rmRedo():A.rmUndo()}});
 /* ---------- PAGOS EN LÍNEA, WHATSAPP Y DEUDA ---------- */
 const SEC_WA='51900000000';
 const waIcon=()=>typeof WA_ICON==='undefined'?'':WA_ICON;
