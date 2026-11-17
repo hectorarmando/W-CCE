@@ -574,6 +574,45 @@ html{scroll-behavior:smooth}
 .hero-crest{width:min(360px,90%);aspect-ratio:auto;border:0;border-radius:0;box-shadow:none;overflow:visible}
 .hero-crest img{height:auto;object-fit:contain;filter:drop-shadow(0 24px 40px rgba(2,14,36,.45))}
 @media (max-width:900px){.hero-crest{width:220px}}
+
+/* ---------- Mensajes (chat interno) ---------- */
+.nav .nb{margin-left:auto;background:var(--red);color:#fff;border-radius:999px;font-style:normal;font-size:11px;font-weight:700;padding:1px 7px;line-height:1.5}
+.chat{display:grid;grid-template-columns:310px minmax(0,1fr);height:calc(100vh - 190px);min-height:440px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.chat-side{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.chat-sh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:14px 14px 10px}
+.chat-sh h2{font-size:15px}
+.chat-list{overflow-y:auto;padding:0 8px 8px;display:grid;gap:2px;align-content:start}
+.chat-it{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:0;background:none;border-radius:10px;padding:9px 8px;cursor:pointer;color:inherit;font:inherit}
+.chat-it:hover{background:var(--surface-2)}
+.chat-it[aria-current="true"]{background:var(--violet-soft)}
+.chat-it .tx{display:grid;gap:2px;min-width:0;flex:1}
+.chat-it .row{display:flex;justify-content:space-between;gap:8px;align-items:center;min-width:0}
+.chat-it b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-it small{font-size:11.5px;color:var(--muted);flex:none}
+.chat-it .tx>small{flex:initial;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-it .pv{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-it .badge{background:var(--primary);color:var(--on-primary);border-radius:999px;font-style:normal;font-size:11px;font-weight:700;min-width:20px;text-align:center;padding:1px 6px;flex:none}
+.chat-it.unr b,.chat-it.unr .pv{color:var(--fg);font-weight:700}
+.avatar.d{background:var(--ok-soft);color:var(--ok)}
+.chat-pane{display:flex;flex-direction:column;min-height:0;min-width:0}
+.chat-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.chat-head>div{flex:1;min-width:0}.chat-head b{display:block;font-size:14px}.chat-head>div span{font-size:12px;color:var(--muted)}
+.chat-back{display:none;font-size:18px;line-height:1}
+.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:6px;background:var(--bg)}
+.chat-body.ro{max-height:52vh;border:1px solid var(--line);border-radius:10px}
+.chat-day{text-align:center;margin:8px 0 4px}.chat-day span{font-size:11px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.bub{max-width:min(75%,520px);padding:8px 12px 6px;border-radius:14px;font-size:13.5px;line-height:1.45;display:grid;gap:2px;overflow-wrap:anywhere}
+.bub small{font-size:10.5px;opacity:.75;justify-self:end}
+.bub .bn{font-size:11px;font-weight:700;opacity:.85}
+.bub.me{align-self:flex-end;background:var(--primary);color:var(--on-primary);border-bottom-right-radius:4px}
+.bub.ot{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:4px}
+.chat-form{display:flex;gap:8px;padding:10px 12px 6px;border-top:1px solid var(--line)}
+.chat-note{font-size:11px;color:var(--muted);padding:0 14px 10px;text-align:center}
+.chat-empty{margin:auto;display:grid;justify-items:center;gap:6px;text-align:center;color:var(--muted);padding:24px;max-width:340px}
+.chat-empty svg{color:var(--violet)}.chat-empty b{color:var(--fg);font-size:15px}.chat-empty .btn{margin-top:8px}
+.msg-pick{display:grid;gap:14px;max-height:55vh;overflow-y:auto}.msg-pick .grp{display:grid;gap:2px}.msg-pick .eyebrow{margin:0 0 2px 8px}
+@media (max-width:900px){.chat{grid-template-columns:minmax(0,1fr);height:calc(100vh - 250px);min-height:420px}.chat.open .chat-side{display:none}.chat:not(.open) .chat-pane{display:none}.chat-back{display:inline-flex}}
+body:has(.chat.open) .ai-fab,body:has(.chat.open) .ai-panel{display:none!important}
 </style>
 
 <div id="app"></div>
@@ -630,17 +669,17 @@ const NF=['Valeria','Camila','Lucía','Mariana','Sofía','Daniela','Ximena','Fer
 const NM=['Mateo','Santiago','Sebastián','Diego','Thiago','Gael','Adrián','Joaquín','Rodrigo','Leonardo','Gabriel','Fabricio','Matías','Bruno','Alonso','Emiliano'];
 const APES=['Quispe','Huamán','Flores','Mamani','Rojas','Sánchez','García','Torres','Chávez','Ramírez','Vargas','Castillo','Gutiérrez','Espinoza','Paredes','Salazar','Ríos','Cárdenas','Vílchez','Ccahuana','Palomino','Zevallos','Lozano','Rivera'];
 const ROLES={
- dir:{n:'Dirección general',user:'Mg. Elena Paredes Salazar',mail:'direccion@diegothomson.edu.pe',nav:['inicio','sedes','alumnos','adm','docentes','asistencia','notas','aula','eval','pagos','ingresos','com','seg']},
+ dir:{n:'Dirección general',user:'Mg. Elena Paredes Salazar',mail:'direccion@diegothomson.edu.pe',nav:['inicio','sedes','alumnos','adm','docentes','asistencia','notas','aula','eval','pagos','ingresos','com','msg','seg']},
  sed:{n:'Dirección de sede',user:'Lic. Raúl Castillo Torres',mail:'direccion.norte@diegothomson.edu.pe',sede:'nor',nav:['inicio','alumnos','docentes','asistencia','notas','aula','eval','pagos','ingresos','com']},
  sec:{n:'Secretaría',user:'Patricia Rojas Vílchez',mail:'secretaria.central@diegothomson.edu.pe',sede:'cen',nav:['inicio','alumnos','adm','asistencia','notas','com']},
  tes:{n:'Tesorería',user:'Jorge Lozano Ríos',mail:'tesoreria.central@diegothomson.edu.pe',sede:'cen',nav:['inicio','pagos','ingresos','com']},
- doc:{n:'Docente',user:'Prof. Rosa Quispe Huamán',mail:'rquispe@diegothomson.edu.pe',sede:'cen',nav:['inicio','cursos','notas','asistencia','tutoria','eval','com']},
+ doc:{n:'Docente',user:'Prof. Rosa Quispe Huamán',mail:'rquispe@diegothomson.edu.pe',sede:'cen',nav:['inicio','cursos','notas','asistencia','tutoria','eval','com','msg']},
  pad:{n:'Padre de familia',user:'Carlos Mendoza Ríos',mail:'cmendoza@correo.pe',sede:'cen',nav:['finicio','fcursos','fexam','fnotas','fasis','fpagos','favisos']},
- est:{n:'Estudiante',user:'Valeria Mendoza Salazar',mail:'vmendoza@diegothomson.edu.pe',sede:'cen',nav:['finicio','fcursos','fexam','fnotas','fasis','favisos']}};
-const NAV={inicio:'Inicio',sedes:'Sedes y año escolar',alumnos:'Alumnos y padres',adm:'Admisión y página web',docentes:'Docentes',asistencia:'Asistencia de alumnos',notas:'Notas y libretas',aula:'Aula virtual',eval:'Evaluaciones',pagos:'Pensiones',ingresos:'Control de ingresos',com:'Comunicados y avisos',seg:'Usuarios y seguridad',cursos:'Mis cursos',tutoria:'Mi tutoría',finicio:'Inicio',fcursos:'Mis cursos',fexam:'Exámenes',fnotas:'Notas y libretas',fasis:'Asistencia',fpagos:'Pensiones y pagos',favisos:'Avisos'};
-const NAVR={dir:{inicio:'Panel de la dirección'},sed:{inicio:'Panel de la sede'},doc:{notas:'Registro de notas',com:'Avisos'}};
+ est:{n:'Estudiante',user:'Valeria Mendoza Salazar',mail:'vmendoza@diegothomson.edu.pe',sede:'cen',nav:['finicio','fcursos','fexam','fnotas','fasis','favisos','msg']}};
+const NAV={inicio:'Inicio',sedes:'Sedes y año escolar',alumnos:'Alumnos y padres',adm:'Admisión y página web',docentes:'Docentes',asistencia:'Asistencia de alumnos',notas:'Notas y libretas',aula:'Aula virtual',eval:'Evaluaciones',pagos:'Pensiones',ingresos:'Control de ingresos',com:'Comunicados y avisos',seg:'Usuarios y seguridad',cursos:'Mis cursos',tutoria:'Mi tutoría',finicio:'Inicio',fcursos:'Mis cursos',fexam:'Exámenes',fnotas:'Notas y libretas',fasis:'Asistencia',fpagos:'Pensiones y pagos',favisos:'Avisos',msg:'Mensajes'};
+const NAVR={dir:{inicio:'Panel de la dirección',msg:'Supervisión de mensajes'},sed:{inicio:'Panel de la sede'},doc:{notas:'Registro de notas',com:'Avisos'}};
 const navL=k=>(NAVR[role()]||{})[k]||NAV[k];
-const EYEBROW={inicio:'Resumen',sedes:'Sedes, niveles y periodos',alumnos:'Fichas, matrícula y ratificación',adm:'Solicitudes desde la página web',docentes:'Fichas y asignación de cursos',asistencia:'Control diario y reportes',notas:'Calificaciones, libretas y actas',aula:'Plataforma virtual',eval:'Evaluaciones virtuales y presenciales',pagos:'Cronogramas, pagos y vouchers',ingresos:'Recaudación por sede y mes',com:'Comunicados y notificaciones',seg:'Usuarios, permisos y copias',cursos:'Aula virtual',tutoria:'Seguimiento de tu aula',finicio:'Portal de familias',fcursos:'Aula virtual',fexam:'Evaluaciones',fnotas:'Libretas',fasis:'Control de asistencia',fpagos:'Estado de cuenta',favisos:'Comunicados'};
+const EYEBROW={msg:'Chat interno del colegio',inicio:'Resumen',sedes:'Sedes, niveles y periodos',alumnos:'Fichas, matrícula y ratificación',adm:'Solicitudes desde la página web',docentes:'Fichas y asignación de cursos',asistencia:'Control diario y reportes',notas:'Calificaciones, libretas y actas',aula:'Plataforma virtual',eval:'Evaluaciones virtuales y presenciales',pagos:'Cronogramas, pagos y vouchers',ingresos:'Recaudación por sede y mes',com:'Comunicados y notificaciones',seg:'Usuarios, permisos y copias',cursos:'Aula virtual',tutoria:'Seguimiento de tu aula',finicio:'Portal de familias',fcursos:'Aula virtual',fexam:'Evaluaciones',fnotas:'Libretas',fasis:'Control de asistencia',fpagos:'Estado de cuenta',favisos:'Comunicados'};
 const ICA={cursos:'aula',tutoria:'alumnos',finicio:'inicio',fcursos:'aula',fexam:'eval',fnotas:'notas',fasis:'asistencia',fpagos:'pagos',favisos:'bell',ingresos:'chart',seg:'roles',docentes:'alumnos',sedes:'sedes'};
 const IC={
  inicio:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
@@ -659,6 +698,7 @@ const IC={
  clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
  money:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/>',
+ msg:'<path d="M4 5h16v11H9.5L4 20z"/><path d="M8 9.5h8M8 12.5h5"/>',
  bell:'<path d="M6 16v-5a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
  search:'<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/>',
  chev:'<path d="M9 6l6 6-6 6"/>',
@@ -782,6 +822,7 @@ function ensureS(){
  S.config=S.config||{};
  if(!S.config.ai)S.config.ai={on:{dir:true,sed:true,sec:true,tes:true,doc:true,pad:true,est:true},lim:50,base:17.6};
  if(!S.deudas)S.deudas=[];
+ msgSeed();
  if(!S.siagie)S.siagie=[];
  if(!S.onlineSeed){S.onlineSeed=true;let n=0;S.students.forEach(st=>{Object.values(S.pagos[st.id]||{}).forEach(p=>{if(n<8&&p.f&&p.f.slice(0,7)===TISO.slice(0,7)&&p.m!=='En línea'&&(st.id.charCodeAt(st.id.length-1)%3===0)){p.m='En línea';p.canal=n%2?'Yape':'Tarjeta';p.op='IZ-'+(704512+n*137);n++}})})}
  if(!S.deriv)S.deriv=[
@@ -904,7 +945,7 @@ function shell(){
  return `<div class="shell">
  <aside class="side">
   <div class="brand"><img src="${CREST}" alt="Escudo Diego Thomson"><div><b>I.E.P. Diego Thomson</b><span>Plataforma educativa</span></div></div>
-  <nav class="nav" aria-label="Módulos">${u.nav.map(k=>`<button data-a="go" data-v="${k}" ${k===view?'aria-current="page"':''}>${icon(k)}<span>${navL(k)}</span></button>`).join('')}</nav>
+  <nav class="nav" aria-label="Módulos">${u.nav.map(k=>`<button data-a="go" data-v="${k}" ${k===view?'aria-current="page"':''}>${icon(k)}<span>${navL(k)}</span>${k==='msg'&&msgBadge()?`<i class="nb">${msgBadge()}</i>`:''}</button>`).join('')}</nav>
   <div class="side-foot"><button data-a="reset">${RESETARM?'Toca otra vez para confirmar':'Reiniciar datos de la demo'}</button><b>HR7</b><span>Desarrollado por HR7 · prototipo con datos ficticios</span></div>
  </aside>
  <main class="main">
@@ -934,6 +975,8 @@ function notifs(){const r=role(),out=[];
   let nf=0;DOC_AULAS.forEach(id=>aulaStudents(id).forEach(s=>S.notas[s.id]['Matemática'][3].forEach(x=>{if(x==null)nf++})));if(nf)out.push({n:nf,t:'Notas del IV bimestre sin registrar',v:'notas'})}
  if(r==='est'){const k=curKid();const tp=CURSOS.reduce((n,c)=>n+lmsOf(k.aula,c).tar.filter(t=>!t.ent[k.id]&&daysTo(t.lim)>=0).length,0);if(tp)out.push({n:tp,t:'Tareas por entregar',v:'fcursos'});
   const ep=S.exams.filter(e=>e.aula===k.aula&&!e.res[k.id]).length;if(ep)out.push({n:ep,t:'Exámenes por rendir',v:'fexam'})}
+ if(['doc','est'].includes(r)){const u=msgUnread();if(u)out.push({n:u,t:'Mensajes sin leer',v:'msg'})}
+ if(r==='dir'){const p=msgRepPend();if(p)out.push({n:p,t:'Conversaciones reportadas',v:'msg'})}
  if(r==='pad'){const kids=famKids().map(k=>k.id);const un=S.com.filter(c=>!c.read.includes(FAM)&&audStudents(c.aud).some(s=>kids.includes(s.id))).length;if(un)out.push({n:un,t:'Comunicados sin leer',v:'favisos'});
   const v=kids.filter(id=>cuenta(stu(id)).venc>0).length;if(v)out.push({n:v,t:'Hijo(s) con pensión vencida',v:'fpagos'});
   const rj=S.vouchers.filter(x=>kids.includes(x.sid)&&x.estado==='Rechazado').length;if(rj)out.push({n:rj,t:'Vouchers rechazados',v:'fpagos'})}
@@ -1460,9 +1503,9 @@ function vSeg(){if(!S.ui.segTab)S.ui.segTab='usr';
  return `<div class="card">${t}<div style="margin-top:16px">${b}</div></div>`}
 function permMatrix(){
  const P=[['Dirección general','Todas'],['Dirección de sede','Su sede'],['Secretaría','Su sede'],['Tesorería','Su sede'],['Docente','Sus aulas'],['Padre de familia','Sus hijos'],['Estudiante','Sus cursos']];
- const M=[['Sedes, año escolar y usuarios',['E','—','—','—','—','—','—']],['Matrícula y fichas',['E','E','E','V','—','V','—']],['Docentes y asignación',['E','E','—','—','—','—','—']],['Asistencia',['E','E','V','—','E','V','V']],['Notas y libretas',['E','E','V','—','E','V','V']],['Aula virtual',['V','V','—','—','E','V','E']],['Evaluaciones',['V','V','—','—','E','V','E']],['Pensiones y vouchers',['E','E','—','E','—','E','—']],['Control de ingresos',['V','V','—','V','—','—','—']],['Comunicados',['E','E','E','E','E','V','V']],['Bitácora y copias',['V','—','—','—','—','—','—']]];
+ const M=[['Sedes, año escolar y usuarios',['E','—','—','—','—','—','—']],['Matrícula y fichas',['E','E','E','V','—','V','—']],['Docentes y asignación',['E','E','—','—','—','—','—']],['Asistencia',['E','E','V','—','E','V','V']],['Notas y libretas',['E','E','V','—','E','V','V']],['Aula virtual',['V','V','—','—','E','V','E']],['Evaluaciones',['V','V','—','—','E','V','E']],['Pensiones y vouchers',['E','E','—','E','—','E','—']],['Control de ingresos',['V','V','—','V','—','—','—']],['Comunicados',['E','E','E','E','E','V','V']],['Mensajería interna',['V','—','—','—','E','—','E']],['Bitácora y copias',['V','—','—','—','—','—','—']]];
  const cell=x=>x==='E'?'<span class="chip ok">Editar</span>':x==='V'?'<span class="chip info">Ver</span>':'<span class="muted">—</span>';
- return `<div class="tw"><table class="t matrix vh"><thead><tr><th>Módulo</th>${P.map(p=>`<th class="c">${p[0]}<span class="sub" style="text-transform:none;letter-spacing:0;opacity:.8">${p[1]}</span></th>`).join('')}</tr></thead><tbody>${M.map(([m,v])=>`<tr><td><b>${m}</b></td>${v.map(x=>`<td class="c">${cell(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="muted" style="font-size:12.5px;margin-top:10px">Padre de familia "Editar" en pensiones significa subir vouchers; en evaluaciones el estudiante rinde exámenes.</p>`}
+ return `<div class="tw"><table class="t matrix vh"><thead><tr><th>Módulo</th>${P.map(p=>`<th class="c">${p[0]}<span class="sub" style="text-transform:none;letter-spacing:0;opacity:.8">${p[1]}</span></th>`).join('')}</tr></thead><tbody>${M.map(([m,v])=>`<tr><td><b>${m}</b></td>${v.map(x=>`<td class="c">${cell(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="muted" style="font-size:12.5px;margin-top:10px">Padre de familia "Editar" en pensiones significa subir vouchers; en evaluaciones el estudiante rinde exámenes. En mensajería, la dirección general supervisa las conversaciones y atiende los reportes.</p>`}
 function newUserHTML(){return `${mhead('Nuevo usuario','Recibirá un correo para crear su contraseña')}<form data-f="user" class="fg"><div class="field full"><label for="nu1">Nombres y apellidos *</label><input class="in" id="nu1" name="n" required></div><div class="field full"><label for="nu2">Correo *</label><input class="in" id="nu2" name="mail" type="email" required></div><div class="field"><label for="nu3">Perfil</label><select class="in" id="nu3" name="perfil">${PERFILES.map(p=>opt(p,p,'Secretaría')).join('')}</select></div><div class="field"><label for="nu4">Sede</label><select class="in" id="nu4" name="sede">${opt('all','Todas las sedes','cen')}${SEDES.map(s=>opt(s.id,s.n,'cen')).join('')}</select></div><div class="mf full"><button type="button" class="btn ghost" data-a="close">Cancelar</button><button class="btn">Crear usuario</button></div></form>`}
 
 /* ---------- ASISTENCIA: REPORTE ---------- */
@@ -1583,7 +1626,67 @@ function voucherHTML(s){const c=cuenta(s),inRev=new Set(S.vouchers.filter(v=>v.s
 function fAvisos(){const k=curKid(),coms=kidComs(k);
  return `<div class="card"><div class="card-h"><div><h2>Avisos y comunicados</h2><p>${role()==='pad'?'Confirma la lectura para que el colegio lo sepa':'Comunicados del colegio para tu aula'}</p></div></div><div class="list">${coms.map(x=>{const rd=x.read.includes(FAM);return `<div class="pitem"><div class="row"><b style="font-size:14px">${esc(x.tit)}</b>${role()==='pad'?(rd?'<span class="chip ok">Leído</span>':'<span class="chip warn">Nuevo</span>'):''}</div><span style="font-size:13.5px;line-height:1.6">${esc(x.body)}</span><div class="row"><span class="muted" style="font-size:12px">${fd(x.f)} ${x.hora} · ${esc(x.autor)} · ${audLabel(x.aud)}</span>${role()==='pad'&&!rd?`<button class="btn sm" data-a="confirmRead" data-id="${x.id}">Confirmar lectura</button>`:''}</div></div>`}).join('')||'<div class="empty">Sin comunicados.</div>'}</div></div>`}
 
-const VIEWS={adm:vAdm,inicio:vInicio,sedes:vSedes,alumnos:vAlumnos,docentes:vDocentes,asistencia:vAsistencia,notas:vNotas,aula:vAula,cursos:vAula,tutoria:vTutoria,eval:vEval,pagos:vPagos,ingresos:vIngresos,com:vCom,seg:vSeg,finicio:fInicio,fcursos:fCursos,fexam:fExam,fnotas:fNotas,fasis:fAsis,fpagos:fPagos,favisos:fAvisos};
+/* ---------- MENSAJES: chat interno docente ↔ alumno y entre alumnos de la misma aula ---------- */
+function msgSeed(){if(S.msg)return;const v=S.ids.vale,m=S.ids.mateo,cls=S.students.filter(s=>s.aula==='cen-1'&&s.id!==v),c1=cls[0],c2=cls[1],c3=cls[2];
+ const M=(fr,tx,d,h)=>({fr,tx,f:addDays(d),h});
+ S.msg={convs:[
+  {id:'M1',p:[v,'D1'],m:[M(v,'Profesora, no entendí el ejercicio 4 de la ficha 7 de fracciones.',-1,'16:12'),M('D1','Hola, Valeria. Primero busca el mínimo común denominador de 4 y 8. ¿Cuál te sale?',-1,'16:40'),M(v,'Me sale 8. Entonces 3/4 es 6/8.',-1,'16:47'),M('D1','¡Exacto! Ahora suma 6/8 + 1/8 y lo revisamos mañana en clase.',-1,'17:02')],seen:{[v]:4,D1:4}},
+  {id:'M2',p:[c1.id,v],m:[M(c1.id,'Vale, ¿hacemos en grupo la maqueta del ciclo del agua?',0,'07:31'),M(v,'¡Sí! En el recreo vemos los materiales.',0,'07:40'),M(c1.id,'Ya, yo llevo el tecnopor y las témperas.',0,'07:44')],seen:{[c1.id]:3,[v]:2}},
+  {id:'M3',p:['D9',v],m:[M('D9','Valeria, remember to upload your daily routine writing before Friday.',-2,'12:05'),M(v,'Yes, teacher! Thank you.',-2,'18:20')],seen:{D9:2,[v]:2}},
+  {id:'M4',p:[m,'D1'],m:[M(m,'Miss Rosa, ¿la tarea de decimales es para el lunes?',0,'06:58')],seen:{[m]:1,D1:0}},
+  {id:'M5',p:[c2.id,c3.id],m:[M(c2.id,'Pásame tu tarea de Comunicación para copiarla.',-1,'20:10'),M(c3.id,'No, cada uno hace la suya.',-1,'20:14'),M(c2.id,'Ya pues, no seas así.',-1,'20:15')],seen:{[c2.id]:3,[c3.id]:3},
+   rep:{by:c3.id,f:addDays(-1),h:'20:16',mot:'Me presiona para copiar la tarea',estado:'Pendiente'}}]}}
+function msgMe(){const r=role();if(r==='doc'){const d=S.docentes.find(x=>x.n===ROLES.doc.user);return d?d.id:'D1'}return r==='est'?S.ids.vale:null}
+function isDocP(pid){return /^D/.test(String(pid))}
+function pName(pid){if(isDocP(pid)){const d=S.docentes.find(x=>x.id===pid);return d?d.n:'Docente'}const s=stu(pid);return s?fullName(s):'Usuario'}
+function pSub(pid){if(isDocP(pid)){if(role()==='est'){const a=stu(msgMe()).aula,cs=CURSOS.filter(c=>S.asig[a+'|'+c]===pid);if(cs.length)return 'Docente · '+cs.join(', ')}const d=S.docentes.find(x=>x.id===pid);return 'Docente'+(d&&d.esp?' · '+d.esp:'')}
+ const s=stu(pid);if(!s)return '';const a=aulaById(s.aula);return 'Estudiante · '+a.n+(role()==='dir'?' · '+sedeN(a.sede):'')}
+function msgLast(c){const x=c.m[c.m.length-1];return x?x.f+' '+x.h:'9999'}
+function myConvs(){const me=msgMe();return S.msg.convs.filter(c=>c.p.includes(me)).sort((a,b)=>msgLast(b).localeCompare(msgLast(a)))}
+function convUnread(c){return Math.max(0,c.m.length-(c.seen[msgMe()]||0))}
+function msgUnread(){return S.msg&&msgMe()?myConvs().reduce((n,c)=>n+convUnread(c),0):0}
+function msgRepPend(){return S.msg?S.msg.convs.filter(c=>c.rep&&c.rep.estado==='Pendiente').length:0}
+function msgBadge(){const r=role();return ['doc','est'].includes(r)?msgUnread():r==='dir'?msgRepPend():0}
+function dLab(f){return f===TISO?'Hoy':f===addDays(-1)?'Ayer':fd(f)}
+function tLab(x){return !x?'':x.f===TISO?x.h:x.f===addDays(-1)?'Ayer':fds(x.f)}
+function msgContacts(){const r=role(),me=msgMe();
+ if(r==='est'){const a=stu(me).aula,ds=[...new Set(CURSOS.map(c=>S.asig[a+'|'+c]).filter(Boolean))];return [['Mis docentes',ds],['Compañeros de '+aulaById(a).n,aulaStudents(a).filter(s=>s.id!==me).map(s=>s.id)]]}
+ if(r==='doc'){const as=[...new Set(Object.entries(S.asig).filter(([,d])=>d===me).map(([k])=>k.split('|')[0]))];return as.map(a=>['Alumnos de '+aulaById(a).n,aulaStudents(a).map(s=>s.id)])}
+ return []}
+function msgScroll(){const b=document.getElementById('chatBody');if(b)b.scrollTop=b.scrollHeight}
+function msgFocus(){const i=document.getElementById('msgIn');if(i&&matchMedia('(pointer:fine)').matches)i.focus({preventScroll:true})}
+const avP=pid=>`<span class="avatar${isDocP(pid)?' d':''}">${initials(pName(pid))}</span>`;
+function bubbles(c,me){let ld='';return c.m.map(x=>{const d=x.f!==ld?`<div class="chat-day"><span>${dLab(x.f)}</span></div>`:'';ld=x.f;
+ const mine=me?x.fr===me:x.fr===c.p[1];return d+`<div class="bub ${mine?'me':'ot'}">${me?'':`<span class="bn">${esc(pName(x.fr))}</span>`}<span>${esc(x.tx)}</span><small>${x.h}</small></div>`}).join('')}
+function vMsg(){if(role()==='dir')return msgSup();
+ const me=msgMe(),cs=myConvs(),cur=cs.find(c=>c.id===S.ui.conv)||null;
+ if(cur&&convUnread(cur)){cur.seen[me]=cur.m.length;save()}
+ const vis=cs.filter(c=>c.m.length||(cur&&c.id===cur.id));
+ const list=vis.length?vis.map(c=>{const o=c.p.find(x=>x!==me),l=c.m[c.m.length-1],u=convUnread(c);
+  return `<button class="chat-it${u?' unr':''}" data-a="msgOpen" data-id="${c.id}" ${cur&&cur.id===c.id?'aria-current="true"':''}>${avP(o)}<span class="tx"><span class="row"><b>${esc(pName(o))}</b><small>${tLab(l)}</small></span><span class="row"><span class="pv">${l?(l.fr===me?'Tú: ':'')+esc(l.tx):'Nueva conversación'}</span>${u?`<i class="badge">${u}</i>`:''}</span></span></button>`}).join(''):'<div class="empty" style="margin:0 6px">Aún no tienes conversaciones.</div>';
+ const pane=cur?chatPane(cur,me):`<div class="chat-empty">${icon('msg',36)}<b>Tus mensajes</b><span>Elige una conversación o escribe ${role()==='est'?'a uno de tus docentes o a un compañero de tu aula':'a uno de tus alumnos'}.</span><button class="btn" data-a="msgNew">Nuevo mensaje</button></div>`;
+ setTimeout(msgScroll);
+ return `<div class="chat${cur?' open':''}"><aside class="chat-side"><div class="chat-sh"><h2>Conversaciones</h2><button class="btn sm" data-a="msgNew">+ Nuevo</button></div><div class="chat-list">${list}</div></aside><section class="chat-pane" aria-label="Conversación">${pane}</section></div>`}
+function chatPane(c,me){const o=c.p.find(x=>x!==me);
+ return `<header class="chat-head"><button class="btn ghost sm chat-back" data-a="msgBack" aria-label="Volver a las conversaciones">‹</button>${avP(o)}<div><b>${esc(pName(o))}</b><span>${esc(pSub(o))}</span></div>${c.rep&&c.rep.by===me?'<span class="chip warn">Reportada</span>':c.m.length?`<button class="btn ghost sm" data-a="msgRep" data-id="${c.id}">Reportar</button>`:''}</header>
+ <div class="chat-body" id="chatBody" aria-live="polite">${c.m.length?bubbles(c,me):`<div class="chat-empty"><span>Escribe el primer mensaje para ${esc(pName(o))}.</span></div>`}</div>
+ <form class="chat-form" data-f="msg" data-id="${c.id}"><input class="in" id="msgIn" name="tx" autocomplete="off" maxlength="1000" placeholder="Escribe un mensaje…" aria-label="Mensaje" required><button class="btn">Enviar</button></form>
+ <p class="chat-note">Los mensajes quedan registrados y la dirección puede revisarlos. No compartas contraseñas ni datos personales.</p>`}
+function msgNewHTML(){return `${mhead('Nuevo mensaje',role()==='est'?'Escribe a tus docentes o a tus compañeros de aula':'Escribe a los alumnos de tus aulas')}<input class="in" id="msgQ" placeholder="Buscar por nombre" autocomplete="off" aria-label="Buscar contacto" style="margin-bottom:12px"><div class="msg-pick">${msgContacts().map(([g,ids])=>`<div class="grp"><p class="eyebrow">${esc(g)}</p>${ids.map(id=>`<button class="chat-it" data-a="msgTo" data-id="${id}" data-q="${esc(fold(pName(id)))}">${avP(id)}<span class="tx"><b>${esc(pName(id))}</b><small>${esc(pSub(id))}</small></span></button>`).join('')}</div>`).join('')}</div>`}
+function msgRepHTML(id){return `${mhead('Reportar conversación','La dirección revisará la conversación completa. La otra persona no sabrá que la reportaste.')}<form data-f="msgRep" data-id="${id}" class="fg"><div class="field full"><label for="rp1">Motivo</label><select class="in" id="rp1" name="mot">${['Lenguaje ofensivo o insultos','Me molesta o acosa','Me presiona para copiar la tarea','Contenido inapropiado','Otro motivo'].map(x=>opt(x,x,'')).join('')}</select></div><div class="field full"><label for="rp2">Detalle (opcional)</label><textarea class="in" id="rp2" name="det" maxlength="500"></textarea></div><div class="mf full"><button type="button" class="btn ghost" data-a="close">Cancelar</button><button class="btn">Enviar reporte</button></div></form>`}
+function msgEstado(c){return !c.rep?'<span class="muted">Sin reportes</span>':c.rep.estado==='Pendiente'?'<span class="chip bad">Reportada · pendiente</span>':'<span class="chip ok">Revisada</span>'}
+function msgSup(){if(!S.ui.msgTab)S.ui.msgTab='rep';const cs=S.msg.convs.filter(c=>c.m.length).sort((a,b)=>msgLast(b).localeCompare(msgLast(a)));
+ const rep=cs.filter(c=>c.rep).sort((a,b)=>(b.rep.estado==='Pendiente')-(a.rep.estado==='Pendiente')),rows=S.ui.msgTab==='rep'?rep:cs;
+ return `<div class="card"><div class="card-h"><div><h2>Supervisión de mensajes</h2><p>Chat interno entre docentes y alumnos, y entre alumnos de la misma aula · los mensajes no se pueden borrar</p></div></div>
+ ${tabs('msgTab',[['rep','Reportadas',msgRepPend()],['all','Todas las conversaciones',cs.length]])}
+ <div class="tw" style="margin-top:14px"><table class="t"><thead><tr><th>Participantes</th><th>Último mensaje</th><th class="c">Mensajes</th><th>Estado</th><th class="r"></th></tr></thead><tbody>${rows.length?rows.map(c=>{const l=c.m[c.m.length-1];
+  return `<tr><td>${c.p.map(x=>`<b>${esc(pName(x))}</b><br><span class="muted" style="font-size:12px">${esc(pSub(x))}</span>`).join('<br>')}</td><td style="max-width:300px"><span style="font-size:13px">${esc(l.tx.length>80?l.tx.slice(0,80)+'…':l.tx)}</span><br><span class="muted" style="font-size:12px">${dLab(l.f)} · ${l.h}</span></td><td class="c">${c.m.length}</td><td>${msgEstado(c)}${c.rep?`<br><span class="muted" style="font-size:12px">${esc(c.rep.mot)}</span>`:''}</td><td class="r"><button class="btn ghost sm" data-a="msgView" data-id="${c.id}">Ver conversación</button></td></tr>`}).join(''):`<tr><td colspan="5"><div class="empty">No hay conversaciones reportadas.</div></td></tr>`}</tbody></table></div></div>`}
+function msgViewHTML(c){const r=c.rep;return `${mhead(c.p.map(pName).map(esc).join(' y '),'Conversación de solo lectura')}
+ ${r?`<div class="alert${r.estado==='Pendiente'?'':' info'}" style="margin-bottom:12px"><span>⚑</span><span><b>Reportada por ${esc(pName(r.by))}</b> ${r.f===TISO?'hoy':r.f===addDays(-1)?'ayer':'el '+fd(r.f)} a las ${r.h} · ${esc(r.mot)}${r.estado!=='Pendiente'&&r.por?` · revisada por ${esc(r.por)}`:''}</span></div>`:''}
+ <div class="chat-body ro">${bubbles(c,null)}</div>
+ <div class="mf" style="margin-top:12px"><button class="btn ghost" data-a="close">Cerrar</button>${r&&r.estado==='Pendiente'?`<button class="btn" data-a="msgRev" data-id="${c.id}">Marcar como revisada</button>`:''}</div>`}
+
+const VIEWS={msg:vMsg,adm:vAdm,inicio:vInicio,sedes:vSedes,alumnos:vAlumnos,docentes:vDocentes,asistencia:vAsistencia,notas:vNotas,aula:vAula,cursos:vAula,tutoria:vTutoria,eval:vEval,pagos:vPagos,ingresos:vIngresos,com:vCom,seg:vSeg,finicio:fInicio,fcursos:fCursos,fexam:fExam,fnotas:fNotas,fasis:fAsis,fpagos:fPagos,favisos:fAvisos};
 
 /* ---------- acciones ---------- */
 const A={
@@ -1712,6 +1815,18 @@ const F={
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;if(el.tagName==='TR'&&e.target.closest('button,a,input,select'))return;const fn=A[el.dataset.a];if(fn){e.preventDefault();fn(el,e)}});
 MODAL.addEventListener('mousedown',e=>{if(e.target===MODAL)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!MODAL.hidden)closeModal()});
+Object.assign(A,{
+ msgOpen(el){const c=S.msg.convs.find(x=>x.id===el.dataset.id);if(!c)return;S.ui.conv=c.id;c.seen[msgMe()]=c.m.length;save();render();msgFocus()},
+ msgBack(){S.ui.conv=null;save();render()},
+ msgNew(){openModal(msgNewHTML(),'sm')},
+ msgTo(el){const me=msgMe(),id=el.dataset.id;let c=S.msg.convs.find(x=>x.p.includes(me)&&x.p.includes(id));if(!c){c={id:'M'+Date.now(),p:[me,id],m:[],seen:{}};S.msg.convs.push(c)}S.ui.conv=c.id;S.ui.view='msg';save();closeModal();render();msgFocus()},
+ msgRep(el){openModal(msgRepHTML(el.dataset.id),'sm')},
+ msgView(el){const c=S.msg.convs.find(x=>x.id===el.dataset.id);if(c)openModal(msgViewHTML(c))},
+ msgRev(el){const c=S.msg.convs.find(x=>x.id===el.dataset.id);c.rep.estado='Revisada';c.rep.por=user().user;log('Reporte de mensajes revisado',c.p.map(pName).join(' y '));save();closeModal();render();toast('Reporte marcado como revisado.')}});
+Object.assign(F,{
+ msg(f,fd_){const tx=String(fd_.get('tx')||'').trim();if(!tx)return;const c=S.msg.convs.find(x=>x.id===f.dataset.id),me=msgMe();if(!c)return;c.m.push({fr:me,tx,f:TISO,h:hhmm()});c.seen[me]=c.m.length;save();render();msgFocus()},
+ msgRep(f,fd_){const c=S.msg.convs.find(x=>x.id===f.dataset.id),det=String(fd_.get('det')||'').trim();c.rep={by:msgMe(),f:TISO,h:hhmm(),mot:fd_.get('mot')+(det?': '+det:''),estado:'Pendiente'};log('Conversación reportada',c.p.map(pName).join(' y '));save();closeModal();render();toast('Reporte enviado a la dirección. Gracias por avisar.')}});
+document.addEventListener('input',e=>{if(e.target.id!=='msgQ')return;const q=fold(e.target.value.trim());MODAL.querySelectorAll('.msg-pick .grp').forEach(g=>{let n=0;g.querySelectorAll('[data-q]').forEach(b=>{const ok=!q||b.dataset.q.includes(q);b.hidden=!ok;if(ok)n++});g.hidden=!n})});
 /* ---------- PAGOS EN LÍNEA, WHATSAPP Y DEUDA ---------- */
 const SEC_WA='51900000000';
 const waIcon=()=>typeof WA_ICON==='undefined'?'':WA_ICON;
