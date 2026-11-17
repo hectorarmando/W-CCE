@@ -823,7 +823,7 @@ function generate(){
      if(R()<.58&&s!==vale)t1.ent[s.id]={f:addDays(-ri(0,2)),file:`${fold(s.nom)}_${c==='Inglés'?'task':'tarea'}.pdf`,nota:R()<.35?ri(12,19):null,fb:''};
      if(R()<.9)t2.ent[s.id]={f:addDays(-ri(6,9)),file:`${fold(s.nom)}_trabajo.pdf`,nota:ri(11,19),fb:pick(['Buen trabajo, revisa la presentación.','Muy bien resuelto.','Cuida la ortografía.','Excelente procedimiento.'])};
    });
-   lms[a.id+'|'+c]={mat:MATS[c].map((t,i)=>({t,tipo:TIPOS[i],f:addDays(-ri(2,20)),ref:TIPOS[i]==='Video enlazado'?'Enlace de video':`${fold(t).replace(/[^a-z0-9]+/g,'-').slice(0,28)}.pdf`})),
+   lms[a.id+'|'+c]={mat:MATS[c].map((t,i)=>({t,tipo:/^Video/.test(t)?'Video enlazado':'Archivo PDF',f:addDays(-ri(2,20)),ref:/^Video/.test(t)?'Enlace de video':`${fold(t).replace(/[^a-z0-9]+/g,'-').slice(0,28)}.pdf`})),
      tar:[t1,t2],anu:[{f:addDays(-1),txt:c==='Inglés'?'Remember to bring your workbook on Thursday.':'Recuerden traer su ficha impresa para la clase del jueves.'}]};
  }));
  const banco=[
@@ -887,6 +887,7 @@ function ensureS(){
  msgSeed();
  vivoSeed();
  matSeed();
+ tipoFix();
  if(!S.siagie)S.siagie=[];
  if(!S.onlineSeed){S.onlineSeed=true;let n=0;S.students.forEach(st=>{Object.values(S.pagos[st.id]||{}).forEach(p=>{if(n<8&&p.f&&p.f.slice(0,7)===TISO.slice(0,7)&&p.m!=='En línea'&&(st.id.charCodeAt(st.id.length-1)%3===0)){p.m='En línea';p.canal=n%2?'Yape':'Tarjeta';p.op='IZ-'+(704512+n*137);n++}})})}
  if(!S.deriv)S.deriv=[
@@ -1926,11 +1927,12 @@ const DEMO_MAT=demoMat();
 function matSeed(){if(S.matSeed)return;S.matSeed=1;['cen-0|Matemática','cen-1|Matemática'].forEach(k=>{const L=S.lms[k];if(!L)return;
  L.mat.push({t:'Presentación: Fracciones equivalentes',tipo:'Presentación PPT',f:addDays(-4),ref:'clase-fracciones-equivalentes.pptx · 6 diapositivas'});
  L.mat.sort((a,b)=>b.f.localeCompare(a.f));const DM=demoMat();L.mat.forEach(m=>{const d=DM[m.t];if(d&&d.f)m.ref=d.f+(d.k==='pdf'?' · PDF':'')})})}
+function tipoFix(){if(S.tipoFix)return;S.tipoFix=1;Object.values(S.lms).forEach(L=>L.mat.forEach(m=>{if(!['Archivo PDF','Video enlazado'].includes(m.tipo)||!/^(Video|Lectura|Guía|Mapa|Ficha|Vocabulary|Worksheet)/.test(m.t))return;const v=/^Video/.test(m.t);if(v===(m.tipo==='Video enlazado'))return;m.tipo=v?'Video enlazado':'Archivo PDF';m.ref=v?'Enlace de video':`${fold(m.t).replace(/[^a-z0-9]+/g,'-').slice(0,28)}.pdf`}))}
 function matIc(m){return m.tipo==='Video enlazado'||m.tipo==='Grabación de clase'?'▶':m.tipo==='Pizarra de clase'?'✎':m.tipo==='Presentación PPT'?'PPT':'PDF'}
 function matAct(m){const d=DEMO_MAT[m.t],b=matBase();
  if(d&&d.k==='pdf')return `<div class="act"><a class="btn ghost sm" href="${b+d.f}" target="_blank" rel="noopener">Ver</a><a class="btn sm" href="${b+d.f}" download>Descargar</a></div>`;
  if(d&&d.k==='ppt')return `<div class="act"><button class="btn ghost sm" data-a="matPpt" data-t="${esc(m.t)}">Ver presentación</button><a class="btn sm" href="${b+d.f}" download>Descargar</a></div>`;
- if(d&&d.k==='vid')return `<div class="act"><button class="btn ghost sm" data-a="matVid" data-t="${esc(m.t)}">Ver video</button></div>`;
+ if((d&&d.k==='vid')||m.tipo==='Video enlazado')return `<div class="act"><button class="btn ghost sm" data-a="matVid" data-t="${esc(m.t)}">Ver video</button></div>`;
  if(m.cls&&m.tipo==='Pizarra de clase'&&vHasBoard(m.cls))return `<div class="act"><button class="btn ghost sm" data-a="vivoBoard" data-id="${m.cls}">Ver pizarra</button></div>`;
  if(m.cls&&m.tipo==='Grabación de clase')return `<div class="act"><button class="btn ghost sm" data-a="vivoRec" data-id="${m.cls}">Ver grabación</button></div>`;
  return ''}
@@ -2127,7 +2129,7 @@ document.addEventListener('keydown',e=>{if(!ROOM||!MODAL.hidden)return;if(e.key=
 Object.assign(A,{
  matPpt(el){PPTV={t:el.dataset.t,i:0};openModal(pptHTML())},
  pptGo(el){const d=DEMO_MAT[PPTV.t];PPTV.i=clamp(+el.dataset.v,0,d.n-1);openModal(pptHTML())},
- matVid(el){openModal(`${mhead(esc(el.dataset.t),'Video del curso · Matemática')}<div class="rec-v"><iframe src="${VREC_URL}" title="${esc(el.dataset.t)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="mf"><button class="btn ghost" data-a="close">Cerrar</button></div>`)}});
+ matVid(el){openModal(`${mhead(esc(el.dataset.t),'Video del curso · aula virtual')}<div class="rec-v"><iframe src="${VREC_URL}" title="${esc(el.dataset.t)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="mf"><button class="btn ghost" data-a="close">Cerrar</button></div>`)}});
 document.addEventListener('keydown',e=>{if(MODAL.hidden||!PPTV||!MODAL.querySelector('.ppt-v'))return;const d=DEMO_MAT[PPTV.t];if(e.key==='ArrowRight'&&PPTV.i<d.n-1){PPTV.i++;openModal(pptHTML())}else if(e.key==='ArrowLeft'&&PPTV.i>0){PPTV.i--;openModal(pptHTML())}});
 /* ---------- PAGOS EN LÍNEA, WHATSAPP Y DEUDA ---------- */
 const SEC_WA='51900000000';
