@@ -1,5 +1,11 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>ERP Diego Thomson</title>
+<meta name="theme-color" content="#123E7C">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Diego Thomson">
+<link rel="manifest" href="/erp-diego-thomson/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/erp-diego-thomson/icon-192.png">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -770,6 +776,19 @@ function generate(){
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&x.v===4)return x}catch(e){}return generate()}
 S=load();
+function ensureS(){
+ S.config=S.config||{};
+ if(!S.config.ai)S.config.ai={on:{dir:true,sed:true,sec:true,tes:true,doc:true,pad:true,est:true},lim:50,base:17.6};
+ if(!S.deudas)S.deudas=[];
+ if(!S.deriv)S.deriv=[
+  {id:'Q1',f:addDays(-1),h:'19:42',u:'Carlos Mendoza Ríos',r:'Padre de familia',sede:'cen',q:'¿Puedo recoger a Mateo antes de la salida el viernes por una cita médica?',estado:'Pendiente'},
+  {id:'Q2',f:addDays(-2),h:'08:15',u:'Valeria Mendoza Salazar',r:'Estudiante',sede:'cen',q:'¿Dónde compro el polo de educación física?',estado:'Atendida',por:'Patricia Rojas Vílchez'}];
+ if(!S.log.some(l=>l.a==='Consulta al asistente IA')){
+  [[-1,'20:05','Carlos Mendoza Ríos','Padre de familia','¿Cuánto debo de pensión?'],[-1,'19:41','Carlos Mendoza Ríos','Padre de familia','¿Puedo recoger a Mateo antes de la salida el viernes?'],[-2,'16:20','Prof. Rosa Quispe Huamán','Docente','Propón 3 preguntas de fracciones'],[-3,'09:12','Mg. Elena Paredes Salazar','Dirección general','¿Qué sede tiene más morosidad?']]
+   .forEach(([d,h,u,r,q])=>S.log.push({t:`${addDays(d)} ${h}`,u,r,a:'Consulta al asistente IA',d:q}));
+  S.log.sort((a,b)=>b.t.localeCompare(a.t))}
+}
+ensureS();
 AULAS=S.aulas;
 
 /* ---------- consultas ---------- */
@@ -800,10 +819,11 @@ function showN(n,force){const e=force||S.ui.escala;if(n==null)return '<span clas
 function promBim(sid,c,b){return prom(S.notas[sid][c][b],S.pesos[c])}
 function bimCompleto(sid,c,b){return S.notas[sid][c][b].every(n=>n!=null)}
 function asisPct(sid){const a=S.asis[sid];return pct(a.A+a.T,a.A+a.T+a.F)}
-function cuotas(s){const m=MONTO[aulaById(s.aula).nivel];return [{k:'MAT',n:'Matrícula 2026',v:'2026-02-27',m:350},...[2,3,4,5,6,7,8,9,10,11].map(i=>({k:'M'+i,n:'Pensión '+MESL[i],v:iso(new Date(2026,i+1,0)),m}))]}
+function cuotas(s){const m=MONTO[aulaById(s.aula).nivel];return [...(S.deudas||[]).filter(d=>d.sid===s.id).map(d=>({k:d.id,n:d.n,v:d.v,m:d.m})),{k:'MAT',n:'Matrícula 2026',v:'2026-02-27',m:350},...[2,3,4,5,6,7,8,9,10,11].map(i=>({k:'M'+i,n:'Pensión '+MESL[i],v:iso(new Date(2026,i+1,0)),m}))]}
 function cuenta(s){const p=S.pagos[s.id]||{};let pag=0,pend=0,venc=0,nV=0;
  const rows=cuotas(s).map(c=>{const pg=p[c.k];const est=pg?'Pagado':(c.v<TISO?'Vencido':'Pendiente');if(pg)pag+=c.m;else if(est==='Vencido'){venc+=c.m;nV++}else pend+=c.m;return{...c,pg,est}});
  return{rows,pag,pend,venc,nV}}
+function porMedio(students){const o={};MEDIOS.forEach(m=>o[m]=Array(12).fill(0));students.forEach(s=>{const p=S.pagos[s.id]||{};cuotas(s).forEach(c=>{const pg=p[c.k];if(pg&&o[pg.m])o[pg.m][Number(pg.f.slice(5,7))-1]+=c.m})});return o}
 function recaudacion(students){const out=Array(12).fill(0);students.forEach(s=>{const p=S.pagos[s.id]||{};cuotas(s).forEach(c=>{const pg=p[c.k];if(pg){const m=Number(pg.f.slice(5,7))-1;out[m]+=c.m}})});return out}
 function asisHoyStats(aulas){let pres=0,tot=0;const pend=[];aulas.forEach(a=>{const r=S.asisHoy[a.id];if(!r){pend.push(a);return}Object.values(r.marks).forEach(m=>{tot++;if(m!=='F')pres++})});return{pres,tot,pend,pctv:pct(pres,tot)}}
 function audStudents(aud){const t=aud.t,v=aud.v;if(t==='inst')return S.students;if(t==='sede')return S.students.filter(s=>s.sede===v);if(t==='nivel')return S.students.filter(s=>aulaById(s.aula)?.nivel===v);if(t==='grado'){const[n,g]=String(v).split('|');return S.students.filter(s=>{const a=aulaById(s.aula);return a&&a.nivel===n&&a.grado===g})}if(t==='familia'){const s0=stu(v);return s0?S.students.filter(s=>s.apod===s0.apod):[]}return S.students.filter(s=>s.aula===v)}
@@ -832,6 +852,7 @@ const cursoSelect=()=>visCursos().length>1?`<div class="field"><label for="selCu
 const estChip=e=>`<span class="chip ${e==='Pagado'?'ok':e==='Vencido'?'bad':''}">${e}</span>`;
 
 function render(){
+ ensureS();
  const ae=document.activeElement,fid=ae&&ae.id&&APP.contains(ae)?ae.id:null;let ss=null,se=null;try{ss=ae.selectionStart;se=ae.selectionEnd}catch(e){}
  const exV=['eval','fexam'].includes(S.ui.view);
  if(TICK&&!(EXAM&&exV)){clearInterval(TICK);TICK=null}
@@ -897,6 +918,7 @@ function notifs(){const r=role(),out=[];
   if(r!=='tes'){const h=asisHoyStats(aulas);if(h.pend.length)out.push({n:h.pend.length,t:'Aulas sin asistencia registrada',v:'asistencia'})}
   if(r!=='sec'){const vp=visVou().filter(v=>v.estado==='Por revisar').length;if(vp)out.push({n:vp,t:'Vouchers por revisar',v:'pagos',tab:'vou'});
    const mor=sts.filter(s=>cuenta(s).venc>0).length;if(mor)out.push({n:mor,t:'Alumnos con pensiones vencidas',v:'pagos',tab:'mor'})}
+  if(['dir','sed','sec'].includes(r)){const fs=fixedSede(),nq=S.deriv.filter(q=>q.estado==='Pendiente'&&(!fs||q.sede===fs)).length;if(nq)out.push({n:nq,t:'Consultas derivadas por el asistente IA',v:'com'})}
   if(['dir','sec'].includes(r)){const ns=visSol().filter(x=>x.estado==='Nueva').length;if(ns)out.push({n:ns,t:'Solicitudes de admisión nuevas',v:'adm'})}
   if(r!=='tes'){const rp=sts.filter(s=>s.rat!=='Ratificado').length;if(rp)out.push({n:rp,t:'Ratificaciones 2027 pendientes',v:'alumnos'})}
   if(['dir','sed'].includes(r)){const sin=aulas.reduce((n,a)=>n+CURSOS.filter(c=>!S.asig[a.id+'|'+c]).length,0);if(sin)out.push({n:sin,t:'Cursos sin docente asignado',v:'docentes'});const pc=porCalificar(aulas,CURSOS);if(pc)out.push({n:pc,t:'Entregas de tareas por calificar',v:'aula'})}}
@@ -1034,7 +1056,7 @@ function vAsisTomar(){
   </tbody></table></div>
   <div class="mf" style="margin-top:14px"><button class="btn" data-a="saveAsis">${rec?'Actualizar asistencia':'Guardar asistencia'}</button></div>
  </div>
- <div class="card"><div class="card-h"><div><h2>Registro de hoy por aula</h2><p>Las familias reciben aviso de faltas y tardanzas</p></div></div><div class="list">
+ <div class="card"><div class="card-h"><div><h2>Registro de hoy por aula</h2><p>Hora de registro y aulas pendientes del día</p></div></div><div class="list">
  ${aulas.map(x=>{const r=S.asisHoy[x.id];let f=0,t=0;if(r)Object.values(r.marks).forEach(m=>{if(m==='F')f++;if(m==='T')t++});return `<div class="item" style="cursor:pointer" data-a="ui" data-k="aula" data-v="${x.id}"><div class="body"><b>${x.n}</b><span class="meta">${sedeN(x.sede)} · ${r?`${r.at} · ${f} faltas · ${t} tardanzas`:'Sin registro'}</span></div><span class="chip ${r?'ok':'warn'}">${r?'Registrada':'Pendiente'}</span></div>`}).join('')}
  </div></div></div>`}
 
@@ -1191,13 +1213,13 @@ function pagMor(){const list=visStudents().map(s=>({s,c:cuenta(s)})).filter(x=>x
 function pagRec(){const sedes=role()==='dir'?(S.ui.sede==='all'?SEDES:SEDES.filter(s=>s.id===S.ui.sede)):SEDES.filter(s=>s.id==='cen');const months=[];for(let m=2;m<=MT;m++)months.push(m);
  const data=sedes.map(sd=>({sd,r:recaudacion(S.students.filter(s=>s.sede===sd.id))}));const tot=months.map(m=>data.reduce((a,d)=>a+d.r[m],0));
  return `${barChart(months.slice(-6).map(m=>({l:MES[m],v:tot[m-2]})),kfmt)}<div class="tw" style="margin-top:12px"><table class="t"><thead><tr><th>Sede</th>${months.map(m=>`<th class="r">${MES[m]}</th>`).join('')}<th class="r">Total</th></tr></thead><tbody>${data.map(d=>`<tr><td><b>${d.sd.n}</b></td>${months.map(m=>`<td class="r">${kfmt(d.r[m])}</td>`).join('')}<td class="r"><b>${money(months.reduce((a,m)=>a+d.r[m],0))}</b></td></tr>`).join('')}${data.length>1?`<tr><td><b>Total</b></td>${tot.map(v=>`<td class="r"><b>${kfmt(v)}</b></td>`).join('')}<td class="r"><b>${money(tot.reduce((a,v)=>a+v,0))}</b></td></tr>`:''}</tbody></table></div><p class="muted" style="font-size:12.5px;margin-top:8px">Montos en soles por mes de cobro. Incluye matrícula y pensiones.</p>`}
-function pagCro(){return `<div class="tw"><table class="t"><thead><tr><th>Concepto</th><th>Vencimiento</th><th class="r">Inicial</th><th class="r">Primaria</th><th class="r">Secundaria</th></tr></thead><tbody><tr><td><b>Matrícula 2026</b></td><td>${fd('2026-02-27')}</td><td class="r">${money(350)}</td><td class="r">${money(350)}</td><td class="r">${money(350)}</td></tr>${[2,3,4,5,6,7,8,9,10,11].map(i=>`<tr><td><b>Pensión ${MESL[i]}</b></td><td>${fd(iso(new Date(2026,i+1,0)))}</td><td class="r">${money(MONTO.Inicial)}</td><td class="r">${money(MONTO.Primaria)}</td><td class="r">${money(MONTO.Secundaria)}</td></tr>`).join('')}</tbody></table></div><div class="alert info" style="margin-top:14px"><span>ℹ</span><span>Montos de ejemplo. El cronograma y la política de moras los define la institución antes de la semana 3 del proyecto.</span></div>`}
+function pagCro(){return `<div class="tw"><table class="t"><thead><tr><th>Concepto</th><th>Vencimiento</th><th class="r">Inicial</th><th class="r">Primaria</th><th class="r">Secundaria</th></tr></thead><tbody><tr><td><b>Matrícula 2026</b></td><td>${fd('2026-02-27')}</td><td class="r">${money(350)}</td><td class="r">${money(350)}</td><td class="r">${money(350)}</td></tr>${[2,3,4,5,6,7,8,9,10,11].map(i=>`<tr><td><b>Pensión ${MESL[i]}</b></td><td>${fd(iso(new Date(2026,i+1,0)))}</td><td class="r">${money(MONTO.Inicial)}</td><td class="r">${money(MONTO.Primaria)}</td><td class="r">${money(MONTO.Secundaria)}</td></tr>`).join('')}</tbody></table></div><div class="alert info" style="margin-top:14px"><span>ℹ</span><span>Montos de ejemplo. El cronograma y la política de moras los define la institución antes de la semana 2 del proyecto.</span></div>`}
 
 /* ---------- COMUNICADOS ---------- */
 function visComs(){const r=role(),sts=new Set(visStudents().map(s=>s.id));
  return S.com.filter(c=>{if(r==='dir'&&S.ui.sede==='all')return true;return audStudents(c.aud).some(s=>sts.has(s.id))}).sort((a,b)=>(b.f+b.hora).localeCompare(a.f+a.hora))}
 function comItem(c){const tot=familias(c.aud),l=leidos(c);return `<div class="item" style="cursor:pointer" data-a="comDet" data-id="${c.id}"><div class="ic">${icon('com',17)}</div><div class="body"><b>${esc(c.tit)}</b><span class="meta">${audLabel(c.aud)} · ${fd(c.f)} ${c.hora} · ${esc(c.autor)}</span><div style="display:flex;gap:10px;align-items:center;margin-top:4px"><div class="prog" style="flex:1;max-width:220px"><i style="width:${pct(l,tot)}%"></i></div><span class="meta">${l} de ${tot} familias leyeron</span></div></div></div>`}
-function vCom(){return `<div class="card"><div class="card-h"><div><h2>Comunicados enviados</h2><p>Aviso dentro del sistema y notificación en el celular de cada familia</p></div><button class="btn" data-a="newCom">+ Nuevo comunicado</button></div><div class="list">${visComs().map(comItem).join('')||'<div class="empty">Sin comunicados.</div>'}</div></div>`}
+function vCom(){return `${derivCard()}<div class="card"><div class="card-h"><div><h2>Comunicados enviados</h2><p>Aviso dentro del sistema y notificación en el celular de cada familia</p></div><button class="btn" data-a="newCom">+ Nuevo comunicado</button></div><div class="list">${visComs().map(comItem).join('')||'<div class="empty">Sin comunicados.</div>'}</div></div>`}
 function audOptions(){const r=role();if(r==='doc')return [['aula','Un aula'],['familia','Una familia']];if(['sec','tes','sed'].includes(r))return [['sede','Toda la sede'],['aula','Una sección'],['familia','Una familia']];return [['inst','Toda la institución'],['sede','Una sede'],['nivel','Un nivel'],['grado','Un grado'],['aula','Una sección'],['familia','Una familia']]}
 function audValues(t){const fs=fixedSede();if(t==='sede')return (fs?SEDES.filter(s=>s.id===fs):SEDES).map(s=>[s.id,s.n]);if(t==='nivel')return [['Inicial','Inicial'],['Primaria','Primaria'],['Secundaria','Secundaria']];if(t==='grado'){const m=new Map();AULAS.forEach(a=>m.set(a.nivel+'|'+a.grado,`${a.grado} ${a.nivel}`));return [...m]}if(t==='aula')return (role()==='dir'?AULAS:visAulas()).map(a=>[a.id,`${a.n} · ${sedeN(a.sede)}`]);if(t==='familia')return (role()==='dir'?S.students:visStudents()).slice().sort(sortName).map(s=>[s.id,`${s.ape}, ${s.nom} · ${aulaById(s.aula).n}`]);return []}
 function newComHTML(){const ops=audOptions();if(!DRAFT.comT||!ops.find(o=>o[0]===DRAFT.comT))DRAFT.comT=ops[0][0];const t=DRAFT.comT,vals=audValues(t);if(!vals.find(v=>v[0]===DRAFT.comV))DRAFT.comV=vals[0]?.[0];
@@ -1401,10 +1423,11 @@ function vTutoria(){const aid=DOC_AULAS[0],a=aulaById(aid),sts=aulaStudents(aid)
 function vIngresos(){const sedes=fixedSede()?SEDES.filter(s=>s.id===fixedSede()):(S.ui.sede==='all'?SEDES:SEDES.filter(s=>s.id===S.ui.sede));const months=[];for(let m=2;m<=MT;m++)months.push(m);
  const data=sedes.map(sd=>({sd,r:recaudacion(S.students.filter(s=>s.sede===sd.id))}));const tot=months.map(m=>data.reduce((a,d)=>a+d.r[m],0));const total=tot.reduce((a,v)=>a+v,0);
  const pays=[];visStudents().forEach(s=>{const cs=cuotas(s);Object.entries(S.pagos[s.id]||{}).forEach(([k,p])=>{const c=cs.find(x=>x.k===k);if(c)pays.push({s,c,p})})});pays.sort((a,b)=>b.p.f.localeCompare(a.p.f));
- const byM={Caja:0,'Depósito':0,Transferencia:0};pays.filter(x=>x.p.f.slice(5,7)===pad(MT+1)).forEach(x=>{byM[x.p.m]=(byM[x.p.m]||0)+x.c.m});
- return `<div class="kpis">${kpi('money','p','Recaudado en el año',money(total),`Marzo a ${MESL[MT].toLowerCase()}`)}${kpi('chart','','Recaudado en '+MESL[MT].toLowerCase(),money(tot[tot.length-1]),`${MESL[MT-1]}: ${money(tot[tot.length-2])}`)}${kpi('check','ok','Por caja este mes',money(byM.Caja),'Pagos en ventanilla')}${kpi('pagos','','Depósito y transferencia',money(byM['Depósito']+byM.Transferencia),'Este mes')}</div>
+ const stsI=S.students.filter(s=>sedes.some(sd=>sd.id===s.sede)),pm=porMedio(stsI);
+ return `<div class="kpis">${kpi('money','p','Recaudado en el año',money(total),`Marzo a ${MESL[MT].toLowerCase()}`)}${kpi('chart','','Recaudado en '+MESL[MT].toLowerCase(),money(tot[tot.length-1]),`${MESL[MT-1]}: ${money(tot[tot.length-2])}`)}${kpi('check','ok','Caja este mes',money(pm.Caja[MT]),'Pagos en ventanilla')}${kpi('pagos','','Depósito este mes',money(pm['Depósito'][MT]),'Con constancia o voucher')}${kpi('pagos','','Transferencia este mes',money(pm.Transferencia[MT]),'Banca por internet')}</div>
  <div class="card"><div class="card-h"><div><h2>Recaudación por sede y mes</h2><p>Montos en soles por mes de cobro · incluye matrícula y pensiones</p></div><button class="btn ghost sm" data-a="xlsIng">Exportar a Excel</button></div>${barChart(months.slice(-6).map(m=>({l:MES[m],v:tot[m-2]})),v=>'S/ '+kfmt(v))}
  <div class="tw" style="margin-top:12px"><table class="t vh"><thead><tr><th>Sede</th>${months.map(m=>`<th class="r">${MES[m]}</th>`).join('')}<th class="r">Total</th></tr></thead><tbody>${data.map(d=>`<tr><td><b>${d.sd.n}</b></td>${months.map(m=>`<td class="r">${kfmt(d.r[m])}</td>`).join('')}<td class="r"><b>${money(months.reduce((a,m)=>a+d.r[m],0))}</b></td></tr>`).join('')}${data.length>1?`<tr><td><b>Total</b></td>${tot.map(v=>`<td class="r"><b>${kfmt(v)}</b></td>`).join('')}<td class="r"><b>${money(total)}</b></td></tr>`:''}</tbody></table></div></div>
+ <div class="card"><div class="card-h"><div><h2>Recaudación por medio de pago</h2><p>Caja, depósito y transferencia · montos en soles por mes de cobro</p></div></div><div class="tw"><table class="t vh"><thead><tr><th>Medio de pago</th>${months.map(m=>`<th class="r">${MES[m]}</th>`).join('')}<th class="r">Total</th><th class="r">% del año</th></tr></thead><tbody>${MEDIOS.map(md=>{const t=months.reduce((a,m)=>a+pm[md][m],0);return `<tr><td><b>${md==='Caja'?'Caja del colegio':md}</b></td>${months.map(m=>`<td class="r">${kfmt(pm[md][m])}</td>`).join('')}<td class="r"><b>${money(t)}</b></td><td class="r">${pct(t,total)}%</td></tr>`}).join('')}</tbody></table></div></div>
  <div class="card"><div class="card-h"><div><h2>Últimos pagos registrados</h2><p>Caja, depósito y transferencia</p></div></div><div class="tw"><table class="t"><thead><tr><th>Fecha</th><th>Alumno</th><th>Concepto</th><th>Medio</th><th>N.° operación</th><th class="r">Monto</th></tr></thead><tbody>${pays.slice(0,12).map(x=>`<tr><td>${fds(x.p.f)}</td><td><b>${esc(fullName(x.s))}</b><span class="sub">${aulaById(x.s.aula).n} · ${sedeN(x.s.sede)}</span></td><td>${x.c.n}</td><td>${x.p.m}</td><td class="tn">${esc(x.p.op)}</td><td class="r"><b>${money(x.c.m)}</b></td></tr>`).join('')}</tbody></table></div></div>`}
 
 /* ---------- VOUCHERS ---------- */
@@ -1415,11 +1438,13 @@ function pagVou(){const list=visVou(),pend=list.filter(v=>v.estado==='Por revisa
 /* ---------- USUARIOS Y SEGURIDAD ---------- */
 const PERFILES=['Dirección general','Dirección de sede','Secretaría','Tesorería','Docente','Padre de familia','Estudiante'];
 function vSeg(){if(!S.ui.segTab)S.ui.segTab='usr';
- const t=tabs('segTab',[['usr','Usuarios',S.users.length],['perm','Perfiles y permisos'],['bk','Copias de seguridad'],['log','Bitácora',S.log.length]]);let b='';
+ const t=tabs('segTab',[['usr','Usuarios',S.users.length],['perm','Perfiles y permisos'],['ia','Asistente IA'],['mig','Migración de datos'],['bk','Copias de seguridad'],['log','Bitácora',S.log.length]]);let b='';
  if(S.ui.segTab==='usr'){const f=S.ui.usrF||'all',list=f==='all'?S.users:S.users.filter(u=>u.perfil===f);
   b=`<div class="toolbar" style="margin-bottom:14px;justify-content:space-between"><div class="field" style="max-width:260px"><label for="uf">Perfil</label><select class="in" id="uf" data-c="ui" data-k="usrF">${opt('all','Todos',f)}${PERFILES.map(p=>opt(p,p,f)).join('')}</select></div><button class="btn" data-a="newUser">+ Nuevo usuario</button></div>
   <div class="tw"><table class="t vh"><thead><tr><th>Usuario</th><th>Perfil</th><th>Sede</th><th>Último acceso</th><th>Estado</th><th class="r">Acciones</th></tr></thead><tbody>${list.map(u=>`<tr><td><b>${esc(u.n)}</b><span class="sub">${esc(u.mail)}</span></td><td>${u.perfil}</td><td>${u.sede==='all'?'Todas':sedeN(u.sede)}</td><td>${u.ult?fds(u.ult):'<span class="muted">Nunca</span>'}</td><td><span class="chip ${u.activo?'ok':''}">${u.activo?'Activo':'Inactivo'}</span></td><td class="r" style="white-space:nowrap"><button class="btn ghost sm" data-a="resetPwd" data-id="${u.id}">Restablecer contraseña</button> <button class="btn ghost sm" data-a="toggleUser" data-id="${u.id}">${u.activo?'Desactivar':'Activar'}</button></td></tr>`).join('')}</tbody></table></div>`}
  else if(S.ui.segTab==='perm')b=permMatrix();
+ else if(S.ui.segTab==='ia')b=aiCfgView();
+ else if(S.ui.segTab==='mig')b=migView();
  else if(S.ui.segTab==='bk'){b=`<div class="g2"><div><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px"><p class="muted">Copia automática diaria a las 2:00 a. m. Las copias manuales se pueden restaurar en esta demo.</p><button class="btn" data-a="backup">Crear copia ahora</button></div>
   <div class="tw"><table class="t"><thead><tr><th>Fecha</th><th>Tipo</th><th>Tamaño</th><th>Estado</th><th class="r"></th></tr></thead><tbody>${S.backups.map(k=>`<tr><td>${fds(k.f)} · ${k.h}</td><td>${k.tipo}</td><td>${k.tam}</td><td><span class="chip ok">Completa</span></td><td class="r">${k.snap?(RESTOREARM===k.id?`<button class="btn sm" data-a="restore" data-id="${k.id}">Confirmar restauración</button>`:`<button class="btn ghost sm" data-a="restore" data-id="${k.id}">Restaurar</button>`):'<span class="muted" style="font-size:12px">En el servidor</span>'}</td></tr>`).join('')}</tbody></table></div></div>
   <div class="card" style="box-shadow:none"><h2 style="font-size:15px;margin-bottom:10px">Procedimiento de restauración</h2><ol style="margin:0;padding-left:18px;display:grid;gap:6px;font-size:13px;color:var(--muted)"><li>Elegir la copia por fecha y hora.</li><li>Confirmar la restauración (queda en la bitácora).</li><li>El sistema reemplaza los datos y registra quién la hizo.</li><li>Las copias automáticas se conservan 30 días en el servidor.</li></ol><div class="alert info" style="margin-top:12px"><span>🔒</span><span>Conexión cifrada (HTTPS), contraseñas cifradas y acceso por perfil y sede.</span></div></div></div>`}
@@ -1450,16 +1475,61 @@ function actaHTML(aid,c){const a=aulaById(aid);return `${mhead('Acta de evaluaci
 /* ---------- IMPORTAR Y EXPORTAR ---------- */
 let IMP=null;
 const aulaLabel=a=>`${a.n} - ${sedeN(a.sede)}`;
-function importHTML(){return `${mhead('Importar alumnos desde Excel','Carga inicial con la plantilla del colegio (módulo de migración)')}
- <div class="alert info"><span>ℹ</span><span>Columnas: <b>Nombres, Apellidos, DNI, Nacimiento (AAAA-MM-DD), Aula, Apoderado, Celular</b>. El aula se escribe como en la hoja "Aulas" de la plantilla.</span></div>
+let IMPT='alu';
+const nz=r=>r.some(c=>String(c??'').trim()),cl=x=>String(x??'').trim();
+const sedeByName=x=>SEDES.find(sd=>fold(sd.n)===fold(x)||fold(sd.n)===fold('Sede '+x));
+function impValidate(rows){const dnis=new Set(S.students.map(s=>s.dni));const fa=Object.fromEntries(AULAS.map(a=>[fold(aulaLabel(a)),a]));
+ return rows.filter(nz).map(r=>{const[nom,ape,dni,nac,au,apod,tel]=r.map(cl);const errs=[];const a=fa[fold(au)];
+  if(!nom||!ape)errs.push('Faltan nombres');if(!/^\d{8}$/.test(dni))errs.push('DNI inválido');else if(dnis.has(dni))errs.push('DNI ya registrado');if(!a)errs.push('Aula no existe');if(!/^9\d{8}$/.test(tel))errs.push('Celular inválido');
+  if(/^\d{8}$/.test(dni))dnis.add(dni);return{nom,ape,dni,nac:/^\d{4}-\d{2}-\d{2}$/.test(nac)?nac:'',a,apod:apod||'—',tel,errs}})}
+function valDoc(rows){const dn=new Set(S.docentes.map(d=>d.dni));
+ return rows.filter(nz).map(r=>{const[n,dni,esp,se,tel]=r.map(cl);const errs=[];const sd=sedeByName(se);
+  if(n.split(/\s+/).length<2)errs.push('Faltan nombres');if(!/^\d{8}$/.test(dni))errs.push('DNI inválido');else if(dn.has(dni))errs.push('DNI ya registrado');if(!esp)errs.push('Falta especialidad');if(!sd)errs.push('Sede no existe');if(!/^9\d{8}$/.test(tel))errs.push('Celular inválido');
+  if(/^\d{8}$/.test(dni))dn.add(dni);return{n,dni,esp,sd,tel,errs}})}
+function valAula(rows){const seen=new Set(AULAS.map(a=>[a.sede,a.nivel,a.grado,a.sec].join('|')));
+ return rows.filter(nz).map(r=>{const[se,niv,gr,sec,tut,cap]=r.map(cl);const errs=[];const sd=sedeByName(se);const nv=['Inicial','Primaria','Secundaria'].find(x=>fold(x)===fold(niv));const g=nv&&GRADOS[nv].find(x=>fold(x)===fold(gr)||fold(x).replace(/\D/g,'')===fold(gr).replace(/\D/g,'')&&fold(gr).replace(/\D/g,''));const sc=sec.toUpperCase();const c=cap===''?30:Number(cap);
+  if(!sd)errs.push('Sede no existe');if(!nv)errs.push('Nivel inválido');else if(!g)errs.push('Grado no válido para el nivel');if(!/^[A-Z]$/.test(sc))errs.push('Sección inválida');if(!(c>=1&&c<=45))errs.push('Capacidad fuera de rango');
+  const key=[sd&&sd.id,nv,g,sc].join('|');if(!errs.length&&seen.has(key))errs.push('La sección ya existe');if(!errs.length)seen.add(key);return{sd,nv,g,sc,tut,cap:c,errs}})}
+function valDeu(rows){const bd=Object.fromEntries(S.students.map(s=>[s.dni,s]));
+ return rows.filter(nz).map(r=>{const[dni,n,v,m]=r.map(cl);const errs=[];const st=bd[dni];const mm=Number(String(m).replace(/[^\d.,-]/g,'').replace(',','.'));
+  if(!st)errs.push('Alumno no registrado');if(!n)errs.push('Falta concepto');if(!/^\d{4}-\d{2}-\d{2}$/.test(v))errs.push('Fecha inválida');if(!(mm>0))errs.push('Monto inválido');return{st,dni,n,v,m:mm,errs}})}
+const MIG={
+ alu:{t:'Alumnos',file:'Plantilla_carga_alumnos',cols:['Nombres','Apellidos','DNI','Nacimiento','Aula','Apoderado','Celular'],
+  help:'Columnas: <b>Nombres, Apellidos, DNI, Nacimiento (AAAA-MM-DD), Aula, Apoderado, Celular</b>. El aula se escribe como en la hoja "Aulas" de la plantilla.',
+  ex:()=>[['Ana','Ruiz Paz','71234567','2017-05-02',aulaLabel(AULAS[0]),'Luis Ruiz Soto','912345678']],ref:()=>[['Aulas',[['Aula'],...AULAS.map(a=>[aulaLabel(a)])]]],
+  sample:()=>[['Sofía','Rivera Lozano','72345611','2016-08-14',aulaLabel(AULAS[1]),'María Lozano Paz','987650001'],['Diego','Chávez Ríos','72345612','2018-01-22',aulaLabel(AULAS[0]),'Pedro Chávez Vera','987650002'],['Lucía','Mamani Torres','7234561','2014-03-03',aulaLabel(AULAS[2]),'Rosa Torres Gil','987650003'],['Bruno','Flores Paz','72345614','2013-11-30','6.° Primaria Z - Sede Sur','Ana Paz Ruiz','987650004'],['Camila','Vargas Soto','72345615','2015-06-09',aulaLabel(AULAS[5]),'Jorge Vargas Lima','987650005']],
+  val:impValidate,head:['Alumno','DNI','Aula'],cells:r=>[`<b>${esc(r.ape)}, ${esc(r.nom)}</b><span class="sub">${esc(r.apod)} · ${esc(r.tel)}</span>`,esc(r.dni),r.a?aulaLabel(r.a):'<span class="muted">—</span>'],
+  save:r=>addStudent({nom:r.nom,ape:r.ape,dni:r.dni,nac:r.nac,aula:r.a.id,apod:r.apod,tel:r.tel}),logA:'Carga masiva de alumnos',u:'alumno(s)',ok:n=>`${n} alumnos importados. Ya figuran en sus aulas.`},
+ doc:{t:'Docentes',file:'Plantilla_carga_docentes',cols:['Nombres y apellidos','DNI','Especialidad','Sede','Celular'],
+  help:'Columnas: <b>Nombres y apellidos, DNI, Especialidad, Sede, Celular</b>. La sede se escribe como en la hoja "Sedes". Cada docente queda con su usuario de acceso.',
+  ex:()=>[['Ana María Ruiz Paz','41234567','Matemática','Sede Central','912345678']],ref:()=>[['Sedes',[['Sede'],...SEDES.map(x=>[x.n])]]],
+  sample:()=>[['Lucía Fernández Soto','41230001','Comunicación','Sede Norte','987650011'],['Miguel Rojas Vera','41230002','Educación Física','Sede Sur','987650012'],['Carla Núñez Paz','4123','Arte','Sede Este','987650013'],['Pedro Gil Lima','41230004','Inglés','Sede Oeste','987650014']],
+  val:valDoc,head:['Docente','DNI','Especialidad y sede'],cells:r=>[`<b>${esc(r.n)}</b><span class="sub">${esc(r.tel)}</span>`,esc(r.dni),`${esc(r.esp)}${r.sd?' · '+r.sd.n:''}`],
+  save:(r,i)=>{const n=r.n.startsWith('Prof.')?r.n:'Prof. '+r.n;const p=n.replace('Prof. ','').split(' ');const d={id:'D'+Date.now()+'_'+i,n,esp:r.esp,sede:r.sd.id,dni:r.dni,mail:fold(p[0][0]+(p[1]||'')).replace(/[^a-z]/g,'')+'@diegothomson.edu.pe',tel:r.tel,estado:'Activo'};S.docentes.push(d);S.users.push({id:'U'+Date.now()+'_'+i,n:d.n,mail:d.mail,perfil:'Docente',sede:d.sede,activo:true,ult:null})},
+  logA:'Carga masiva de docentes',u:'docente(s)',ok:n=>`${n} docentes importados, con su usuario de acceso. Asígnales cursos en Docentes.`},
+ aula:{t:'Aulas',file:'Plantilla_carga_aulas',cols:['Sede','Nivel','Grado','Sección','Tutor(a)','Capacidad'],
+  help:'Columnas: <b>Sede, Nivel (Inicial, Primaria o Secundaria), Grado, Sección, Tutor(a), Capacidad</b>. Los grados válidos están en la hoja "Grados".',
+  ex:()=>[['Sede Central','Primaria','1.°','A','Prof. Ana Ruiz Paz','30']],ref:()=>[['Sedes',[['Sede'],...SEDES.map(x=>[x.n])]],['Grados',[['Nivel','Grado'],...Object.entries(GRADOS).flatMap(([n,gs])=>gs.map(g=>[n,g]))]]],
+  sample:()=>[['Sede Central','Primaria','1.°','A','Prof. Ana Ruiz Paz','30'],['Sede Norte','Secundaria','3.°','B','','28'],['Sede Sur','Primaria','7.°','A','','30'],['Sede Central','Primaria','3.°','A','','30']],
+  val:valAula,head:['Sección','Sede','Tutor(a) y capacidad'],cells:r=>[`<b>${r.nv&&r.g?esc(r.nv==='Inicial'?`Inicial ${r.g} ${r.sc}`:`${r.g} ${r.nv} ${r.sc}`):'—'}</b>`,r.sd?r.sd.n:'<span class="muted">—</span>',`${esc(r.tut||'Por asignar')} · ${r.cap} vacantes`],
+  save:(r,i)=>{AULAS.push({id:`${r.sd.id}-${Date.now()%1000000}${i}`,sede:r.sd.id,nivel:r.nv,grado:r.g,sec:r.sc,n:r.nv==='Inicial'?`Inicial ${r.g} ${r.sc}`:`${r.g} ${r.nv} ${r.sc}`,tutor:r.tut||'Por asignar',cap:r.cap})},
+  logA:'Carga masiva de aulas',u:'aula(s)',ok:n=>`${n} secciones creadas. Asigna sus cursos en Docentes.`},
+ deu:{t:'Deudas iniciales',file:'Plantilla_carga_deudas',cols:['DNI del alumno','Concepto','Vencimiento','Monto (S/)'],
+  help:'Saldos pendientes que vienen del sistema anterior. Columnas: <b>DNI del alumno, Concepto, Vencimiento (AAAA-MM-DD), Monto en soles</b>. Primero carga a los alumnos.',
+  ex:()=>[[S.students[0].dni,'Pensión diciembre 2025','2025-12-31','420']],ref:()=>[],
+  sample:()=>[[S.students[3].dni,'Pensión diciembre 2025','2025-12-31','420'],[S.students[15].dni,'Pensión noviembre 2025','2025-11-30','420'],['70000000','Pensión diciembre 2025','2025-12-31','480'],[S.students[30].dni,'Matrícula 2025','31/01/2025','350']],
+  val:valDeu,head:['Alumno','Concepto','Monto'],cells:r=>[r.st?`<b>${esc(fullName(r.st))}</b><span class="sub">${aulaById(r.st.aula).n} · ${sedeN(r.st.sede)}</span>`:`DNI ${esc(r.dni)}`,`${esc(r.n)}<span class="sub">Vence ${/^\d{4}-\d{2}-\d{2}$/.test(r.v)?fd(r.v):esc(r.v)}</span>`,r.m>0?money(r.m):'—'],
+  save:(r,i)=>S.deudas.push({id:'DEU'+Date.now()+'_'+i,sid:r.st.id,n:r.n,v:r.v,m:r.m}),logA:'Carga de deudas iniciales',u:'deuda(s)',ok:n=>`${n} deudas cargadas. Ya figuran en el estado de cuenta y en morosidad.`}};
+function importHTML(){const M=MIG[IMPT];return `${mhead('Importar '+M.t.toLowerCase()+' desde Excel','Carga inicial con las plantillas del colegio (módulo de migración)')}
+ <div class="seg" role="group" aria-label="Tipo de carga" style="margin-bottom:12px">${Object.entries(MIG).map(([k,x])=>`<button type="button" aria-pressed="${k===IMPT}" data-a="impType" data-t="${k}">${x.t}</button>`).join('')}</div>
+ <div class="alert info"><span>ℹ</span><span>${M.help}</span></div>
  <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" data-a="tplDown">Descargar plantilla</button><button class="btn ghost" data-a="tplSample">Probar con datos de ejemplo</button></div>
  <div class="field"><label for="impFile">Archivo Excel o CSV</label><input class="in" type="file" id="impFile" accept=".xlsx,.xls,.csv" data-c="impfile"></div>
  <div id="impPrev">${IMP?impPreview():''}</div>`}
-function impValidate(rows){const dnis=new Set(S.students.map(s=>s.dni));const fa=Object.fromEntries(AULAS.map(a=>[fold(aulaLabel(a)),a]));
- return rows.filter(r=>r.some(c=>String(c||'').trim())).map(r=>{const[nom,ape,dni,nac,au,apod,tel]=r.map(x=>String(x??'').trim());const errs=[];const a=fa[fold(au)];
-  if(!nom||!ape)errs.push('Faltan nombres');if(!/^\d{8}$/.test(dni))errs.push('DNI inválido');else if(dnis.has(dni))errs.push('DNI ya registrado');if(!a)errs.push('Aula no existe');if(!/^9\d{8}$/.test(tel))errs.push('Celular inválido');
-  if(/^\d{8}$/.test(dni))dnis.add(dni);return{nom,ape,dni,nac:/^\d{4}-\d{2}-\d{2}$/.test(nac)?nac:'',a,apod:apod||'—',tel,errs}})}
-function impPreview(){const ok=IMP.filter(r=>!r.errs.length).length;return `<div class="tw"><table class="t"><thead><tr><th>Alumno</th><th>DNI</th><th>Aula</th><th>Validación</th></tr></thead><tbody>${IMP.map(r=>`<tr><td><b>${esc(r.ape)}, ${esc(r.nom)}</b><span class="sub">${esc(r.apod)} · ${esc(r.tel)}</span></td><td>${esc(r.dni)}</td><td>${r.a?aulaLabel(r.a):'<span class="muted">—</span>'}</td><td>${r.errs.length?`<span class="chip bad">${r.errs.join(' · ')}</span>`:'<span class="chip ok">Lista para importar</span>'}</td></tr>`).join('')}</tbody></table></div><div class="mf" style="margin-top:12px"><span class="muted" style="align-self:center">${ok} de ${IMP.length} filas válidas</span><button class="btn" data-a="doImport" ${ok?'':'disabled'}>Importar ${ok} alumno(s)</button></div>`}
+function impPreview(){const M=MIG[IMPT],ok=IMP.filter(r=>!r.errs.length).length;return `<div class="tw"><table class="t"><thead><tr>${M.head.map(h=>`<th>${h}</th>`).join('')}<th>Validación</th></tr></thead><tbody>${IMP.map(r=>`<tr>${M.cells(r).map(c=>`<td>${c}</td>`).join('')}<td>${r.errs.length?`<span class="chip bad">${r.errs.join(' · ')}</span>`:'<span class="chip ok">Lista para importar</span>'}</td></tr>`).join('')}</tbody></table></div><div class="mf" style="margin-top:12px"><span class="muted" style="align-self:center">${ok} de ${IMP.length} filas válidas · las filas con error no se graban</span><button class="btn" data-a="doImport" ${ok?'':'disabled'}>Importar ${ok} ${M.u}</button></div>`}
+function migView(){const cnt={alu:S.students.length,doc:S.docentes.length,aula:AULAS.length,deu:S.deudas.length};
+ return `<div class="alert info" style="margin-bottom:14px"><span>ℹ</span><span>Carga inicial de la información del colegio: <b>1)</b> descarga la plantilla, <b>2)</b> complétala y depúrala, <b>3)</b> impórtala. El sistema valida cada fila y muestra los errores antes de grabar.</span></div>
+ <div class="tw"><table class="t vh"><thead><tr><th>Plantilla</th><th>Columnas</th><th class="r">Registros actuales</th><th class="r"></th></tr></thead><tbody>${Object.entries(MIG).map(([k,M])=>`<tr><td><b>${M.t}</b></td><td><span class="sub" style="margin:0">${M.cols.join(' · ')}</span></td><td class="r">${cnt[k]}</td><td class="r" style="white-space:nowrap"><button class="btn ghost sm" data-a="tplDown" data-t="${k}">Descargar plantilla</button> <button class="btn sm" data-a="importar" data-t="${k}">Importar</button></td></tr>`).join('')}</tbody></table></div>`}
 const inFrame=(()=>{try{return window.self!==window.top}catch(e){return true}})();
 function download(name,blob){if(inFrame){toast('La descarga funciona en el archivo HTML descargado; esta vista previa la bloquea.');return}const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);toast('Archivo descargado: '+name)}
 function exportX(name,sheets){if(window.XLSX){const wb=XLSX.utils.book_new();sheets.forEach(([n,rows])=>XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),n));const out=XLSX.write(wb,{bookType:'xlsx',type:'array'});download(name+'.xlsx',new Blob([out],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}))}
@@ -1480,7 +1550,7 @@ function fInicio(){const k=curKid(),a=aulaById(k.aula),c=cuenta(k),h=S.asis[k.id
  const last=CURSOS.map(cu=>{const arr=S.notas[k.id][cu][3];let li=-1;arr.forEach((n,i)=>{if(n!=null)li=i});return{cu,n:li>=0?arr[li]:null,comp:li>=0?COMP[cu][li]:''}}).filter(x=>x.n!=null).slice(0,4);
  return `<div class="hello"><small>${fechaLarga()}</small><h2>${pad_?'Resumen de '+esc(k.nom):saludo()+', '+esc(k.nom)}</h2><p>${a.grado} ${a.sec} · ${a.nivel} · ${sedeN(a.sede)}</p></div>
  <div class="kpis">${kpi('chart','','Promedio general',pg==null?'—':pg.toFixed(1).replace('.',','),'IV bimestre en curso')}${kpi('check','ok','Asistencia',asisPct(k.id)+'%',`${h.F} faltas en el año`)}${kpi('clock','','Tardanzas',h.T,'Año escolar 2026')}${venc?kpi('money','bad','Pensión vencida',money(venc),`${c.nV} cuota(s) vencida(s)`,'bad'):next?kpi('money','p','Próxima pensión',money(next.m),'Vence '+fd(next.v)):kpi('money','ok','Pensiones','Al día','Sin cuotas pendientes')}</div>
- ${pad_?`<div class="alert info"><span>📱</span><span><b>Instala el portal en tu celular.</b> Desde el navegador, elige "Agregar a pantalla de inicio". No necesitas descargar nada de tiendas de aplicaciones.</span></div>`:''}
+ ${STANDALONE()?'':`<div class="alert info" style="align-items:center"><span>📱</span><span style="flex:1"><b>Instala el portal en tu celular.</b> Queda como una app en tu pantalla de inicio, sin descargarla de tiendas de aplicaciones.</span><button class="btn sm" data-a="pwa">${PWA?'Instalar ahora':'Cómo instalar'}</button></div>`}
  <div class="g2"><div class="card"><div class="card-h"><div><h2>Últimas notas publicadas</h2><p>IV bimestre</p></div><button class="link" data-a="go" data-v="fnotas">Ver notas ›</button></div>${last.length?last.map(x=>`<div class="sch" style="grid-template-columns:minmax(0,1fr) auto"><div><b>${x.cu}</b><span class="muted" style="display:block;font-size:12px">${x.comp}</span></div>${showN(x.n,S.config.escala[a.nivel])}</div>`).join(''):'<div class="empty">Aún no hay notas del IV bimestre.</div>'}</div>
  <div class="card"><div class="card-h"><div><h2>Avisos recientes</h2><p>${un} sin leer</p></div><button class="link" data-a="go" data-v="favisos">Ver todos ›</button></div><div class="list">${coms.slice(0,3).map(x=>`<div class="item" style="cursor:pointer" data-a="go" data-v="favisos"><div class="ic">${icon('bell',16)}</div><div class="body"><b>${esc(x.tit)}</b><span class="meta">${fds(x.f)} · ${esc(x.autor)}</span></div>${x.read.includes(FAM)?'':'<span class="chip warn">Nuevo</span>'}</div>`).join('')}</div></div></div>
  <div class="g2e"><div class="card"><div class="card-h"><div><h2>Tareas pendientes</h2><p>Aula virtual</p></div><button class="link" data-a="go" data-v="fcursos">Ir a mis cursos ›</button></div><div class="list">${tareas.slice(0,4).map(t=>`<div class="item"><div class="body"><b>${esc(t.t)}</b><span class="meta">${t.cu}</span></div><span class="chip info">${fds(t.lim)}</span></div>`).join('')||'<div class="empty">Sin tareas pendientes.</div>'}</div></div>
@@ -1492,7 +1562,7 @@ function fNotas(){const k=curKid(),a=aulaById(k.aula),e=S.config.escala[a.nivel]
  <div class="card"><div class="card-h"><div><h2>Detalle por competencias</h2><p>IV bimestre en curso</p></div></div><div class="tw"><table class="t"><thead><tr><th>Curso</th><th>Competencia</th><th class="c">Nota</th></tr></thead><tbody>${CURSOS.flatMap(cu=>COMP[cu].map((cn,i)=>`<tr><td>${i===0?`<b>${cu}</b>`:''}</td><td>${cn}</td><td class="c">${showN(S.notas[k.id][cu][3][i],e)}</td></tr>`)).join('')}</tbody></table></div></div>`}
 function fAsis(){const k=curKid(),h=S.asis[k.id];
  return `<div class="kpis">${kpi('check','ok','Asistencia del año',asisPct(k.id)+'%',`${h.A} días asistidos`)}${kpi('clock','','Tardanzas',h.T,'Año escolar 2026')}${kpi('asistencia','bad','Faltas',h.F,'Año escolar 2026')}</div>
- <div class="card"><div class="card-h"><div><h2>Últimos 10 días de clase</h2><p>${esc(fullName(k))} · hoy: ${hoyChip(k)}</p></div></div><div class="dots" style="gap:8px">${lastDays(k).map(d=>`<div style="display:grid;gap:4px;justify-items:center;font-size:11px;color:var(--muted)"><span class="${d.m}" style="width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-weight:700">${d.l}</span>${d.d}</div>`).join('')}</div><p class="muted" style="font-size:12px;margin-top:12px">P presente · T tardanza · F falta. La familia recibe un aviso el mismo día de cada falta o tardanza.</p></div>`}
+ <div class="card"><div class="card-h"><div><h2>Últimos 10 días de clase</h2><p>${esc(fullName(k))} · hoy: ${hoyChip(k)}</p></div></div><div class="dots" style="gap:8px">${lastDays(k).map(d=>`<div style="display:grid;gap:4px;justify-items:center;font-size:11px;color:var(--muted)"><span class="${d.m}" style="width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-weight:700">${d.l}</span>${d.d}</div>`).join('')}</div><p class="muted" style="font-size:12px;margin-top:12px">P presente · T tardanza · F falta. La asistencia se actualiza en el portal el mismo día en que el colegio la registra.</p></div>`}
 function fPagos(){const k=curKid(),c=cuenta(k),vs=S.vouchers.filter(v=>v.sid===k.id);const inRev=new Set(vs.filter(v=>v.estado==='Por revisar').flatMap(v=>v.ks));
  return `<div class="kpis">${kpi('money','ok','Pagado',money(c.pag),'Año escolar 2026')}${kpi('clock','bad','Vencido',money(c.venc),`${c.nV} cuota(s)`,c.venc?'bad':'')}${kpi('pagos','p','Por vencer',money(c.pend),'Hasta diciembre')}</div>
  <div class="card"><div class="card-h"><div><h2>Pensiones de ${esc(k.nom)}</h2><p>Paga en caja del colegio o por depósito o transferencia y sube aquí la constancia</p></div><button class="btn" data-a="voucher" data-id="${k.id}" ${c.rows.some(r=>!r.pg&&!inRev.has(r.k))?'':'disabled'}>Subir voucher</button></div>
@@ -1522,7 +1592,7 @@ const A={
  setsede(el){S.ui.sede=el.dataset.v;save();render()},
  signout(){S.session=null;EXAM=null;LOGIN_STEP='login';closeModal();save();render();window.scrollTo(0,0);toast('Sesión cerrada correctamente')},
  logout(){S.session=null;EXAM=null;LOGIN_STEP='choose';closeModal();save();render();window.scrollTo(0,0)},
- reset(){if(!RESETARM){RESETARM=true;render();setTimeout(()=>{RESETARM=false;if(S.session)render()},4000);return}RESETARM=false;const ses=S.session;S=generate();S.session=ses;AULAS=S.aulas;DRAFT={asis:{},qt:'om',comT:null};EXAM=null;save();render();toast('Datos de la demo restablecidos.')},
+ reset(){if(!RESETARM){RESETARM=true;render();setTimeout(()=>{RESETARM=false;if(S.session)render()},4000);return}RESETARM=false;const ses=S.session;S=generate();ensureS();S.session=ses;AULAS=S.aulas;DRAFT={asis:{},qt:'om',comT:null};EXAM=null;save();render();toast('Datos de la demo restablecidos.')},
  close(){closeModal()},
  ficha(el){openModal(fichaHTML(stu(el.dataset.id)))},
  libreta(el){openModal(libretaHTML(stu(el.dataset.id)))},
@@ -1541,8 +1611,8 @@ const A={
  saveAsis(){const aid=curAula(),d=DRAFT.asis[aid],prev=S.asisHoy[aid],map={P:'A',T:'T',F:'F'};
   if(prev)Object.entries(prev.marks).forEach(([sid,m])=>S.asis[sid][map[m]]--);
   Object.entries(d).forEach(([sid,m])=>S.asis[sid][map[m]]++);
-  S.asisHoy[aid]={at:hhmm(),by:user().user,marks:{...d}};const avis=Object.values(d).filter(m=>m!=='P').length;
-  log(prev?'Asistencia modificada':'Asistencia registrada',`${aulaById(aid).n} · ${sedeN(aulaById(aid).sede)}`);delete DRAFT.asis[aid];save();render();toast(`Asistencia guardada.${avis?` Se avisó a ${avis} familia(s) por faltas o tardanzas.`:''}`)},
+  S.asisHoy[aid]={at:hhmm(),by:user().user,marks:{...d}};
+  log(prev?'Asistencia modificada':'Asistencia registrada',`${aulaById(aid).n} · ${sedeN(aulaById(aid).sede)}`);delete DRAFT.asis[aid];save();render();toast('Asistencia guardada. Ya se ve en el portal de las familias.')},
  saveNotas(){const aid=curAula(),c=curCurso();let n=0;aulaStudents(aid).forEach(s=>S.notas[s.id][c][3].forEach(x=>{if(x!=null)n++}));log('Notas modificadas',`${c} · ${aulaById(aid).n} · IV bimestre`);save();toast(`Notas guardadas: ${n} registros del IV bimestre.`)},
  revTarea(el){openModal(revTareaHTML(findTarea(el.dataset.t),curAulaFor()))},
  entregar(el){const t=findTarea(el.dataset.t),inp=document.getElementById('ef-'+t.id),f=inp&&inp.files&&inp.files[0];if(!f){toast('Adjunta un archivo para entregar la tarea.');inp&&inp.focus();return}
@@ -1561,13 +1631,14 @@ const A={
  xlsPanel(){exportX('Panel_Diego_Thomson',[['Comparativo',[['Sede','Alumnos','Asistencia hoy %','Promedio '+BIM[PER()]+' bim.','Ingresos '+MESL[MT],'Deuda vencida'],...SEDES.map(sd=>{const ss=S.students.filter(s=>s.sede===sd.id),au=AULAS.filter(a=>a.sede===sd.id),h=asisHoyStats(au);const vals=[];ss.forEach(s=>CURSOS.forEach(c=>{const p=promBim(s.id,c,PER());if(p!=null)vals.push(p)}));return [sd.n,ss.length,h.pctv,vals.length?+(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2):'',recaudacion(ss)[MT],ss.reduce((a,s)=>a+cuenta(s).venc,0)]})]]])},
  xlsAlu(){exportX('Alumnos',[['Alumnos',[['Apellidos','Nombres','DNI','Nacimiento','Aula','Sede','Apoderado','Celular','Ratificación 2027','Deuda vencida'],...visStudents().slice().sort(sortName).map(s=>[s.ape,s.nom,s.dni,s.nac,aulaById(s.aula).n,sedeN(s.sede),s.apod,s.tel,s.rat,cuenta(s).venc])]]])},
  xlsMor(){exportX('Morosidad',[['Morosidad',[['Alumno','Aula','Sede','Apoderado','Celular','Cuotas vencidas','Deuda'],...visStudents().map(s=>({s,c:cuenta(s)})).filter(x=>x.c.venc>0).map(({s,c})=>[fullName(s),aulaById(s.aula).n,sedeN(s.sede),s.apod,s.tel,c.nV,c.venc])]]])},
- xlsIng(){const months=[];for(let m=2;m<=MT;m++)months.push(m);exportX('Control_de_ingresos',[['Ingresos',[['Sede',...months.map(m=>MESL[m]),'Total'],...SEDES.map(sd=>{const r=recaudacion(S.students.filter(s=>s.sede===sd.id));return [sd.n,...months.map(m=>r[m]),months.reduce((a,m)=>a+r[m],0)]})]]])},
+ xlsIng(){const months=[];for(let m=2;m<=MT;m++)months.push(m);exportX('Control_de_ingresos',[['Ingresos',[['Sede',...months.map(m=>MESL[m]),'Total'],...SEDES.map(sd=>{const r=recaudacion(S.students.filter(s=>s.sede===sd.id));return [sd.n,...months.map(m=>r[m]),months.reduce((a,m)=>a+r[m],0)]})]],['Por medio de pago',(()=>{const pm=porMedio(S.students);return [['Medio de pago',...months.map(m=>MESL[m]),'Total'],...MEDIOS.map(md=>[md,...months.map(m=>pm[md][m]),months.reduce((a,m)=>a+pm[md][m],0)])]})()]])},
  xlsAsis(){exportX('Asistencia',[['Asistencia',[['Aula','Sede','Estudiantes','Asistencias','Tardanzas','Faltas','% asistencia'],...visAulas().map(a=>{const sts=aulaStudents(a.id);let A=0,T=0,F=0;sts.forEach(s=>{A+=S.asis[s.id].A;T+=S.asis[s.id].T;F+=S.asis[s.id].F});return [a.n,sedeN(a.sede),sts.length,A,T,F,pct(A+T,A+T+F)]})]]])},
  xlsActa(){const aid=curAula(),c=curCurso();exportX('Acta_'+c.replace(/\s/g,'_'),[['Acta',[['Estudiante','I','II','III','IV','Final'],...aulaStudents(aid).map(s=>{const ps=[0,1,2,3].map(b=>promBim(s.id,c,b));return [fullName(s),...ps.map(p=>p??''),bimCompleto(s.id,c,3)?Math.round(ps.reduce((a,b)=>a+b,0)/4):'']})]]])},
- importar(){IMP=null;openModal(importHTML())},
- tplDown(){exportX('Plantilla_carga_alumnos',[['Alumnos',[['Nombres','Apellidos','DNI','Nacimiento','Aula','Apoderado','Celular'],['Ana','Ruiz Paz','71234567','2017-05-02',aulaLabel(AULAS[0]),'Luis Ruiz Soto','912345678']]],['Aulas',[['Aula'],...AULAS.map(a=>[aulaLabel(a)])]]])},
- tplSample(){IMP=impValidate([['Sofía','Rivera Lozano','72345611','2016-08-14',aulaLabel(AULAS[1]),'María Lozano Paz','987650001'],['Diego','Chávez Ríos','72345612','2018-01-22',aulaLabel(AULAS[0]),'Pedro Chávez Vera','987650002'],['Lucía','Mamani Torres','7234561','2014-03-03',aulaLabel(AULAS[2]),'Rosa Torres Gil','987650003'],['Bruno','Flores Paz','72345614','2013-11-30','6.° Primaria Z - Sede Sur','Ana Paz Ruiz','987650004'],['Camila','Vargas Soto','72345615','2015-06-09',aulaLabel(AULAS[5]),'Jorge Vargas Lima','987650005']]);openModal(importHTML())},
- doImport(){const ok=IMP.filter(r=>!r.errs.length);ok.forEach(r=>addStudent({nom:r.nom,ape:r.ape,dni:r.dni,nac:r.nac,aula:r.a.id,apod:r.apod,tel:r.tel}));log('Carga masiva de alumnos',`${ok.length} alumnos importados desde Excel`);IMP=null;save();closeModal();render();toast(`${ok.length} alumnos importados. Ya figuran en sus aulas.`)},
+ importar(el){IMPT=(el&&el.dataset&&el.dataset.t)||'alu';IMP=null;openModal(importHTML())},
+ impType(el){IMPT=el.dataset.t;IMP=null;openModal(importHTML())},
+ tplDown(el){const k=(el&&el.dataset&&el.dataset.t)||IMPT,M=MIG[k];exportX(M.file,[[M.t,[M.cols,...M.ex()]],...M.ref()])},
+ tplSample(){IMP=MIG[IMPT].val(MIG[IMPT].sample());openModal(importHTML())},
+ doImport(){const M=MIG[IMPT],ok=IMP.filter(r=>!r.errs.length);ok.forEach((r,i)=>M.save(r,i));log(M.logA,`${ok.length} ${M.u} importados desde Excel`);IMP=null;save();closeModal();render();toast(M.ok(ok.length))},
  printDoc(){printDoc()},
  actaPDF(){openModal(actaHTML(curAula(),curCurso()))},
  editSede(el){openModal(editSedeHTML(el.dataset.id),'sm')},
@@ -1603,7 +1674,7 @@ const F={
   if(DRAFT.solId){const x=S.sol.find(y=>y.id===DRAFT.solId);if(x)x.estado='Matriculada';DRAFT.solId=null}
   log('Matrícula registrada',`${fullName(s)} · ${a.n} · ${sedeN(a.sede)}`);save();closeModal();render();toast(`Matrícula registrada: ${s.nom} en ${a.n}.`)},
  material(f,fd_){const L=lmsK(courseKey()),file=fd_.get('file');const ref=(file&&file.name)||String(fd_.get('url')||'').trim()||'Sin archivo';L.mat.unshift({t:String(fd_.get('t')).trim(),tipo:fd_.get('tipo'),f:TISO,ref});log('Material publicado',`${fd_.get('t')} · ${courseKey().split('|')[1]}`);save();render();toast('Material publicado. Los estudiantes ya lo ven en el curso.')},
- tarea(f,fd_){const L=lmsK(courseKey());L.tar.unshift({id:'T'+Date.now(),t:String(fd_.get('t')).trim(),d:String(fd_.get('d')||'').trim()||'Revisa las indicaciones en clase.',lim:fd_.get('lim'),ent:{}});log('Tarea asignada',`${fd_.get('t')} · vence ${fd(fd_.get('lim'))}`);save();render();toast('Tarea asignada y notificada a los estudiantes.')},
+ tarea(f,fd_){const L=lmsK(courseKey());L.tar.unshift({id:'T'+Date.now(),t:String(fd_.get('t')).trim(),d:String(fd_.get('d')||'').trim()||'Revisa las indicaciones en clase.',lim:fd_.get('lim'),ent:{}});log('Tarea asignada',`${fd_.get('t')} · vence ${fd(fd_.get('lim'))}`);save();render();toast('Tarea asignada. Ya aparece en el portal de los estudiantes.')},
  anuncio(f,fd_){lmsK(courseKey()).anu.unshift({f:TISO,txt:String(fd_.get('txt')).trim()});save();render();toast('Anuncio publicado.')},
  califTarea(f,fd_){const t=findTarea(f.dataset.t);let n=0,bad=false;Object.keys(t.ent).forEach(sid=>{const v=fd_.get('n_'+sid);if(v!==null&&v!==''){const x=Number(v);if(!Number.isInteger(x)||x<0||x>20){bad=true;return}if(t.ent[sid].nota!==x)n++;t.ent[sid].nota=x}t.ent[sid].fb=String(fd_.get('f_'+sid)||'')});if(bad){toast('Las notas deben ser enteros de 0 a 20.');return}log('Tarea calificada',`${t.t} · ${n} notas`);save();closeModal();render();toast('Calificaciones guardadas. Los estudiantes ven su nota y comentario.')},
  examen(f,fd_){const qs=fd_.getAll('q');if(!qs.length){toast('Elige al menos una pregunta.');return}const aid=fd_.get('aula');const ex={id:'E'+Date.now(),tit:String(fd_.get('tit')).trim(),c:bank(qs[0]).c,aula:aid,dur:Number(fd_.get('dur'))||20,q:qs,estado:'Publicado',res:{}};S.exams.unshift(ex);log('Examen publicado',`${ex.tit} · ${aulaById(aid).n}`);save();closeModal();render();toast('Examen publicado para los estudiantes.')},
@@ -1635,6 +1706,43 @@ const F={
 document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;if(el.tagName==='TR'&&e.target.closest('button,a,input,select'))return;const fn=A[el.dataset.a];if(fn){e.preventDefault();fn(el,e)}});
 MODAL.addEventListener('mousedown',e=>{if(e.target===MODAL)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!MODAL.hidden)closeModal()});
+/* ---------- ASISTENTE IA: configuración y derivación ---------- */
+const AI_MES=()=>S.log.filter(l=>l.a==='Consulta al asistente IA'&&l.t.slice(0,7)===TISO.slice(0,7));
+const aiUsed=()=>Math.round((S.config.ai.base+AI_MES().length*0.05)*100)/100;
+const aiOn=()=>!!(S.session&&S.config.ai.on[role()]);
+const usd=n=>'US$ '+n.toFixed(2);
+function aiCfgView(){const cfg=S.config.ai,used=aiUsed(),pc=Math.min(100,Math.round(used/cfg.lim*100)),mes=AI_MES();
+ const cnt=k=>mes.filter(l=>l.r===ROLES[k].n).length,conv=S.log.filter(l=>l.a==='Consulta al asistente IA').slice(0,8);
+ return `<div class="g2"><div><h2 style="font-size:15px;margin-bottom:4px">Activación por perfil</h2><p class="muted" style="font-size:13px;margin-bottom:12px">Si desactivas un perfil, sus usuarios dejan de ver el botón del asistente.</p>
+ <div class="tw"><table class="t"><thead><tr><th>Perfil</th><th class="r">Consultas del mes</th><th>Estado</th><th class="r"></th></tr></thead><tbody>${Object.keys(ROLES).map(k=>`<tr><td><b>${ROLES[k].n}</b></td><td class="r">${cnt(k)}</td><td><span class="chip ${cfg.on[k]?'ok':''}">${cfg.on[k]?'Activo':'Desactivado'}</span></td><td class="r"><button class="btn ghost sm" data-a="aiToggle" data-r="${k}">${cfg.on[k]?'Desactivar':'Activar'}</button></td></tr>`).join('')}</tbody></table></div></div>
+ <div style="display:grid;gap:14px;align-content:start"><div class="card" style="box-shadow:none"><h2 style="font-size:15px;margin-bottom:10px">Límite de gasto mensual</h2>
+ <p style="font-size:13px;margin-bottom:8px">Consumo estimado de ${MESL[MT].toLowerCase()}: <b>${usd(used)}</b> de ${usd(cfg.lim)} (${pc}%)</p>
+ <div style="height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden"><i style="display:block;height:100%;width:${pc}%;background:${pc>=90?'var(--bad)':pc>=70?'var(--warn)':'var(--primary)'}"></i></div>
+ <form data-f="aiLim" class="fg" style="margin-top:12px"><div class="field full"><label for="ail">Límite mensual (US$)</label><input class="in" id="ail" name="lim" type="number" min="5" step="5" value="${cfg.lim}" required></div><div class="mf full"><button class="btn">Guardar límite</button></div></form>
+ <p class="muted" style="font-size:12px;margin-top:8px">Al llegar al límite, el asistente se pausa hasta el mes siguiente y las consultas de las familias se derivan a secretaría. El consumo lo factura el proveedor de IA a nombre del colegio.</p></div>
+ <div class="alert info"><span>🔒</span><span>El asistente solo consulta e informa: no modifica notas, matrículas ni pagos. Cada consulta queda registrada en la bitácora.</span></div></div></div>
+ <div class="card" style="box-shadow:none;margin-top:14px"><div class="card-h"><div><h2 style="font-size:15px">Últimas conversaciones</h2><p>Registro de consultas al asistente</p></div><button class="link" data-a="ui" data-k="segTab" data-v="log">Ver bitácora ›</button></div>
+ <div class="tw"><table class="t"><thead><tr><th>Fecha y hora</th><th>Usuario</th><th>Perfil</th><th>Consulta</th></tr></thead><tbody>${conv.map(l=>`<tr><td>${fds(l.t.slice(0,10))} · ${l.t.slice(11)}</td><td><b>${esc(l.u)}</b></td><td>${esc(l.r)}</td><td>${esc(l.d)}</td></tr>`).join('')||'<tr><td colspan="4" class="muted">Aún no hay consultas.</td></tr>'}</tbody></table></div></div>`}
+function derivCard(){const r=role();if(!['dir','sed','sec'].includes(r))return '';const fs=fixedSede(),list=S.deriv.filter(q=>!fs||q.sede===fs),p=list.filter(q=>q.estado==='Pendiente').length;
+ return `<div class="card"><div class="card-h"><div><h2>Consultas derivadas por Thomson IA</h2><p>Preguntas que el asistente no pudo responder · ${p} pendiente(s)</p></div></div><div class="list">${list.map(q=>`<div class="item"><div class="ic">${icon('bell',17)}</div><div class="body"><b>“${esc(q.q)}”</b><span class="meta">${esc(q.u)} · ${esc(q.r)} · ${sedeN(q.sede)} · ${fds(q.f)} ${q.h}${q.por?' · Atendida por '+esc(q.por):''}</span></div>${q.estado==='Pendiente'?`<button class="btn sm" data-a="derivOk" data-id="${q.id}">Marcar como atendida</button>`:'<span class="chip ok">Atendida</span>'}</div>`).join('')||'<div class="empty">No hay consultas derivadas.</div>'}</div></div>`}
+function derive(text){const u=user();S.deriv.unshift({id:'Q'+Date.now(),f:TISO,h:hhmm(),u:u.user,r:u.n,sede:u.sede||'cen',q:String(text).slice(0,200),estado:'Pendiente'});log('Consulta derivada a secretaría',String(text).slice(0,80));save()}
+/* ---------- PORTAL INSTALABLE ---------- */
+let PWA=null;
+const STANDALONE=()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();PWA=e;if(S.session&&['pad','est'].includes(role()))render()});
+addEventListener('appinstalled',()=>{PWA=null;toast('Portal instalado en tu pantalla de inicio.')});
+const pwaHTML=()=>`${mhead('Instala el portal en tu celular','Funciona como una app, sin descargarla de tiendas')}
+ <div class="g2"><div><h2 style="font-size:14px;margin-bottom:8px">Android (Chrome)</h2><ol style="margin:0;padding-left:18px;display:grid;gap:6px;font-size:13px"><li>Abre el portal del colegio en Chrome.</li><li>Toca el menú <b>⋮</b> (arriba a la derecha).</li><li>Elige <b>Instalar aplicación</b> o <b>Agregar a pantalla principal</b>.</li></ol></div>
+ <div><h2 style="font-size:14px;margin-bottom:8px">iPhone (Safari)</h2><ol style="margin:0;padding-left:18px;display:grid;gap:6px;font-size:13px"><li>Abre el portal del colegio en Safari.</li><li>Toca el botón <b>Compartir</b> (cuadrado con flecha).</li><li>Elige <b>Agregar a inicio</b>.</li></ol></div></div>
+ <div class="alert info" style="margin-top:14px"><span>ℹ</span><span>El ícono del colegio aparece en tu pantalla de inicio y abre el portal a pantalla completa.</span></div>
+ <div class="mf" style="margin-top:12px"><button class="btn" data-a="close">Entendido</button></div>`;
+Object.assign(A,{
+ aiToggle(el){const k=el.dataset.r,c=S.config.ai;c.on[k]=!c.on[k];log(c.on[k]?'Asistente IA activado':'Asistente IA desactivado',`Perfil ${ROLES[k].n}`);save();render();toast(c.on[k]?`El asistente quedó activo para ${ROLES[k].n}.`:`${ROLES[k].n} ya no verá el asistente.`)},
+ derivOk(el){const q=S.deriv.find(x=>x.id===el.dataset.id);q.estado='Atendida';q.por=user().user;log('Consulta derivada atendida',q.q.slice(0,80));save();render();toast('Consulta marcada como atendida.')},
+ pwa(){if(PWA){const p=PWA;PWA=null;p.prompt();p.userChoice&&p.userChoice.then(()=>render())}else openModal(pwaHTML(),'sm')}});
+Object.assign(F,{
+ aiLim(f,fd_){const v=Math.max(5,Math.round(Number(fd_.get('lim'))||0));S.config.ai.lim=v;log('Límite de gasto de IA actualizado',`US$ ${v} mensuales`);save();render();toast(`Límite mensual fijado en US$ ${v}.`)}});
+
 document.addEventListener('submit',e=>{const f=e.target;if(f.dataset.f&&F[f.dataset.f]){e.preventDefault();F[f.dataset.f](f,new FormData(f))}});
 document.addEventListener('input',e=>{const el=e.target,c=el.dataset.c;if(!c)return;
  if(c==='ui'&&el.dataset.live){S.ui[el.dataset.k]=el.value;render();return}
@@ -1652,7 +1760,7 @@ document.addEventListener('change',e=>{const el=e.target,c=el.dataset.c;if(!c)re
  if(c==='comt'||c==='comv'){const f=el.form;DRAFT.comTit=f.tit.value;DRAFT.comBody=f.body.value;if(c==='comt'){DRAFT.comT=el.value;DRAFT.comV=null}else DRAFT.comV=el.value;openModal(newComHTML());return}
  if(c==='ptot'){updTotal();return}
  if(c==='anivel'){DRAFT.anNivel=el.value;const g=document.getElementById('na3');g.innerHTML=GRADOS[el.value].map(x=>opt(x,x,'')).join('');return}
- if(c==='impfile'){const file=el.files&&el.files[0];if(!file)return;const done=rows=>{IMP=impValidate(rows.slice(1));document.getElementById('impPrev').innerHTML=impPreview()};
+ if(c==='impfile'){const file=el.files&&el.files[0];if(!file)return;const done=rows=>{IMP=MIG[IMPT].val(rows.slice(1));document.getElementById('impPrev').innerHTML=impPreview()};
   if(window.XLSX&&!/\.csv$/i.test(file.name)){file.arrayBuffer().then(b=>{const wb=XLSX.read(b,{type:'array'});done(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:false,defval:''}))}).catch(()=>toast('No se pudo leer el archivo. Usa la plantilla en Excel o CSV.'))}else file.text().then(t=>done(parseCSV(t)));return}
  if(c==='wnivel'){const g=document.getElementById('w6');g.innerHTML=GRADOS[el.value].map(x=>opt(x,x,'')).join('');return}
 });
@@ -1802,14 +1910,16 @@ function answer(text){
  if(has(q,'gracias'))return '¡Con gusto! Si necesitas algo más, aquí estoy. 😊';
  let a=null;
  if(r==='pad'||r==='est')a=ansFam(q);else if(r==='doc')a=ansDoc(q);else a=ansAdm(q);
- return a||`No encontré esa información en el sistema o no está dentro de tus permisos. Voy a derivar tu consulta a <b>secretaría</b> para que te respondan. También puedes escribirnos por <a href="${WA_URL}" target="_blank" rel="noopener">WhatsApp</a>.`}
+ if(a)return a;
+ if(['pad','est','doc'].includes(r)){derive(text);return 'No encontré esa información en el sistema o no está dentro de tus permisos. Derivé tu consulta a <b>secretaría</b> de tu sede; te responderán a la brevedad.'}
+ return 'No encontré esa información en el sistema o no está dentro de tus permisos. Prueba con una de las sugerencias.'}
 
 function addMsg(html,who){const d=document.createElement('div');d.className='ai-m '+who;d.innerHTML=html;$('aiBody').appendChild(d);$('aiBody').scrollTop=1e6;return d}
 function ask(text){
  text=String(text||'').trim();if(!text||AI.busy)return;AI.busy=true;
  addMsg(esc(text),'u');$('aiIn').value='';
  const t=addMsg('<span class="ai-typing"><i></i><i></i><i></i></span>','b');
- setTimeout(()=>{try{t.innerHTML=answer(text)}catch(e){t.innerHTML='Tuve un problema al consultar los datos. Inténtalo de nuevo.'}
+ setTimeout(()=>{try{if(aiUsed()>=S.config.ai.lim){if(['pad','est','doc'].includes(role()))derive(text);t.innerHTML='El asistente llegó al límite de consultas de este mes y está en pausa.'+(['pad','est','doc'].includes(role())?' Derivé tu pregunta a <b>secretaría</b> para que te respondan.':' Puedes ampliar el límite en <b>Usuarios y seguridad › Asistente IA</b>.')}else t.innerHTML=answer(text)}catch(e){t.innerHTML='Tuve un problema al consultar los datos. Inténtalo de nuevo.'}
   $('aiBody').scrollTop=1e6;AI.busy=false;
   try{S.log.unshift({t:`${TISO} ${hhmm()}`,u:user().user,r:user().n,a:'Consulta al asistente IA',d:text.slice(0,80)});save()}catch(e){}},700+Math.random()*700)}
 function aiReset(){
@@ -1820,8 +1930,9 @@ function aiReset(){
 function aiSync(){
  const inApp=!WEB&&!!S.session;
  waFab.hidden=!WEB;
- $('aiFab').hidden=!inApp||AI.open;
- if(!inApp){AI.open=false;$('aiPanel').hidden=true;return}
+ if(inApp&&!aiOn())AI.open=false;
+ $('aiFab').hidden=!inApp||AI.open||!aiOn();
+ if(!inApp||!aiOn()){AI.open=false;$('aiPanel').hidden=true;return}
  if(AI.role!==role())aiReset();
  $('aiPanel').hidden=!AI.open;
 }

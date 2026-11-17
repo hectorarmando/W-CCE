@@ -1,0 +1,25 @@
+{
+  "name": "I.E.P. Diego Thomson",
+  "short_name": "Diego Thomson",
+  "description": "Plataforma escolar: notas, asistencia, tareas, pagos y comunicados.",
+  "lang": "es-PE",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#123E7C",
+  "icons": [
+    {
+      "src": "/erp-diego-thomson/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/erp-diego-thomson/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
