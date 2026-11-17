@@ -617,6 +617,10 @@ body:has(.chat.open) .ai-fab,body:has(.chat.open) .ai-panel{display:none!importa
 .live{display:inline-flex;align-items:center;gap:6px;background:#C8202F;color:#fff;font-weight:700;font-size:10.5px;letter-spacing:.06em;border-radius:6px;padding:3px 8px;white-space:nowrap}
 .live:before{content:"";width:7px;height:7px;border-radius:50%;background:#fff;animation:liveP 1.2s infinite}
 @keyframes liveP{50%{opacity:.25}}
+a.btn{text-decoration:none}
+.ppt-v{aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#0E2347;border:1px solid var(--line)}.ppt-v img{width:100%;height:100%;object-fit:contain;display:block}
+.ppt-dots{display:flex;gap:6px;justify-content:center}.ppt-dots button{width:9px;height:9px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}.ppt-dots button[aria-current="true"]{background:var(--primary);width:22px;border-radius:5px}
+.rec-v{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}.rec-v iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .item.vlive{border-color:#C8202F;box-shadow:inset 3px 0 0 #C8202F}
 body.room-on{overflow:hidden}
 body.room-on .ai-fab,body.room-on .ai-panel,body.room-on .wa-fab{display:none!important}
@@ -882,6 +886,7 @@ function ensureS(){
  if(!S.deudas)S.deudas=[];
  msgSeed();
  vivoSeed();
+ matSeed();
  if(!S.siagie)S.siagie=[];
  if(!S.onlineSeed){S.onlineSeed=true;let n=0;S.students.forEach(st=>{Object.values(S.pagos[st.id]||{}).forEach(p=>{if(n<8&&p.f&&p.f.slice(0,7)===TISO.slice(0,7)&&p.m!=='En línea'&&(st.id.charCodeAt(st.id.length-1)%3===0)){p.m='En línea';p.canal=n%2?'Yape':'Tarjeta';p.op='IZ-'+(704512+n*137);n++}})})}
  if(!S.deriv)S.deriv=[
@@ -1216,14 +1221,15 @@ function coursePage(aid,c){
  const L=lmsOf(aid,c),a=aulaById(aid),ed=['doc','dir','sed'].includes(role()),est=['est','pad'].includes(role());
  const back=est?`<button class="link" data-a="ui" data-k="estCurso" data-v="">‹ Mis cursos</button>`:'';
  let body='';
- if(S.ui.aulaTab==='mat')body=`<div class="list">${L.mat.map(m=>`<div class="item"><div class="ic">${m.tipo==='Video enlazado'||m.tipo==='Grabación de clase'?'▶':m.tipo==='Pizarra de clase'?'✎':'PDF'}</div><div class="body"><b>${esc(m.t)}</b><span class="meta">${m.tipo} · publicado el ${fd(m.f)} · ${esc(m.ref)}</span></div>${m.cls&&m.tipo==='Pizarra de clase'&&vHasBoard(m.cls)?`<div class="act"><button class="btn ghost sm" data-a="vivoBoard" data-id="${m.cls}">Ver pizarra</button></div>`:m.cls&&m.tipo==='Grabación de clase'?`<div class="act"><button class="btn ghost sm" data-a="vivoRec" data-id="${m.cls}">Ver grabación</button></div>`:''}</div>`).join('')}</div>
+ if(S.ui.aulaTab==='mat')body=`<div class="list">${L.mat.map(m=>`<div class="item"><div class="ic"${matIc(m)==='PPT'?' style="font-size:11px;background:#FCE9DE;color:#C2501B"':matIc(m)==='PDF'?' style="background:var(--bad-soft);color:var(--bad)"':''}>${matIc(m)}</div><div class="body"><b>${esc(m.t)}</b><span class="meta">${m.tipo} · publicado el ${fd(m.f)} · ${esc(m.ref)}</span></div>${matAct(m)}</div>`).join('')}</div>
   ${ed?`<form class="card" data-f="material" style="margin-top:14px;box-shadow:none"><h3 style="font-size:14.5px;margin-bottom:12px">Publicar material</h3><div class="fg"><div class="field"><label for="mt1">Título *</label><input class="in" id="mt1" name="t" required placeholder="Ej. Guía de repaso"></div><div class="field"><label for="mt2">Tipo</label><select class="in" id="mt2" name="tipo">${['Archivo PDF','Video enlazado','Enlace'].map(x=>opt(x,x,'')).join('')}</select></div><div class="field"><label for="mt3">Archivo</label><input class="in" id="mt3" type="file" name="file"></div><div class="field"><label for="mt4">O enlace</label><input class="in" id="mt4" name="url" placeholder="https://…"></div></div><div class="mf" style="margin-top:12px"><button class="btn">Publicar en el curso</button></div></form>`:''}`;
  else if(S.ui.aulaTab==='tar')body=`<div class="list">${L.tar.map(t=>tareaItem(t,aid,ed,est)).join('')}</div>
   ${ed?`<form class="card" data-f="tarea" style="margin-top:14px;box-shadow:none"><h3 style="font-size:14.5px;margin-bottom:12px">Nueva tarea</h3><div class="fg"><div class="field"><label for="ta1">Título *</label><input class="in" id="ta1" name="t" required></div><div class="field"><label for="ta2">Fecha límite *</label><input class="in" id="ta2" type="date" name="lim" value="${addDays(7)}" required></div><div class="field full"><label for="ta3">Indicaciones</label><textarea class="in" id="ta3" name="d" placeholder="Qué deben entregar y en qué formato"></textarea></div></div><div class="mf" style="margin-top:12px"><button class="btn">Asignar tarea</button></div></form>`:''}`;
+ else if(S.ui.aulaTab==='exa')body=courseExams(aid,c,est);
  else body=`<div class="list">${L.anu.map(x=>`<div class="item"><div class="ic">${icon('com',17)}</div><div class="body"><b>${esc(x.txt)}</b><span class="meta">${fd(x.f)} · ${docenteDe(aid,c)}</span></div></div>`).join('')}</div>
   ${ed?`<form data-f="anuncio" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"><input class="in" id="an1" name="txt" required placeholder="Escribe un anuncio para el curso" style="flex:1 1 260px"><button class="btn">Publicar anuncio</button></form>`:''}`;
  return `${back}<div class="banner"><div><p class="eyebrow">${a.n} · ${sedeN(a.sede)}</p><h2>${c}</h2><p>${docenteDe(aid,c)}</p></div><span class="chip" style="background:rgba(255,255,255,.16);color:#fff">${aulaStudents(aid).length} estudiantes</span></div>
- <div class="card">${tabs('aulaTab',[['tar','Tareas',L.tar.length],['mat','Materiales',L.mat.length],['anu','Anuncios',L.anu.length]])}<div style="margin-top:16px">${body}</div></div>`}
+ <div class="card">${tabs('aulaTab',[['tar','Tareas',L.tar.length],['mat','Materiales',L.mat.length],['exa','Exámenes',S.exams.filter(e=>e.aula===aid&&e.c===c).length],['anu','Anuncios',L.anu.length]])}<div style="margin-top:16px">${body}</div></div>`}
 function tareaItem(t,aid,ed,est){const dd=daysTo(t.lim),tot=aulaStudents(aid).length,ents=Object.values(t.ent),cal=ents.filter(e=>e.nota!=null).length;
  const lim=dd<0?`<span class="chip">Cerró el ${fds(t.lim)}</span>`:dd===0?'<span class="chip warn">Vence hoy</span>':`<span class="chip info">Vence en ${dd} día${dd>1?'s':''}</span>`;
  if(est){const e=t.ent[curKid().id];
@@ -1749,6 +1755,8 @@ function msgViewHTML(c){const r=c.rep;return `${mhead(c.p.map(pName).map(esc).jo
 
 /* ---------- CLASES EN VIVO Y PIZARRA INTERACTIVA ---------- */
 var LIVE,ROOM,VBC;
+/* Video de ejemplo para simular las grabaciones de clase */
+var VREC_URL='https://www.youtube.com/embed/Phal-sPAunk?si=Jr2U3Q4oojbxraQ4';
 function lkey(){return 'erp-diego-thomson-vivo-v1'}
 function LS(){try{return JSON.parse(localStorage.getItem(lkey())||'{}')||{}}catch(e){return {}}}
 function liveAll(){if(!LIVE)LIVE=LS();return LIVE}
@@ -1910,6 +1918,33 @@ function vivoMsg(m){if(!m)return;
 addEventListener('storage',e=>{if(e.key===lkey())vivoMsg({k:'upd',id:ROOM&&ROOM.id})});
 vbc();
 
+/* ---------- MATERIALES DE EJEMPLO (archivos reales en /materiales) y exámenes del curso ---------- */
+function matBase(){return location.pathname.includes('/erp-diego-thomson/')?'materiales/':'/erp-diego-thomson/materiales/'}
+function demoMat(){return {'Guía: Fracciones equivalentes':{k:'pdf',f:'guia-fracciones-equivalentes.pdf'},'Ficha de práctica N.° 7':{k:'pdf',f:'ficha-de-practica-7.pdf'},
+ 'Presentación: Fracciones equivalentes':{k:'ppt',f:'clase-fracciones-equivalentes.pptx',dir:'clase-fracciones-equivalentes',n:6},'Video: Suma y resta de fracciones':{k:'vid'}}}
+const DEMO_MAT=demoMat();
+function matSeed(){if(S.matSeed)return;S.matSeed=1;['cen-0|Matemática','cen-1|Matemática'].forEach(k=>{const L=S.lms[k];if(!L)return;
+ L.mat.push({t:'Presentación: Fracciones equivalentes',tipo:'Presentación PPT',f:addDays(-4),ref:'clase-fracciones-equivalentes.pptx · 6 diapositivas'});
+ L.mat.sort((a,b)=>b.f.localeCompare(a.f));const DM=demoMat();L.mat.forEach(m=>{const d=DM[m.t];if(d&&d.f)m.ref=d.f+(d.k==='pdf'?' · PDF':'')})})}
+function matIc(m){return m.tipo==='Video enlazado'||m.tipo==='Grabación de clase'?'▶':m.tipo==='Pizarra de clase'?'✎':m.tipo==='Presentación PPT'?'PPT':'PDF'}
+function matAct(m){const d=DEMO_MAT[m.t],b=matBase();
+ if(d&&d.k==='pdf')return `<div class="act"><a class="btn ghost sm" href="${b+d.f}" target="_blank" rel="noopener">Ver</a><a class="btn sm" href="${b+d.f}" download>Descargar</a></div>`;
+ if(d&&d.k==='ppt')return `<div class="act"><button class="btn ghost sm" data-a="matPpt" data-t="${esc(m.t)}">Ver presentación</button><a class="btn sm" href="${b+d.f}" download>Descargar</a></div>`;
+ if(d&&d.k==='vid')return `<div class="act"><button class="btn ghost sm" data-a="matVid" data-t="${esc(m.t)}">Ver video</button></div>`;
+ if(m.cls&&m.tipo==='Pizarra de clase'&&vHasBoard(m.cls))return `<div class="act"><button class="btn ghost sm" data-a="vivoBoard" data-id="${m.cls}">Ver pizarra</button></div>`;
+ if(m.cls&&m.tipo==='Grabación de clase')return `<div class="act"><button class="btn ghost sm" data-a="vivoRec" data-id="${m.cls}">Ver grabación</button></div>`;
+ return ''}
+var PPTV=null;
+function pptHTML(){const d=DEMO_MAT[PPTV.t],b=matBase(),i=PPTV.i;
+ return `${mhead(esc(PPTV.t),`Diapositiva ${i+1} de ${d.n} · usa las flechas del teclado`)}<div class="ppt-v"><img src="${b+d.dir}/slide-${i+1}.jpg" alt="Diapositiva ${i+1} de ${esc(PPTV.t)}"></div>
+ <div class="ppt-dots">${Array.from({length:d.n},(_,k)=>`<button data-a="pptGo" data-v="${k}" aria-label="Ir a la diapositiva ${k+1}" aria-current="${k===i}"></button>`).join('')}</div>
+ <div class="mf"><button class="btn ghost" data-a="pptGo" data-v="${i-1}" ${i?'':'disabled'}>‹ Anterior</button><button class="btn ghost" data-a="pptGo" data-v="${i+1}" ${i<d.n-1?'':'disabled'}>Siguiente ›</button><a class="btn" href="${b+d.f}" download>Descargar PPT</a></div>`}
+function courseExams(aid,c,est){const ex=S.exams.filter(e=>e.aula===aid&&e.c===c),tot=aulaStudents(aid).length;
+ if(!ex.length)return '<div class="empty">No hay exámenes programados en este curso.</div>';
+ return `<div class="list">${ex.map(e=>{const pts=exPts(e),info=`${e.q.length} preguntas · ${e.dur} minutos · ${pts} puntos`;
+  if(est){const r=e.res[curKid().id];return `<div class="item"><div class="ic">${icon('eval',17)}</div><div class="body"><b>${esc(e.tit)}</b><span class="meta">${info} · examen virtual con tiempo límite</span><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">${r?`<span class="chip ok">Rendido el ${fds(r.at)}</span><span class="chip info">${r.auto+(r.des||0)}/${pts} puntos</span>`:'<span class="chip warn">Pendiente</span>'}</div></div>${!r&&role()==='est'?`<div class="act"><button class="btn sm" data-a="startExam" data-id="${e.id}">Rendir examen</button></div>`:r?`<div class="act"><button class="btn ghost sm" data-a="go" data-v="fexam">Ver resultado</button></div>`:''}</div>`}
+  const n=Object.keys(e.res).length;return `<div class="item"><div class="ic">${icon('eval',17)}</div><div class="body"><b>${esc(e.tit)}</b><span class="meta">${info}</span><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="chip ${n<tot?'warn':'ok'}">${n}/${tot} rindieron</span><span class="chip">${e.estado}</span></div></div><div class="act"><button class="btn ghost sm" data-a="go" data-v="eval">Ver en Evaluaciones</button></div></div>`}).join('')}</div>`}
+
 const VIEWS={vivo:vVivo,msg:vMsg,adm:vAdm,inicio:vInicio,sedes:vSedes,alumnos:vAlumnos,docentes:vDocentes,asistencia:vAsistencia,notas:vNotas,aula:vAula,cursos:vAula,tutoria:vTutoria,eval:vEval,pagos:vPagos,ingresos:vIngresos,com:vCom,seg:vSeg,finicio:fInicio,fcursos:fCursos,fexam:fExam,fnotas:fNotas,fasis:fAsis,fpagos:fPagos,favisos:fAvisos};
 
 /* ---------- acciones ---------- */
@@ -2058,7 +2093,7 @@ Object.assign(A,{
  vivoBoard(el){roomOpen(el.dataset.id,{view:true})},
  vivoFree(){roomOpen('FREE-'+msgMe(),{free:true})},
  vivoLeave(){roomClose()},
- vivoRec(el){toast('En el sistema real aquí se reproduce la grabación de la clase guardada en el aula virtual.')},
+ vivoRec(el){const c=vCls(el.dataset.id);if(!c)return;openModal(`${mhead('Grabación: '+esc(c.tit),`${c.curso} · ${aulaById(c.aula).n} · ${esc(vDocN(c))} · ${fd(c.f)} · ${c.dur} min`)}<div class="rec-v"><iframe src="${VREC_URL}" title="Grabación de la clase ${esc(c.tit)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><p class="muted" style="font-size:12.5px;margin:0">Grabación guardada en el aula virtual del curso. Solo la ven los estudiantes del aula y sus docentes.</p><div class="mf"><button class="btn ghost" data-a="close">Cerrar</button></div>`)},
  vivoLink(el){const c=vCls(el.dataset.id);if(c&&c.link&&!/0000000000/.test(c.link))window.open(c.link,'_blank','noopener');else toast('Aquí se abriría la reunión de Zoom o Google Meet que registró el docente.')},
  vivoEndAsk(){openModal(vivoEndHTML(vCls(ROOM.id)),'sm')},
  rmTool(el){ROOM.tool=el.dataset.v;roomParts()},
@@ -2089,6 +2124,11 @@ Object.assign(F,{
  rmChat(f,fd_){const tx=String(fd_.get('tx')||'').trim();if(!tx||!ROOM)return;const l=liveOf(ROOM.id);l.chat.push({n:vMyName(),r:role()==='doc'?'doc':'est',tx,h:hhmm()});vCommit();ROOM.tab='chat';f.reset();rmSide();const i=gid('rmIn');i&&i.focus()}});
 document.addEventListener('change',e=>{if(e.target.dataset.c==='rmAllow'&&ROOM){const l=liveOf(ROOM.id);l.allow=e.target.checked;vCommit();roomParts();toast(l.allow?'Los estudiantes ya pueden dibujar en la pizarra.':'Solo tú puedes dibujar en la pizarra.')}});
 document.addEventListener('keydown',e=>{if(!ROOM||!MODAL.hidden)return;if(e.key==='Escape'&&(ROOM.view||ROOM.free)){roomClose();return}const t=e.target;if(t.tagName==='INPUT'||t.tagName==='TEXTAREA')return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&vCanDraw()){e.preventDefault();e.shiftKey?A.rmRedo():A.rmUndo()}});
+Object.assign(A,{
+ matPpt(el){PPTV={t:el.dataset.t,i:0};openModal(pptHTML())},
+ pptGo(el){const d=DEMO_MAT[PPTV.t];PPTV.i=clamp(+el.dataset.v,0,d.n-1);openModal(pptHTML())},
+ matVid(el){openModal(`${mhead(esc(el.dataset.t),'Video del curso · Matemática')}<div class="rec-v"><iframe src="${VREC_URL}" title="${esc(el.dataset.t)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div><div class="mf"><button class="btn ghost" data-a="close">Cerrar</button></div>`)}});
+document.addEventListener('keydown',e=>{if(MODAL.hidden||!PPTV||!MODAL.querySelector('.ppt-v'))return;const d=DEMO_MAT[PPTV.t];if(e.key==='ArrowRight'&&PPTV.i<d.n-1){PPTV.i++;openModal(pptHTML())}else if(e.key==='ArrowLeft'&&PPTV.i>0){PPTV.i--;openModal(pptHTML())}});
 /* ---------- PAGOS EN LÍNEA, WHATSAPP Y DEUDA ---------- */
 const SEC_WA='51900000000';
 const waIcon=()=>typeof WA_ICON==='undefined'?'':WA_ICON;
